@@ -102,15 +102,20 @@ function setupPeopleMarquee() {
 
   let down = false;      // 포인터 눌림 (클릭 후보)
   let dragging = false;  // 임계값 넘어 실제 드래그 중
+  let hovering = false;  // 마우스가 스트립 위에 있음
 
   function frame() {
-    if (!down) {         // 누르고 있는 동안엔 자동 드리프트 정지
+    if (!down && !hovering) {   // 누르고 있거나 마우스 호버 중이면 자동 드리프트 정지
       if (!reduce) vp.scrollLeft += AUTO;
       wrap();
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  // 마우스 호버 시 정지 (mouseenter/leave 는 마우스에서만 발생 → 터치엔 영향 없음)
+  vp.addEventListener("mouseenter", () => (hovering = true));
+  vp.addEventListener("mouseleave", () => (hovering = false));
 
   // 드래그로 슬라이드. 포인터 캡처는 "실제로 드래그가 시작된 뒤"에만 잡는다
   // (mousedown 마다 캡처하면 click 이 카드가 아니라 뷰포트로 잡혀서 카드 클릭이 씹힘)
