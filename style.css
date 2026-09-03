@@ -228,9 +228,15 @@ small { font-size: 14px; letter-spacing: 0.01em; }
 /* 모션 최소화 설정 시: 자동 드리프트는 JS에서 끔. 드래그·스크롤은 그대로 동작 */
 
 /* 배우미 하위 페이지 (people/*.html) — 메인과 같은 .grid-3 사용 */
-.back { margin-bottom: 4px; }
+.person-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.person-head .back,
+.person-head .person-name { margin: 0; }
 .back a { color: inherit; }
-.person-name { display: block; margin-bottom: 8px; }
 
 /* 하위 페이지 컨테이너 = 정사각형 (내용 넘치면 칸 안에서 스크롤, 페이지도 길어짐) */
 .person-grid .block {
