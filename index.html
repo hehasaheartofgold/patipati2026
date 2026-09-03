@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <title>PP</title>
+  <meta name="description" content="PP — PaTI 한배곳 4학년 콜렉티브의 온라인 공간.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="style.css?v=0.1">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+</head>
+
+<body>
+  <main>
+    <header>
+      <!-- 콜렉티브 이름. 새로고침할 때마다 8/30 전체모임에서 나온 PP 예시 중 하나로 바뀜 (js/main.js PP_NAMES) -->
+      <h1 id="pp-name">PP</h1>
+    </header>
+
+    <div class="grid-3">
+      <!-- PP 소개 -->
+      <div class="block">
+        <p>PP</p><br>
+        <p><!-- TODO: 확정 소개문 -->
+          PP는 파주타이포그라피배곳(PaTI) 한배곳 4학년이 함께 꾸린 콜렉티브입니다.
+          이름의 뜻은 하나로 정해두지 않았습니다 — 프로그램마다, 필요할 때마다 다르게 채웁니다.
+          <br><br>
+          이 곳은 PP가 함께 작업하고, 회의하고, 노는 과정을 모아두는 온라인 공간입니다.
+          <br><br>
+          (임시 텍스트. 실제 소개문으로 교체하세요.)
+        </p>
+      </div>
+
+      <!-- 랜덤 사진: pp-photos/ 에서 새로고침마다 한 장 (파일 목록은 js/main.js 의 PP_PHOTOS) -->
+      <figure id="pp-photo" class="block-image">
+        <img alt="PP 사진" decoding="async">
+      </figure>
+
+      <!-- 파티파티 (전시) -->
+      <div id="partyparty" class="block">
+        <p>파티파티</p><br>
+        <p>PP가 여는 전시. <!-- TODO: 확정 문구 -->
+          여러 프로그램(작업 공유, 워크숍, 강연, 식당 등)과 맺음전을 함께 엽니다.
+        </p><br>
+        <div class="event">
+          <p>때</p>
+          <p><!-- TODO -->2026. 12. 13 – 27 (가제, 미확정)</p>
+        </div>
+        <div class="event">
+          <p>곳</p>
+          <p><!-- TODO -->이상집(파주) 외 · 9/11 답사 후 확정</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 배우미 — 카드 클릭 시 people/<이름>.html 로. TODO: 명단·링크 확정 (8/30 전체모임 기준 17명) -->
+    <!-- 가로 일렬 무한 슬라이드: 자동 드리프트 + 드래그/터치/휠. JS가 트랙을 복제해 루프 -->
+    <div class="people">
+      <div class="people-viewport">
+      <div class="people-track">
+      <div class="block" data-href="people/현.html"><p>현</p><p class="social">→ <a href="https://www.instagram.com/dpsengsun/" target="_blank" rel="noopener">@dpsengsun</a></p></div>
+      <div class="block" data-href="people/서연.html"><p>서연</p><p class="social"> <a href="https://www.instagram.com/my__snowball/" target="_blank" rel="noopener">@my__snowball</a></p></div>
+      <div class="block" data-href="people/시대.html"><p>시대</p><p class="social"> <a href="https://www.instagram.com/sidaeraera/" target="_blank" rel="noopener">@sidaeraera</a></p></div>
+      <div class="block" data-href="people/승민.html"><p>승민</p><p class="social"> <a href="https://www.instagram.com/seungmin.yii" target="_blank" rel="noopener">@seungmin.yii</a></p></div>
+      <div class="block" data-href="people/바치.html"><p>바치</p><p class="social"> <a href="https://www.instagram.com/bacci.kr" target="_blank" rel="noopener">@bacci.kr</a></p></div>
+      <div class="block" data-href="people/도노.html"><p>도노</p><p class="social"> <a href="https://www.instagram.com/dounooo" target="_blank" rel="noopener">@dounooo</a></p></div>
+      <div class="block" data-href="people/오늘이.html"><p>오늘이</p><p class="social"> <a href="https://www.instagram.com/ooneuliii" target="_blank" rel="noopener">@ooneuliii</a></p></div>
+      <div class="block" data-href="people/서로.html"><p>서로</p><p class="social"> <a href="https://www.instagram.com/jyngprk" target="_blank" rel="noopener">@jyngprk</a></p></div>
+      <div class="block" data-href="people/우성.html"><p>우성</p><p class="social"> <a href="https://www.instagram.com/9499ppp/" target="_blank" rel="noopener">@9499ppp</a></p></div>
+      <div class="block" data-href="people/무루골.html"><p>무루골</p><p class="social"> <a href="https://www.instagram.com/doitee_ee" target="_blank" rel="noopener">@doitee_ee</a></p></div>
+      <div class="block" data-href="people/알샴.html"><p>알샴</p><p class="social"> <a href="https://www.instagram.com/choihyoeun7377" target="_blank" rel="noopener">@choihyoeun7377</a></p></div>
+      <div class="block" data-href="people/소요.html"><p>소요</p><p class="social"> <a href="https://www.instagram.com/leessoyo" target="_blank" rel="noopener">@leessoyo</a></p></div>
+      <div class="block" data-href="people/준현.html"><p>준현</p><p class="social"> <a href="https://www.instagram.com/nohjunhyun" target="_blank" rel="noopener">@nohjunhyun</a></p></div>
+      <div class="block" data-href="people/희주.html"><p>희주</p><p class="social"> <a href="https://www.instagram.com/heyizc" target="_blank" rel="noopener">@heyizc</a></p></div>
+      <div class="block" data-href="people/휘.html"><p>휘</p><p class="social"> <a href="https://www.instagram.com/03_k.h.s_22" target="_blank" rel="noopener">@03_k.h.s_22</a></p></div>
+      <div class="block" data-href="people/재이.html"><p>재이</p><p class="social"> <a href="https://www.instagram.com/instagram/" target="_blank" rel="noopener">@instagram</a></p></div>
+      <div class="block" data-href="people/지원.html"><p>지원</p><p class="social"> <a href="https://www.instagram.com/zlwon.e" target="_blank" rel="noopener">@zlwon.e</a></p></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- 과정 기록: 일상 사진 스트립 -->
+    <section class="block records">
+      <p>기록</p><br>
+      <p>회의하고, 작업하고, 같이 밥 먹는 모습. <!-- TODO: 실제 사진으로 교체, 필요하면 슬라이드로 --></p>
+      <div class="photo-strip">
+        <figure class="block-image"><img src="images/placeholder.svg" alt="기록 1" loading="lazy"></figure>
+        <figure class="block-image"><img src="images/placeholder.svg" alt="기록 2" loading="lazy"></figure>
+        <figure class="block-image"><img src="images/placeholder.svg" alt="기록 3" loading="lazy"></figure>
+        <figure class="block-image"><img src="images/placeholder.svg" alt="기록 4" loading="lazy"></figure>
+        <figure class="block-image"><img src="images/placeholder.svg" alt="기록 5" loading="lazy"></figure>
+        <figure class="block-image"><img src="images/placeholder.svg" alt="기록 6" loading="lazy"></figure>
+      </div>
+    </section>
+
+    <div class="grid-3">
+      <!-- Q&A -->
+      <div class="block qa">
+        <p>물음</p><br>
+        <!-- TODO: 배우미들에게 받은 답변 채우기 -->
+        <p>올해 가장 즐거웠던 순간은?</p>
+        <p class="answer">— (답변 자리)</p><br>
+        <p>요즘 듣는 노래?</p>
+        <p class="answer">— (답변 자리)</p><br>
+        <p>작업할 때 꼭 챙기는 것?</p>
+        <p class="answer">— (답변 자리)</p>
+      </div>
+
+      <!-- 연락처 -->
+      <div class="block">
+        <p>연락처</p><br>
+        <p>→ 소식은 <a href="https://www.instagram.com/pp.can.be___" target="_blank" rel="noopener">@pp.can.be___</a> 에서 (홍보-아카이빙팀)</p><br>
+        <p>→ 문의: <a href="mailto:hello@example.com">이메일</a></p>
+        <button id="copy-btn" type="button">이메일 복사</button>
+      </div>
+
+      <!-- 오시는 길 -->
+      <div class="block-image map">
+        <p id="address"><!-- TODO -->전시 장소 · 주소 (미정)</p>
+        <iframe title="지도" width="101%" height="101%" frameborder="0" scrolling="no" loading="lazy"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=126.77%2C37.75%2C126.79%2C37.76&layer=mapnik&marker=37.755%2C126.78"
+          style="border:0"></iframe>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div id="footer-inner">
+      <small>PP · PaTI 한배곳 4학년 &nbsp;|&nbsp; <a href="https://www.instagram.com/pp.can.be___" target="_blank" rel="noopener">@pp.can.be___</a> &nbsp;|&nbsp; hello [at] example.com</small>
+    </div>
+  </footer>
+
+  <script src="js/main.js?v=0.1"></script>
+</body>
+
+</html>

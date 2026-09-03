@@ -1,0 +1,239 @@
+/* PP web — 대문 (초기)
+   extrapractice.space 의 비주얼 언어 참고: 점선 블록 / 납작한 타이포 / 오프화이트 / hover 색 */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --accent: #00943f;        /* 포인트 그린 */
+  --bg-color: #F5F5F5	;      /* 배경 (오프화이트) */
+  --hover: #ffd900;         /* 블록 hover 노랑 */
+  --line: #000;
+  --maxwidth: 1600px;
+}
+
+body {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 20px;
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: clip;   /* 가로 스크롤 방지 (배우미 슬라이드가 넘쳐도) */
+  color: #000;
+  background-color: var(--bg-color);
+  font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+h1, h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  display: inline-block;
+}
+/* 좌측 상단 PP 워드마크. 두 크기를 따로 조절:
+   #pp-name       → 랜덤으로 나오는 나머지 텍스트 크기
+   #pp-name b     → 약자 P 두 글자 크기 (더 작게 하려면 이 숫자만 줄이면 됨) */
+#pp-name {
+  display: block;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+#pp-name b {
+  font-weight: 700;
+  font-size: 20px;
+}
+
+p { margin: 0; }
+
+a, a::after { color: inherit; }
+a:hover { color: #00f; }
+
+/* Layout */
+main {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 20px;
+  padding: 20px;
+  max-width: var(--maxwidth);
+  margin: auto;
+  width: 100%;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: minmax(240px, auto);
+  gap: 20px;
+}
+
+/* Blocks */
+.block {
+  padding: 10px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  overflow: auto;
+}
+.block:hover { background-color: var(--hover); }
+
+/* 파티파티 블록 = 그린 톤 */
+#partyparty {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+#partyparty:hover { background-color: inherit; }
+
+.event {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+}
+.event:hover { background-color: var(--accent); color: #fff; }
+
+/* Images */
+figure.block-image {
+  position: relative;
+  margin: 0;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 240px;
+}
+figure.block-image img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+#pp-photo { cursor: pointer; }   /* 클릭하면 다음 사진 */
+
+/* 기록 — 일상 사진 스트립 */
+.records .photo-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+.records .photo-strip figure.block-image {
+  min-height: 0;
+}
+.records .photo-strip img {
+  aspect-ratio: 1 / 1;
+}
+
+/* Q&A */
+.qa .answer {
+  color: #888;
+  margin-bottom: 4px;
+}
+
+/* 배우미 — 가로 일렬 무한 슬라이드 (자동 드리프트 + 드래그/터치/휠, JS). 카드는 people/<이름>.html 링크 */
+.people-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;          /* Firefox: 스크롤바 숨김 (기능은 유지) */
+  -ms-overflow-style: none;
+  cursor: grab;
+}
+.people-viewport::-webkit-scrollbar { display: none; }
+.people-viewport.dragging { cursor: grabbing; }
+.people-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  width: max-content;
+}
+.people .block {
+  flex: 0 0 180px;   /* 각 카드 폭 고정 */
+  cursor: pointer;   /* 카드 클릭 → people/<이름>.html (JS) */
+}
+.people .social {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 오시는 길 지도 */
+.map {
+  position: relative;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 240px;
+}
+.map iframe {
+  position: absolute;
+  inset: 0;
+  filter: hue-rotate(30deg);
+}
+.map #address {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  padding: 3px 6px;
+  font-size: 16px;
+  color: #fff;
+  background-color: var(--accent);
+}
+
+
+/* Button */
+#copy-btn {
+  display: block;
+  margin: 1em auto 0;
+  padding: 15px;
+  font-family: inherit;
+  font-size: 18px;
+  background: none;
+  border: 1px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#copy-btn:hover { background-color: lightgoldenrodyellow; }
+#copy-btn.copied { background-color: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Footer */
+footer { margin-top: auto; }
+#footer-inner {
+  padding: 20px;
+  border-top: 1px dashed var(--line);
+  background-color: var(--accent);
+  color: #fff;
+  text-align: center;
+}
+#footer-inner a { color: #fff; }
+small { font-size: 14px; letter-spacing: 0.01em; }
+
+/* Mobile */
+@media only screen and (max-width: 800px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+  .block { min-height: 120px; }
+  .people .block { min-height: 0; }
+  figure.block-image, .map { min-height: 250px; }
+  .block:hover, .event:hover, #partyparty:hover { background-color: initial; color: inherit; }
+  .records .photo-strip { grid-template-columns: 1fr 1fr; }
+}
+
+/* 모션 최소화 설정 시: 자동 드리프트는 JS에서 끔. 드래그·스크롤은 그대로 동작 */
+
+/* 배우미 하위 페이지 (people/*.html) — 메인과 같은 .grid-3 사용 */
+.back { margin-bottom: 4px; }
+.back a { color: inherit; }
+.person-name { display: block; margin-bottom: 8px; }
+
+/* 하위 페이지 컨테이너 = 정사각형 (내용 넘치면 칸 안에서 스크롤, 페이지도 길어짐) */
+.person-grid .block {
+  align-self: start;      /* 행 높이에 늘어나지 않게 → aspect-ratio 적용됨 */
+  aspect-ratio: 1 / 1;
+}
