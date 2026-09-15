@@ -20,19 +20,30 @@ const PP_PHOTOS = [
   "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg",
 ];
 
-document.addEventListener("DOMContentLoaded", () => {
-  // 사진: 새로고침마다 pp-photos/ 에서 랜덤 한 장. 칸을 클릭하면 다음 사진
-  const photoFig = document.getElementById("pp-photo");
-  const photoImg = photoFig && photoFig.querySelector("img");
-  if (photoImg && PP_PHOTOS.length) {
-    let pi = Math.floor(Math.random() * PP_PHOTOS.length);
-    const showPhoto = () => { photoImg.src = "pp-photos/" + PP_PHOTOS[pi]; };
+// images/party/ 안의 사진 파일 목록 (파티파티 컨테이너). 사진을 추가/삭제하면 여기도 맞춰줄 것
+const PARTY_PHOTOS = [
+  "party-space1.jpg", "party-space2.jpg", "party-space3.jpg", "party-space-site.jpg",
+  "party-design-meeting1.jpg", "party-design-meeting2.jpg", "party-design-meeting3.jpg",
+  "party-murugol-carrier.jpg", "party-soyo-site.jpg", "party-img6695.jpg", "party-meal.jpg",
+];
+
+// 지정한 <figure id> 안의 <img> 를 새로고침마다 목록에서 랜덤 한 장으로 채움. 칸을 클릭하면 다음 사진
+function setupRandomPhoto(figureId, basePath, photos) {
+  const fig = document.getElementById(figureId);
+  const img = fig && fig.querySelector("img");
+  if (!img || !photos.length) return;
+  let i = Math.floor(Math.random() * photos.length);
+  const showPhoto = () => { img.src = basePath + photos[i]; };
+  showPhoto();
+  fig.addEventListener("click", () => {
+    i = (i + 1) % photos.length;
     showPhoto();
-    photoFig.addEventListener("click", () => {
-      pi = (pi + 1) % PP_PHOTOS.length;
-      showPhoto();
-    });
-  }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupRandomPhoto("pp-photo", "pp-photos/", PP_PHOTOS);
+  setupRandomPhoto("partyparty-photo", "images/party/", PARTY_PHOTOS);
 
   // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
   const nameEl = document.getElementById("pp-name");

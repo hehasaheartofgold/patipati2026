@@ -19,11 +19,16 @@
     </header>
 
     <div class="grid-3">
+      <!-- 랜덤 사진: pp-photos/ 에서 새로고침마다 한 장 (파일 목록은 js/main.js 의 PP_PHOTOS) -->
+      <figure id="pp-photo" class="block-image">
+        <img alt="PP 사진" decoding="async">
+      </figure>
+
       <!-- PP 소개 -->
-      <div class="block">
+      <div id="pp-intro" class="block">
         <p>PP</p><br>
         <p><!-- TODO: 확정 소개문 -->
-          PP는 파주타이포그라피배곳(PaTI) 한배곳 4학년이 함께 꾸린 콜렉티브입니다.
+          2026년 파주타이포그라피배곳(PaTI) 4학년 콜렉티브입니다.
           <br><br>
           이 곳은 PP가 함께 작업하고, 회의하고, 노는 과정을 모아두는 온라인 공간입니다.
           <br><br>
@@ -31,26 +36,10 @@
         </p>
       </div>
 
-      <!-- 랜덤 사진: pp-photos/ 에서 새로고침마다 한 장 (파일 목록은 js/main.js 의 PP_PHOTOS) -->
-      <figure id="pp-photo" class="block-image">
-        <img alt="PP 사진" decoding="async">
+      <!-- 파티파티 사진: pp-photo와 동일 구조. 새로고침마다 images/party/ 에서 랜덤 한 장 (목록은 js/main.js 의 PARTY_PHOTOS). 클릭하면 다음 사진 -->
+      <figure id="partyparty-photo" class="block-image">
+        <img alt="파티파티 사진" decoding="async">
       </figure>
-
-      <!-- 파티파티 (전시) -->
-      <div id="partyparty" class="block">
-        <p>파티파티</p><br>
-        <p>파티파티 PP <!-- TODO: 확정 문구 -->
-          여러 프로그램(작업 공유, 워크숍, 강연, 식당 등)과 맺음전을 함께 엽니다.
-        </p><br>
-        <div class="event">
-          <p>때</p>
-          <p><!-- TODO -->2026. 12. 13 – 27 (가제, 미확정)</p>
-        </div>
-        <div class="event">
-          <p>곳</p>
-          <p><!-- TODO -->이상집(파주) 외 · 9/11 답사 후 확정</p>
-        </div>
-      </div>
     </div>
 
     <!-- 배우미 — 카드 클릭 시 people/<이름>.html 로. TODO: 명단·링크 확정 (8/30 전체모임 기준 17명) -->
@@ -116,9 +105,9 @@
 
       <!-- 오시는 길 -->
       <div class="block-image map">
-        <p id="address"><!-- TODO -->전시 장소 · 주소 (미정)</p>
+        <p id="address">파주타이포그라피배곳(PaTI)</p>
         <iframe title="지도" width="101%" height="101%" frameborder="0" scrolling="no" loading="lazy"
-          src="https://www.openstreetmap.org/export/embed.html?bbox=126.77%2C37.75%2C126.79%2C37.76&layer=mapnik&marker=37.755%2C126.78"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=126.681568%2C37.707608%2C126.701568%2C37.723608&layer=mapnik&marker=37.715608%2C126.691568"
           style="border:0"></iframe>
       </div>
     </div>

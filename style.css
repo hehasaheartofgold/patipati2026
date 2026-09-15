@@ -73,25 +73,22 @@ main {
 /* Blocks */
 .block {
   padding: 10px;
-  border: 1px dashed var(--line);
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: 0;
   overflow: auto;
 }
 .block:hover { background-color: var(--hover); }
 
-/* 파티파티 블록 = 포인트 톤 */
-
-/* #partyparty {
-  border-color: var(--accent);
-  color: var(--accent);
-} */
-#partyparty:hover { background-color: var(--hover); }
+/* PP 소개 = 하이라이트 톤 고정 */
+#pp-intro {
+  background-color: var(--hover);
+}
 
 .event {
   padding: 10px;
   margin: 10px 0;
-  border: 1px dashed var(--accent);
-  border-radius: 10px;
+  border: 1px solid var(--accent);
+  border-radius: 0;
 }
 .event:hover { background-color: var(--accent); color: #fff; }
 
@@ -99,8 +96,8 @@ main {
 figure.block-image {
   position: relative;
   margin: 0;
-  border: 1px dashed var(--line);
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: 0;
   overflow: hidden;
   min-height: 240px;
 }
@@ -110,19 +107,19 @@ figure.block-image img {
   aspect-ratio: 1 / 1;
   object-fit: cover;
 }
-#pp-photo { cursor: pointer; }   /* 클릭하면 다음 사진 */
+#pp-photo, #partyparty-photo { cursor: pointer; }   /* 클릭하면 다음 사진 */
 
-/* 기록 — 일상 사진 스트립 */
-.records .photo-strip {
+/* 사진 스트립 (기록 등 여러 장 나열용) */
+.photo-strip {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 20px;
   margin-top: 15px;
 }
-.records .photo-strip figure.block-image {
+.photo-strip figure.block-image {
   min-height: 0;
 }
-.records .photo-strip img {
+.photo-strip img {
   aspect-ratio: 1 / 1;
 }
 
@@ -165,8 +162,8 @@ figure.block-image img {
 /* 오시는 길 지도 */
 .map {
   position: relative;
-  border: 1px dashed var(--line);
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: 0;
   overflow: hidden;
   min-height: 240px;
 }
@@ -201,7 +198,7 @@ figure.block-image img {
   color: #000;
   background-color: #fff;
   border: 1px solid #000;
-  border-radius: 8px;
+  border-radius: 0;
   text-decoration: none;
 }
 .video-embed .embed-open:hover { background-color: var(--hover); }
@@ -227,7 +224,7 @@ figure.block-image img {
   font-size: 18px;
   background: none;
   border: 1px solid #000;
-  border-radius: 10px;
+  border-radius: 0;
   cursor: pointer;
 }
 #copy-btn:hover { background-color: lightgoldenrodyellow; }
@@ -237,7 +234,7 @@ figure.block-image img {
 footer { margin-top: auto; }
 #footer-inner {
   padding: 20px;
-  border-top: 1px dashed var(--line);
+  border-top: 1px solid var(--line);
   background-color: var(--accent);
   color: #fff;
   text-align: center;
@@ -254,8 +251,8 @@ small { font-size: 14px; letter-spacing: 0.01em; }
   .block { min-height: 120px; }
   .people .block { min-height: 0; }
   figure.block-image, .map { min-height: 250px; }
-  .block:hover, .event:hover, #partyparty:hover { background-color: initial; color: inherit; }
-  .records .photo-strip { grid-template-columns: 1fr 1fr; }
+  .block:hover, .event:hover { background-color: initial; color: inherit; }
+  .photo-strip { grid-template-columns: 1fr 1fr; }
 }
 
 /* 모션 최소화 설정 시: 자동 드리프트는 JS에서 끔. 드래그·스크롤은 그대로 동작 */
