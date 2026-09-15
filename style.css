@@ -4,7 +4,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 :root {
-  --accent: #00943f;        /* 포인트 그린 */
+  --accent: #7B68EE;        /* 포인트 그린 */
   --bg-color: #F5F5F5	;      /* 배경 (오프화이트) */
   --hover: #ffd900;         /* 블록 hover 노랑 */
   --line: #000;
@@ -79,12 +79,13 @@ main {
 }
 .block:hover { background-color: var(--hover); }
 
-/* 파티파티 블록 = 그린 톤 */
-#partyparty {
+/* 파티파티 블록 = 포인트 톤 */
+
+/* #partyparty {
   border-color: var(--accent);
   color: var(--accent);
-}
-#partyparty:hover { background-color: inherit; }
+} */
+#partyparty:hover { background-color: var(--hover); }
 
 .event {
   padding: 10px;
@@ -174,6 +175,18 @@ figure.block-image img {
   inset: 0;
   filter: hue-rotate(30deg);
 }
+.video-embed {
+  position: relative;
+  overflow: hidden;
+}
+.video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .map #address {
   position: absolute;
   top: 10px;
