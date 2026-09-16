@@ -25,6 +25,7 @@ const PARTY_PHOTOS = [
   "party-space1.jpg", "party-space2.jpg", "party-space3.jpg", "party-space-site.jpg",
   "party-design-meeting1.jpg", "party-design-meeting2.jpg", "party-design-meeting3.jpg",
   "party-murugol-carrier.jpg", "party-soyo-site.jpg", "party-img6695.jpg", "party-meal.jpg",
+  "party-meeting.jpeg", "party-woosung-hyundae.jpeg", "party-pr-zoom.png",
 ];
 
 // 지정한 <figure id> 안의 <img> 를 새로고침마다 목록에서 랜덤 한 장으로 채움. 칸을 클릭하면 다음 사진
