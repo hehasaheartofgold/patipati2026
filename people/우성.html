@@ -24,10 +24,10 @@
         <p>소개</p><br>
         <p><!-- TODO: 우성 소개 --></p>
       </div>
-      <div class="block">
-        <p>지난 작업</p><br>
-        <p><!-- TODO: 작업 목록 · 이미지 · 링크 --></p>
-      </div>
+      <!-- 지난 작업 사진: pp-photo와 동일 구조. 새로고침마다 ../images/woosung-work/ 에서 랜덤 한 장 (목록은 ../js/main.js 의 WOOSUNG_WORK_PHOTOS). 클릭하면 다음 사진 -->
+      <figure id="woosung-past-work" class="block-image">
+        <img alt="우성 지난 작업 사진" decoding="async">
+      </figure>
       <div class="block">
         <p>사소한 이야기</p><br>
         <p><!-- TODO: 과정 · 잡담 · 취향 등 --></p>
@@ -53,6 +53,8 @@
       <small>PP · PaTI 한배곳 4학년 &nbsp;|&nbsp; <a href="../index.html">← 대문</a></small>
     </div>
   </footer>
+
+  <script src="../js/main.js?v=0.1"></script>
 </body>
 
 </html>

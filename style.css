@@ -107,7 +107,7 @@ figure.block-image img {
   aspect-ratio: 1 / 1;
   object-fit: cover;
 }
-#pp-photo, #partyparty-photo { cursor: pointer; }   /* 클릭하면 다음 사진 */
+#pp-photo, #patipati-photo { cursor: pointer; }   /* 클릭하면 다음 사진 */
 
 /* 사진 스트립 (기록 등 여러 장 나열용) */
 .photo-strip {

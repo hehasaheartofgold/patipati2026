@@ -20,12 +20,17 @@ const PP_PHOTOS = [
   "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg",
 ];
 
-// images/party/ 안의 사진 파일 목록 (파티파티 컨테이너). 사진을 추가/삭제하면 여기도 맞춰줄 것
-const PARTY_PHOTOS = [
-  "party-space1.jpg", "party-space2.jpg", "party-space3.jpg", "party-space-site.jpg",
-  "party-design-meeting1.jpg", "party-design-meeting2.jpg", "party-design-meeting3.jpg",
-  "party-murugol-carrier.jpg", "party-soyo-site.jpg", "party-img6695.jpg", "party-meal.jpg",
-  "party-meeting.jpeg", "party-woosung-hyundae.jpeg", "party-pr-zoom.png",
+// images/patipati/ 안의 사진 파일 목록 (파티파티=PatiPati 컨테이너). 사진을 추가/삭제하면 여기도 맞춰줄 것
+const PATIPATI_PHOTOS = [
+  "patipati-space1.jpg", "patipati-space2.jpg", "patipati-space3.jpg", "patipati-space-site.jpg",
+  "patipati-design-meeting1.jpg", "patipati-design-meeting2.jpg", "patipati-design-meeting3.jpg",
+  "patipati-murugol-carrier.jpg", "patipati-soyo-site.jpg", "patipati-img6695.jpg", "patipati-meal.jpg",
+  "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.png",
+];
+
+// images/woosung-work/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
+const WOOSUNG_WORK_PHOTOS = [
+  "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade-side.jpeg", "arcade1.jpeg", "arcade2.jpeg",
 ];
 
 // 지정한 <figure id> 안의 <img> 를 새로고침마다 목록에서 랜덤 한 장으로 채움. 칸을 클릭하면 다음 사진
@@ -44,7 +49,8 @@ function setupRandomPhoto(figureId, basePath, photos) {
 
 document.addEventListener("DOMContentLoaded", () => {
   setupRandomPhoto("pp-photo", "pp-photos/", PP_PHOTOS);
-  setupRandomPhoto("partyparty-photo", "images/party/", PARTY_PHOTOS);
+  setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS);
+  setupRandomPhoto("woosung-past-work", "../images/woosung-work/", WOOSUNG_WORK_PHOTOS);
 
   // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
   const nameEl = document.getElementById("pp-name");
