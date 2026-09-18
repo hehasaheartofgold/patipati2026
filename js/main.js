@@ -25,7 +25,7 @@ const PATIPATI_PHOTOS = [
   "patipati-space1.jpg", "patipati-space2.jpg", "patipati-space3.jpg", "patipati-space-site.jpg",
   "patipati-design-meeting1.jpg", "patipati-design-meeting2.jpg", "patipati-design-meeting3.jpg",
   "patipati-murugol-carrier.jpg", "patipati-soyo-site.jpg", "patipati-img6695.jpg", "patipati-meal.jpg",
-  "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.png",
+  "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg",
 ];
 
 // images/woosung-work/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
