@@ -28,7 +28,7 @@ const PATIPATI_PHOTOS = [
   "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg",
 ];
 
-// images/woosung-work/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
+// personal/우성/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
 const WOOSUNG_WORK_PHOTOS = [
   "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade-side.jpeg", "arcade1.jpeg", "arcade2.jpeg",
 ];
@@ -168,7 +168,7 @@ function setupRandomMedia(figureId, basePath, items) {
 document.addEventListener("DOMContentLoaded", () => {
   setupRandomPhoto("pp-photo", "pp-photos/", PP_PHOTOS);
   setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS);
-  setupRandomPhoto("woosung-past-work", "../images/woosung-work/", WOOSUNG_WORK_PHOTOS);
+  setupRandomPhoto("woosung-past-work", "../personal/우성/", WOOSUNG_WORK_PHOTOS);
   setupRandomPhoto("oneuli-structural-kite", "../personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
   setupRandomPhoto("oneuli-drawing", "../personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
   setupRandomMedia("oneuli-biobio", "../personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
