@@ -33,13 +33,92 @@ const WOOSUNG_WORK_PHOTOS = [
   "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade-side.jpeg", "arcade1.jpeg", "arcade2.jpeg",
 ];
 
-// 지정한 <figure id> 안의 <img> 를 새로고침마다 목록에서 랜덤 한 장으로 채움. 칸을 클릭하면 다음 사진
+// personal/오늘이/ 안의 폴더별 사진(+영상) 목록. 개인 페이지 이미지는 personal/<이름>/<폴더>/ 에 정리
+const ONEULI_STRUCTURAL_KITE_PHOTOS = [
+  "structural-kite-process1.jpg", "structural-kite-process2.jpg",
+  "structural-kite-site1.jpg", "structural-kite-site2.jpg",
+];
+const ONEULI_DRAWING_PHOTOS = ["drawing-research1.jpg", "drawing-research2.jpg"];
+const ONEULI_BIOBIO_MEDIA = ["biobio1.jpg", "biobio2.jpg", "biobio-video1.mp4", "biobio-video2.mp4"];
+const ONEULI_WATERCOLOR_PHOTOS = [
+  "watercolor1.jpg", "watercolor2.jpg", "watercolor3.jpg", "watercolor4.jpg", "watercolor5.jpg",
+  "watercolor6.jpg", "watercolor7.jpg", "watercolor8.jpg", "watercolor9.jpg",
+];
+const ONEULI_YEONHAM_PHOTOS = ["yeonham1.jpg", "yeonham2.jpg", "yeonham3.jpg"];
+
+// 사진/영상을 같은 탭 안에서 크게 보여주는 라이트박스. 오버레이는 최초 호출 때 한 번만
+// 만들어서 재사용. 배경 클릭·닫기 버튼·Esc로 닫힘
+function openLightbox(src, isVideo) {
+  let overlay = document.getElementById("lightbox-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "lightbox-overlay";
+    overlay.className = "lightbox-overlay hidden";
+    overlay.innerHTML = '<button type="button" class="lightbox-close" title="닫기" aria-label="닫기">×</button><div class="lightbox-media"></div>';
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay || e.target.classList.contains("lightbox-close")) closeLightbox();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeLightbox();
+    });
+    document.body.appendChild(overlay);
+  }
+  const mediaWrap = overlay.querySelector(".lightbox-media");
+  mediaWrap.innerHTML = "";
+  let el;
+  if (isVideo) {
+    el = document.createElement("video");
+    el.src = src;
+    el.controls = true;
+    el.autoplay = true;
+    el.loop = true;
+    el.playsInline = true;
+  } else {
+    el = document.createElement("img");
+    el.src = src;
+    el.alt = "";
+  }
+  mediaWrap.appendChild(el);
+  overlay.classList.remove("hidden");
+}
+function closeLightbox() {
+  const overlay = document.getElementById("lightbox-overlay");
+  if (!overlay) return;
+  overlay.classList.add("hidden");
+  overlay.querySelector(".lightbox-media").innerHTML = ""; // 재생 중인 영상 정지
+}
+
+// 지정한 figure 안에 "크게 보기" 버튼(iframe embed-open과 같은 스타일)을 만들어 붙임.
+// 이미 있으면 그거 재사용. 클릭하면 라이트박스로 현재 사진/영상을 같은 탭에서 크게 보여줌.
+// 버튼 클릭이 figure의 "다음 사진" 클릭으로 안 번지게 막음
+function ensureOpenButton(fig) {
+  let btn = fig.querySelector(".embed-open");
+  if (btn) return btn;
+  btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "embed-open";
+  btn.title = "크게 보기";
+  btn.setAttribute("aria-label", "크게 보기");
+  btn.textContent = "⧉";
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openLightbox(btn.dataset.src, btn.dataset.video === "1");
+  });
+  fig.appendChild(btn);
+  return btn;
+}
+
 function setupRandomPhoto(figureId, basePath, photos) {
   const fig = document.getElementById(figureId);
   const img = fig && fig.querySelector("img");
   if (!img || !photos.length) return;
   let i = Math.floor(Math.random() * photos.length);
-  const showPhoto = () => { img.src = basePath + photos[i]; };
+  const openBtn = ensureOpenButton(fig);
+  const showPhoto = () => {
+    const src = basePath + photos[i];
+    img.src = src;
+    openBtn.dataset.src = src;
+  };
   showPhoto();
   fig.addEventListener("click", () => {
     i = (i + 1) % photos.length;
@@ -47,10 +126,54 @@ function setupRandomPhoto(figureId, basePath, photos) {
   });
 }
 
+// setupRandomPhoto와 동일하지만 사진·영상이 섞인 목록용. 확장자로 판단해 <img> 또는
+// <video>(자동재생·무음·반복)를 그때그때 만들어 넣음. 칸을 클릭하면 다음 항목
+function setupRandomMedia(figureId, basePath, items) {
+  const fig = document.getElementById(figureId);
+  if (!fig || !items.length) return;
+  let i = Math.floor(Math.random() * items.length);
+  const openBtn = ensureOpenButton(fig);
+  const showItem = () => {
+    const name = items[i];
+    const src = basePath + name;
+    const isVideo = /\.(mp4|mov|webm)$/i.test(name);
+    const old = fig.querySelector("img, video");
+    if (old) old.remove();
+    let el;
+    if (isVideo) {
+      el = document.createElement("video");
+      el.muted = true;
+      el.setAttribute("muted", ""); // 자동재생 허용 조건: 속성으로도 명시해야 확실히 통과
+      el.autoplay = true;
+      el.loop = true;
+      el.playsInline = true;
+      el.src = src; // src는 마지막에 — 앞의 설정이 로드 시작 전에 반영되도록
+    } else {
+      el = document.createElement("img");
+      el.alt = "";
+      el.decoding = "async";
+      el.src = src;
+    }
+    fig.insertBefore(el, fig.firstChild);
+    openBtn.dataset.src = src;
+    openBtn.dataset.video = isVideo ? "1" : "0";
+  };
+  showItem();
+  fig.addEventListener("click", () => {
+    i = (i + 1) % items.length;
+    showItem();
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setupRandomPhoto("pp-photo", "pp-photos/", PP_PHOTOS);
   setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS);
   setupRandomPhoto("woosung-past-work", "../images/woosung-work/", WOOSUNG_WORK_PHOTOS);
+  setupRandomPhoto("oneuli-structural-kite", "../personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
+  setupRandomPhoto("oneuli-drawing", "../personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
+  setupRandomMedia("oneuli-biobio", "../personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
+  setupRandomPhoto("oneuli-watercolor", "../personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS);
+  setupRandomPhoto("oneuli-yeonham", "../personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS);
 
   // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
   const nameEl = document.getElementById("pp-name");
