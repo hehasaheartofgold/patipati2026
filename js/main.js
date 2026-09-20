@@ -108,16 +108,16 @@ function ensureOpenButton(fig) {
   return btn;
 }
 
-function setupRandomPhoto(figureId, basePath, photos) {
+function setupRandomPhoto(figureId, basePath, photos, showOpenButton = true) {
   const fig = document.getElementById(figureId);
   const img = fig && fig.querySelector("img");
   if (!img || !photos.length) return;
   let i = Math.floor(Math.random() * photos.length);
-  const openBtn = ensureOpenButton(fig);
+  const openBtn = showOpenButton ? ensureOpenButton(fig) : null;
   const showPhoto = () => {
     const src = basePath + photos[i];
     img.src = src;
-    openBtn.dataset.src = src;
+    if (openBtn) openBtn.dataset.src = src;
   };
   showPhoto();
   fig.addEventListener("click", () => {
@@ -166,8 +166,8 @@ function setupRandomMedia(figureId, basePath, items) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupRandomPhoto("pp-photo", "pp-photos/", PP_PHOTOS);
-  setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS);
+  setupRandomPhoto("pp-photo", "pp-photos/", PP_PHOTOS, false);
+  setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS, false);
   setupRandomPhoto("woosung-past-work", "../personal/우성/", WOOSUNG_WORK_PHOTOS);
   setupRandomPhoto("oneuli-structural-kite", "../personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
   setupRandomPhoto("oneuli-drawing", "../personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
