@@ -17,7 +17,7 @@ const PP_NAMES = [
 // pp-photos/ 안의 사진 파일 목록. 사진을 추가/삭제하면 여기도 맞춰줄 것
 const PP_PHOTOS = [
   "pp-bag.jpg", "pp-cake.jpg", "pp-cake2.jpg", "pp-can.jpg",
-  "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg",
+  "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg", "pp-letters.jpg",
 ];
 
 // images/patipati/ 안의 사진 파일 목록 (파티파티=PatiPati 컨테이너). 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -25,7 +25,7 @@ const PATIPATI_PHOTOS = [
   "patipati-space1.jpg", "patipati-space2.jpg", "patipati-space3.jpg", "patipati-space-site.jpg",
   "patipati-design-meeting1.jpg", "patipati-design-meeting2.jpg", "patipati-design-meeting3.jpg",
   "patipati-murugol-carrier.jpg", "patipati-soyo-site.jpg", "patipati-img6695.jpg", "patipati-meal.jpg",
-  "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg",
+  "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg", "patipati-carry-box.jpg",
 ];
 
 // personal/우성/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
