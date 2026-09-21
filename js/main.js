@@ -168,12 +168,12 @@ function setupRandomMedia(figureId, basePath, items) {
 document.addEventListener("DOMContentLoaded", () => {
   setupRandomPhoto("pp-photo", "images/pp-photos/", PP_PHOTOS, false);
   setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS, false);
-  setupRandomPhoto("woosung-past-work", "../personal/우성/", WOOSUNG_WORK_PHOTOS);
-  setupRandomPhoto("oneuli-structural-kite", "../personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
-  setupRandomPhoto("oneuli-drawing", "../personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
-  setupRandomMedia("oneuli-biobio", "../personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
-  setupRandomPhoto("oneuli-watercolor", "../personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS);
-  setupRandomPhoto("oneuli-yeonham", "../personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS);
+  setupRandomPhoto("woosung-past-work", "../images/personal/우성/", WOOSUNG_WORK_PHOTOS);
+  setupRandomPhoto("oneuli-structural-kite", "../images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
+  setupRandomPhoto("oneuli-drawing", "../images/personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
+  setupRandomMedia("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
+  setupRandomPhoto("oneuli-watercolor", "../images/personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS);
+  setupRandomPhoto("oneuli-yeonham", "../images/personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS);
 
   // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
   const nameEl = document.getElementById("pp-name");
