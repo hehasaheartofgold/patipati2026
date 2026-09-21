@@ -14,7 +14,7 @@ const PP_NAMES = [
   "Public Pantry", "Printing Poster", "Paper People",
 ];
 
-// pp-photos/ 안의 사진 파일 목록. 사진을 추가/삭제하면 여기도 맞춰줄 것
+// images/pp-photos/ 안의 사진 파일 목록. 사진을 추가/삭제하면 여기도 맞춰줄 것
 const PP_PHOTOS = [
   "pp-bag.jpg", "pp-cake.jpg", "pp-cake2.jpg", "pp-can.jpg",
   "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg", "pp-letters.jpg",
@@ -166,7 +166,7 @@ function setupRandomMedia(figureId, basePath, items) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupRandomPhoto("pp-photo", "pp-photos/", PP_PHOTOS, false);
+  setupRandomPhoto("pp-photo", "images/pp-photos/", PP_PHOTOS, false);
   setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS, false);
   setupRandomPhoto("woosung-past-work", "../personal/우성/", WOOSUNG_WORK_PHOTOS);
   setupRandomPhoto("oneuli-structural-kite", "../personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);

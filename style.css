@@ -85,12 +85,24 @@ main {
 }
 
 .event {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 10px;
   margin: 10px 0;
   border: 1px solid var(--accent);
   border-radius: 0;
+  text-decoration: none;
+  cursor: pointer;
 }
 .event:hover { background-color: var(--accent); color: #fff; }
+.event-thumb {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
 
 /* Images */
 figure.block-image {
@@ -204,6 +216,12 @@ figure.block-image video {
   text-decoration: none;
   cursor: pointer;
   padding: 0;
+  opacity: 0;                 /* 컨테이너 호버 시에만 표시 */
+  transition: opacity 0.15s ease;
+}
+.block-image:hover .embed-open,
+.video-embed:hover .embed-open {
+  opacity: 1;
 }
 .embed-open:hover { background-color: var(--hover); }
 
@@ -314,9 +332,37 @@ small { font-size: 14px; letter-spacing: 0.01em; }
 .person-head .back,
 .person-head .person-name { margin: 0; }
 .back a { color: inherit; }
+.person-insta { font-size: 14px; }
 
-/* 하위 페이지 컨테이너 = 정사각형 (내용 넘치면 칸 안에서 스크롤, 페이지도 길어짐) */
+/* 하위 페이지 컨테이너 — 3열이 서로 독립적으로 쌓이는 컬럼 레이아웃(Pinterest식).
+   grid 대신 컬럼을 쓰는 이유: grid는 같은 행의 3칸이 행 높이를 공유해서, 세로로 긴
+   사진이 하나만 있어도 그 행의 다른 칸들 밑에 간격이 늘어져 보였음. 컬럼은 열마다
+   독립적으로 쌓이므로 간격(20px)이 항상 일정하게 유지됨 */
+.person-grid {
+  display: block;
+  column-count: 3;
+  column-gap: 20px;
+}
+.person-grid .block,
+.person-grid figure.block-image {
+  break-inside: avoid;   /* 컨테이너가 열 경계에서 잘리지 않게 */
+  width: 100%;
+  margin-bottom: 20px;   /* 같은 열 안에서 다음 컨테이너와의 간격 (컬럼엔 row-gap이 없어서 margin으로) */
+}
+
+/* 텍스트 칸·아이프레임(.video-embed도 class="block")은 정사각형 유지 */
 .person-grid .block {
-  align-self: start;      /* 행 높이에 늘어나지 않게 → aspect-ratio 적용됨 */
   aspect-ratio: 1 / 1;
+}
+
+/* 사진 칸(figure.block-image)만 예외 — 가로는 칸 폭 그대로, 세로는 이미지 원본 비율대로.
+   리사이징은 사진에만 적용(아이프레임은 위 .person-grid .block 규칙으로 정사각형 유지) */
+.person-grid figure.block-image {
+  min-height: 0;         /* 기존 240px 최소값 제거 — 이미지보다 칸이 더 커지는 원인이었음 */
+}
+.person-grid figure.block-image img,
+.person-grid figure.block-image video {
+  display: block;        /* 인라인 이미지/영상 기본 여백(＝칸이 콘텐츠보다 살짝 커 보이던 원인) 제거 */
+  height: auto;           /* 정사각형 강제(aspect-ratio:1/1) 대신 원본 비율 그대로 */
+  aspect-ratio: auto;
 }
