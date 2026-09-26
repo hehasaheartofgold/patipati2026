@@ -46,6 +46,20 @@ const ONEULI_WATERCOLOR_PHOTOS = [
 ];
 const ONEULI_YEONHAM_PHOTOS = ["yeonham1.jpg", "yeonham2.jpg", "yeonham3.jpg"];
 
+// personal/서연/ 안의 폴더별 사진 목록
+const SEOYEON_DEOTMARU_PHOTOS = [
+  "deotmaru1.jpg", "deotmaru2.jpg", "deotmaru3.jpg",
+  "deotmaru4.jpg", "deotmaru5.jpg", "deotmaru6.jpg",
+];
+const SEOYEON_MEMO_PHOTOS = [
+  "memo1.jpg", "memo2.jpg", "memo3.jpg", "memo4.jpg",
+  "memo5.jpg", "memo6.jpg", "memo7.jpg",
+];
+const SEOYEON_PANCAKE_PHOTOS = [
+  "pancake1.jpg", "pancake2.jpg", "pancake3.jpg", "pancake4.jpg",
+  "pancake5.jpg", "pancake6.jpg", "pancake7.jpg", "pancake8.jpg",
+];
+
 // 사진/영상을 같은 탭 안에서 크게 보여주는 라이트박스. 오버레이는 최초 호출 때 한 번만
 // 만들어서 재사용. 배경 클릭·닫기 버튼·Esc로 닫힘
 function openLightbox(src, isVideo) {
@@ -189,6 +203,9 @@ document.addEventListener("DOMContentLoaded", () => {
   setupRandomMedia("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
   setupRandomPhoto("oneuli-watercolor", "../images/personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS);
   setupRandomPhoto("oneuli-yeonham", "../images/personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS);
+  setupRandomPhoto("seoyeon-deotmaru", "../images/personal/서연/덧마루/", SEOYEON_DEOTMARU_PHOTOS);
+  setupRandomPhoto("seoyeon-memo", "../images/personal/서연/메모/", SEOYEON_MEMO_PHOTOS);
+  setupRandomPhoto("seoyeon-pancake", "../images/personal/서연/팬케이크/", SEOYEON_PANCAKE_PHOTOS);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
     document.getElementById("potato-pancake-video")

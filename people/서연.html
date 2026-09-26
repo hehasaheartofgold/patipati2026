@@ -21,27 +21,11 @@
 
     <!-- 3x3 정사각형 컨테이너 9개 (메인과 같은 가로 3분할). 내용은 배우미별로 채움 -->
     <div class="grid-3 person-grid">
-      <div class="block">
-        <p>소개</p><br>
-        <p><!-- TODO: 서연 소개 --></p>
-      </div>
-      <div class="block">
-        <p>지난 작업</p><br>
-        <p><!-- TODO: 작업 목록 · 이미지 · 링크 --></p>
-      </div>
-      <div class="block">
-        <p>사소한 이야기</p><br>
-        <p><!-- TODO: 과정 · 잡담 · 취향 등 --></p>
-      </div>
-      <div class="block">
-        <p>링크</p><br>
-        <p>→ <a href="#" target="_blank" rel="noopener">작업</a></p>
-      </div>
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
+      <!-- 폴더별 사진(personal/서연/<폴더>/). pp-photo와 동일 구조, 랜덤 표시 + 클릭 시 다음 항목.
+           내용 있는 컨테이너를 좌상단부터 채우도록 앞으로 배치 -->
+      <figure id="seoyeon-deotmaru" class="block-image"><img alt="덧마루" decoding="async"></figure>
+      <figure id="seoyeon-memo" class="block-image"><img alt="메모" decoding="async"></figure>
+      <figure id="seoyeon-pancake" class="block-image"><img alt="팬케이크" decoding="async"></figure>
     </div>
   </main>
 
@@ -50,6 +34,8 @@
       <small>PP · PaTI 한배곳 4학년 &nbsp;|&nbsp; <a href="../index.html">← 대문</a></small>
     </div>
   </footer>
+
+  <script src="../js/main.js?v=0.1"></script>
 </body>
 
 </html>
