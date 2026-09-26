@@ -18,28 +18,28 @@
       <h1 class="person-name">Potato Pancake</h1>
     </div>
 
-    <!-- 3x3 정사각형 컨테이너 9개 (개인 페이지와 동일한 .grid-3.person-grid 레이아웃) -->
-    <div class="grid-3 person-grid">
-      <div class="block">
-        <p>소개</p><br>
-        <p><!-- TODO: 이벤트 소개 --></p>
-      </div>
-      <div class="block">
-        <p>때</p><br>
-        <p>2026.09.21 · 이상집 404셀</p>
+    <!-- 개인 페이지와 동일한 .grid-3.person-grid 레이아웃 (컬럼 기반, 컨테이너 개수 가변) -->
+    <div id="potato-pancake-grid" class="grid-3 person-grid">
+      <div id="potato-pancake-video" class="block video-embed">
+        <iframe src="https://www.youtube.com/embed/5A5zVTG-3-4" title="Potato Pancake" allowfullscreen></iframe>
+        <a class="embed-open" href="https://youtu.be/5A5zVTG-3-4" target="_blank" rel="noopener" title="새 탭에서 열기" aria-label="새 탭에서 열기">⧉</a>
       </div>
       <figure id="potato-pancake-photo" class="block-image">
         <img src="potato-pancake.png" alt="Potato Pancake">
       </figure>
-      <div class="block">
-        <p>링크</p><br>
-        <p>→ <a href="#" target="_blank" rel="noopener">인스타그램</a></p>
-      </div>
-      <div class="block"><p>컨테이너 5</p></div>
-      <div class="block"><p>컨테이너 6</p></div>
-      <div class="block"><p>컨테이너 7</p></div>
-      <div class="block"><p>컨테이너 8</p></div>
-      <div class="block"><p>컨테이너 9</p></div>
+      <!-- 기록 사진·영상 (images/event/potato-pancake/) — 한 칸에 하나씩 -->
+      <figure class="block-image"><img src="potato-pancake/potato1.jpg" alt=""></figure>
+      <figure class="block-image"><img src="potato-pancake/potato2.jpg" alt=""></figure>
+      <figure class="block-image"><img src="potato-pancake/potato3.jpg" alt=""></figure>
+      <figure class="block-image"><img src="potato-pancake/potato4.jpg" alt=""></figure>
+      <figure class="block-image"><img src="potato-pancake/potato5.jpg" alt=""></figure>
+      <figure class="block-image"><img src="potato-pancake/potato6.jpg" alt=""></figure>
+      <figure class="block-image"><img src="potato-pancake/potato7.jpg" alt=""></figure>
+      <figure class="block-image"><img src="potato-pancake/potato8.jpg" alt=""></figure>
+      <figure class="block-image"><img src="potato-pancake/potato9.jpg" alt=""></figure>
+      <figure class="block-image">
+        <video src="potato-pancake/potato-video1.mp4" muted autoplay loop playsinline></video>
+      </figure>
     </div>
   </main>
 
@@ -48,6 +48,8 @@
       <small>PP · PaTI 한배곳 4학년 &nbsp;|&nbsp; <a href="../../index.html">← 대문</a></small>
     </div>
   </footer>
+
+  <script src="../../js/main.js?v=0.1"></script>
 </body>
 
 </html>

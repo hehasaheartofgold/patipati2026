@@ -165,6 +165,21 @@ function setupRandomMedia(figureId, basePath, items) {
   });
 }
 
+// grid 안에서 keepFirstEl(예: 영상 임베드)만 맨 앞에 고정하고 나머지 컨테이너는 새로고침마다 랜덤 순서로.
+// appendChild는 이미 있는 노드를 옮기는 것이라 iframe/video 등을 다시 만들지 않음
+function shuffleGridKeepFirst(grid, keepFirstEl) {
+  if (!grid || !keepFirstEl) return;
+  const rest = Array.from(grid.children).filter((el) => el !== keepFirstEl);
+  for (let i = rest.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [rest[i], rest[j]] = [rest[j], rest[i]];
+  }
+  const frag = document.createDocumentFragment();
+  frag.appendChild(keepFirstEl);
+  rest.forEach((el) => frag.appendChild(el));
+  grid.appendChild(frag);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setupRandomPhoto("pp-photo", "images/pp-photos/", PP_PHOTOS, false);
   setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS, false);
@@ -174,6 +189,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setupRandomMedia("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
   setupRandomPhoto("oneuli-watercolor", "../images/personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS);
   setupRandomPhoto("oneuli-yeonham", "../images/personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS);
+  shuffleGridKeepFirst(
+    document.getElementById("potato-pancake-grid"),
+    document.getElementById("potato-pancake-video")
+  );
 
   // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
   const nameEl = document.getElementById("pp-name");
