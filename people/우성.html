@@ -21,30 +21,20 @@
 
     <!-- 3x3 정사각형 컨테이너 9개 (메인과 같은 가로 3분할). 내용은 배우미별로 채움 -->
     <div class="grid-3 person-grid">
-      <div class="block">
-        <p>소개</p><br>
-        <p><!-- TODO: 우성 소개 --></p>
-      </div>
-      <!-- 지난 작업 사진: pp-photo와 동일 구조. 새로고침마다 ../images/personal/우성/ 에서 랜덤 한 장 (목록은 ../js/main.js 의 WOOSUNG_WORK_PHOTOS). 클릭하면 다음 사진 -->
+      <!-- 지난 작업 사진: pp-photo와 동일 구조. 새로고침마다 ../images/personal/우성/아케이드/ 에서 랜덤 한 장 (목록은 ../js/main.js 의 WOOSUNG_WORK_PHOTOS). 클릭하면 다음 사진 -->
       <figure id="woosung-past-work" class="block-image">
         <img alt="우성 지난 작업 사진" decoding="async">
       </figure>
-      <div class="block">
-        <p>사소한 이야기</p><br>
-        <p><!-- TODO: 과정 · 잡담 · 취향 등 --></p>
-      </div>
-      <div class="block">
-        <p>링크</p><br>
-        <p>→ <a href="#" target="_blank" rel="noopener">작업</a></p>
-      </div>
       <div class="block video-embed">
         <iframe src="https://hehasaheartofgold.github.io/" title="박우성의 일상"></iframe>
         <a class="embed-open" href="https://hehasaheartofgold.github.io/" target="_blank" rel="noopener" title="새 탭에서 열기" aria-label="새 탭에서 열기">⧉</a>
       </div>
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
+      <div class="block video-embed">
+        <iframe src="https://www.youtube.com/embed/SBc86jw9IRs" title="우성" allowfullscreen></iframe>
+        <a class="embed-open" href="https://youtu.be/SBc86jw9IRs" target="_blank" rel="noopener" title="새 탭에서 열기" aria-label="새 탭에서 열기">⧉</a>
+      </div>
+      <!-- 시지프스 사진: pp-photo와 동일 구조. 새로고침마다 ../images/personal/우성/시지프스/ 에서 랜덤 한 장 -->
+      <figure id="woosung-sisyphus" class="block-image"><img alt="시지프스" decoding="async"></figure>
     </div>
   </main>
 

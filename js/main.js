@@ -28,9 +28,14 @@ const PATIPATI_PHOTOS = [
   "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg", "patipati-carry-box.jpg",
 ];
 
-// personal/우성/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
+// personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
 const WOOSUNG_WORK_PHOTOS = [
   "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade-side.jpeg", "arcade1.jpeg", "arcade2.jpeg",
+];
+// personal/우성/시지프스/ 안의 사진 파일 목록
+const WOOSUNG_SISYPHUS_PHOTOS = [
+  "sisyphus1.jpg", "sisyphus2.jpg", "sisyphus3.jpg",
+  "sisyphus4.jpg", "sisyphus5.jpg", "sisyphus6.jpg",
 ];
 
 // personal/오늘이/ 안의 폴더별 사진(+영상) 목록. 개인 페이지 이미지는 personal/<이름>/<폴더>/ 에 정리
@@ -197,7 +202,8 @@ function shuffleGridKeepFirst(grid, keepFirstEl) {
 document.addEventListener("DOMContentLoaded", () => {
   setupRandomPhoto("pp-photo", "images/pp-photos/", PP_PHOTOS, false);
   setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS, false);
-  setupRandomPhoto("woosung-past-work", "../images/personal/우성/", WOOSUNG_WORK_PHOTOS);
+  setupRandomPhoto("woosung-past-work", "../images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS);
+  setupRandomPhoto("woosung-sisyphus", "../images/personal/우성/시지프스/", WOOSUNG_SISYPHUS_PHOTOS);
   setupRandomPhoto("oneuli-structural-kite", "../images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
   setupRandomPhoto("oneuli-drawing", "../images/personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
   setupRandomMedia("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
