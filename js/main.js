@@ -135,6 +135,7 @@ function expandPhotos(figureId, basePath, items) {
       el.src = src;
     }
     fig.appendChild(el);
+    fig.dataset.zoom = "1"; // 크게 보기 연결됨 (setupZoomFigures가 중복 연결 안 하게)
     fig.addEventListener("click", () => openLightbox(src, isVideo));
     frag.appendChild(fig);
   });
@@ -175,6 +176,61 @@ function setupPhotoGrid(gridId, sources) {
   });
 }
 
+// 일정 페이지처럼 HTML에 직접 넣은 사진·영상 칸(.person-grid 안 figure)도 누르면 라이트박스로 크게 보기
+function setupZoomFigures() {
+  document.querySelectorAll(".person-grid figure.block-image").forEach((fig) => {
+    if (fig.dataset.zoom) return;
+    const media = fig.querySelector("img, video");
+    if (!media) return;
+    fig.dataset.zoom = "1";
+    fig.addEventListener("click", () => {
+      const isVideo = media.tagName === "VIDEO";
+      openLightbox(media.currentSrc || media.src, isVideo);
+    });
+  });
+}
+
+// 개인·일정 페이지(.person-grid) 사진 비율 스냅 — 서로 ±10% 안쪽인 사진끼리 무리를 지어 무리마다 하나의 비율로 맞춤
+// (가운데 기준 살짝 크롭). 어느 무리에도 안 드는 사진은 원본 비율 유지.
+// 사진이 로드될 때마다 로드된 것들로 기준을 다시 계산 (lazy 로딩이어도 동작)
+function setupRatioSnap(grid, tolerance = 0.1) {
+  const imgs = Array.from(grid.querySelectorAll("figure.block-image > img"));
+  if (imgs.length < 2) return;
+  const maxDiff = Math.log(1 + tolerance);
+  const close = (a, b) => Math.abs(Math.log(a / b)) <= maxDiff;
+
+  function apply() {
+    const loaded = imgs.filter((img) => img.complete && img.naturalWidth);
+    const ratios = loaded.map((img) => img.naturalWidth / img.naturalHeight);
+    const base = new Array(loaded.length).fill(null);
+    // 무리 나누기: 비슷한 비율끼리 가장 많이 모인 무리부터 기준(무리의 중앙값)을 정하고, 남은 사진으로 반복.
+    // 예: 세로 3:4 무리와 가로 4:3 무리가 섞여 있으면 각자 자기 무리 기준으로 맞춤. 2장 미만 무리는 원본 비율
+    let left = ratios.map((_, i) => i);
+    while (left.length >= 2) {
+      let best = [];
+      left.forEach((i) => {
+        const group = left.filter((j) => close(ratios[j], ratios[i]));
+        if (group.length > best.length) best = group;
+      });
+      if (best.length < 2) break;
+      const sorted = best.map((i) => ratios[i]).sort((a, b) => a - b);
+      const b = sorted[Math.floor(sorted.length / 2)];
+      best.forEach((i) => (base[i] = b));
+      left = left.filter((i) => base[i] === null);
+    }
+    loaded.forEach((img, i) => {
+      const fig = img.parentElement;
+      fig.classList.toggle("ratio-snap", base[i] !== null);
+      fig.style.aspectRatio = base[i] !== null ? String(base[i]) : "";
+    });
+  }
+
+  imgs.forEach((img) => {
+    if (!(img.complete && img.naturalWidth)) img.addEventListener("load", apply);
+  });
+  apply();
+}
+
 // grid 안에서 keepFirstEl(예: 영상 임베드)만 맨 앞에 고정하고 나머지 컨테이너는 새로고침마다 랜덤 순서로.
 // appendChild는 이미 있는 노드를 옮기는 것이라 iframe/video 등을 다시 만들지 않음
 function shuffleGridKeepFirst(grid, keepFirstEl) {
@@ -212,6 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("potato-pancake-grid"),
     document.getElementById("potato-pancake-video")
   );
+  // 개인·일정 페이지: 비슷한 비율 사진은 하나의 비율로 맞춤 + 누르면 크게 보기 (expandPhotos로 펼친 뒤에)
+  document.querySelectorAll(".person-grid").forEach((grid) => setupRatioSnap(grid));
+  setupZoomFigures();
 
   // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
   const nameEl = document.getElementById("pp-name");
@@ -259,10 +318,41 @@ function setupSheets() {
   const tabW = () => parseFloat(getComputedStyle(document.body).getPropertyValue("--tab-w")) || 72;
   let active = 0;
 
+  // body.tabs-overlay (패널 버전) — 첫 시트(PP 평면)는 늘 바닥에 깔리고, 나머지 탭은 오른쪽에서 패널로 미끄러져 들어와 덮음.
+  // 탭 버튼은 헤더 오른쪽(.site-nav)으로 옮겨 알약 모양으로. 위치 계산 없이 .active 클래스만으로 CSS가 처리
+  const overlay = document.body.classList.contains("tabs-overlay");
+  if (overlay) {
+    const nav = document.querySelector(".site-nav");
+    sheets.forEach((sheet, i) => {
+      const btn = sheet.querySelector(".sheet-tab");
+      if (i === 0) btn.hidden = true; // 바닥 평면(PP)은 버튼 없음 — 패널을 닫으면 보임
+      nav.appendChild(btn);
+    });
+    // 패널이 열려 있을 때 드러난 평면을 누르면 패널만 닫힘(카드 클릭·드래그로 이어지지 않게 캡처 단계에서 막음)
+    sheets[0].addEventListener("click", (e) => {
+      if (active === 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+      show(0);
+    }, true);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && active !== 0) show(0);
+    });
+  }
+  const tabOf = (sheet) => (overlay ? document.querySelectorAll(".site-nav .sheet-tab")[sheets.indexOf(sheet)] : sheet.querySelector(".sheet-tab"));
+
   // body.tabs-horizontal 이면 가로 띠 — 띠가 각 시트 위쪽 끝. 펼친 탭까지는 위에서부터 띠로 쌓이고(펼친 탭은 그 아래로 내용),
   // 뒤 탭들은 화면 아래에 띠로 모임. 뒤 시트가 앞 시트를 덮도록 z-index는 순서대로.
   // 아니면 세로 띠(왼→오른쪽, 앞 시트가 위)
   function layout() {
+    if (overlay) {
+      sheets.forEach((sheet, i) => {
+        sheet.classList.toggle("active", i === active);
+        tabOf(sheet).setAttribute("aria-expanded", i === active ? "true" : "false");
+      });
+      document.body.classList.toggle("panel-open", active !== 0);
+      return;
+    }
     const t = tabW();
     const horizontal = document.body.classList.contains("tabs-horizontal");
     const headerH = parseFloat(getComputedStyle(document.body).getPropertyValue("--header-h")) || 0;
@@ -292,8 +382,9 @@ function setupSheets() {
   }
 
   sheets.forEach((sheet, i) => {
-    sheet.querySelector(".sheet-tab").addEventListener("click", () => {
+    tabOf(sheet).addEventListener("click", () => {
       if (i !== active) show(i);
+      else if (overlay && i !== 0) show(0); // 패널 버전: 열린 탭 버튼을 다시 누르면 닫힘
     });
   });
 

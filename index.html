@@ -11,10 +11,12 @@
   <link rel="icon" href="images/favicon.png" type="image/x-icon">
 </head>
 
-<body class="tabs-page tabs-horizontal">
+<body class="tabs-page tabs-overlay">
   <!-- 헤더 — 모든 탭 위에 항상 고정. 콜렉티브 이름은 새로고침할 때마다 8/30 전체모임에서 나온 PP 예시 중 하나로 바뀜 (js/main.js PP_NAMES) -->
   <header class="site-header">
     <h1 id="pp-name">PP</h1>
+    <!-- 패널 버전(body.tabs-overlay)에서 각 탭의 .sheet-tab 버튼을 js/main.js setupSheets()가 여기로 옮김 -->
+    <nav class="site-nav" aria-label="탭"></nav>
   </header>
 
   <!-- 탭 레이아웃 (sonayong.com 참고): .sheet 하나 = 탭 하나. 겹쳐 쌓인 종이처럼 오른쪽 끝 세로 띠(.sheet-tab)만
@@ -103,39 +105,34 @@
       <div id="event-list">
         <a class="event" href="images/event/potato-pancake.html">
           <img class="event-thumb" src="images/event/potato-pancake.png" alt="">
-          <div>
-            <p>2026.09.21 · 이상집 404셀</p>
-            <p>Potato Pancake</p>
-          </div>
+          <p class="event-title">Potato Pancake</p>
+          <p class="event-place">이상집 404셀</p>
+          <p class="event-date">2026.09.21</p>
         </a>
-        <!-- TODO: 임시 항목 — 날짜·장소·페이지 생기면 a.event 로 교체 -->
+        <a class="event" href="images/event/공간팀-투어.html">
+          <img class="event-thumb" src="images/event/공간팀-투어/tour1.jpg" alt="">
+          <p class="event-title">공간팀 리서치</p>
+          <p class="event-place">파주 고물상</p>
+          <p class="event-date">2026.09.29</p>
+        </a>
+        <!-- TODO: 임시 항목 — 날짜·장소·페이지 생기면 a.event 로 교체. 한 줄 = 썸네일 / 일정 이름 / 위치 / 날짜 -->
         <div class="event event-pending">
           <div class="event-thumb"></div>
-          <div>
-            <p>날짜 미정</p>
-            <p>공간팀 리서치</p>
-          </div>
+          <p class="event-title">디자인팀 깃발제작</p>
+          <p class="event-place">—</p>
+          <p class="event-date">날짜 미정</p>
         </div>
         <div class="event event-pending">
           <div class="event-thumb"></div>
-          <div>
-            <p>날짜 미정</p>
-            <p>디자인팀 깃발제작</p>
-          </div>
+          <p class="event-title">홍보팀 4학년 책상 연구</p>
+          <p class="event-place">—</p>
+          <p class="event-date">날짜 미정</p>
         </div>
         <div class="event event-pending">
           <div class="event-thumb"></div>
-          <div>
-            <p>날짜 미정</p>
-            <p>홍보팀 4학년 책상 연구</p>
-          </div>
-        </div>
-        <div class="event event-pending">
-          <div class="event-thumb"></div>
-          <div>
-            <p>날짜 미정</p>
-            <p>디자인팀 모보 페스티벌</p>
-          </div>
+          <p class="event-title">디자인팀 모보 페스티벌</p>
+          <p class="event-place">—</p>
+          <p class="event-date">날짜 미정</p>
         </div>
       </div>
       <div id="event-view" class="in-tab-view hidden">
@@ -146,15 +143,7 @@
     <button type="button" class="sheet-tab">일정</button>
   </section>
 
-  <!-- 5. 물음 — Q&A (아직 비움) -->
-  <section class="sheet" id="qa">
-    <div class="sheet-body">
-      <p class="sheet-empty">준비 중</p>
-    </div>
-    <button type="button" class="sheet-tab">물음</button>
-  </section>
-
-  <!-- 6. 오시는 길 — 구글 지도 임베드가 탭을 가득 채움. 장소: 뜨인돌출판(주), 파주출판도시.
+  <!-- 5. 오시는 길 — 구글 지도 임베드가 탭을 가득 채움. 장소: 뜨인돌출판(주), 파주출판도시.
        좌표는 공유 링크(maps.app.goo.gl/pTsmmDY3stB3yCAD8)에서 확인. 오른쪽 위 이름을 누르면 구글 지도로 열림 -->
   <section class="sheet" id="map">
     <div class="sheet-body sheet-map">
