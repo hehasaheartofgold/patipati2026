@@ -65,6 +65,14 @@ const SEOYEON_PANCAKE_PHOTOS = [
   "pancake5.jpg", "pancake6.jpg", "pancake7.jpg", "pancake8.jpg",
 ];
 
+// personal/알샴/ 안의 폴더별 사진 목록
+const ALSHAM_GUL_PHOTOS = ["gul1.jpg"];
+const ALSHAM_VESTIBULAR_PHOTOS = [
+  "vestibular1.jpg", "vestibular2.jpg", "vestibular3.jpg", "vestibular4.jpg",
+  "vestibular5.jpg", "vestibular6.jpg", "vestibular7.jpg",
+];
+const ALSHAM_BIRD_LSO_PHOTOS = ["bird-lso1.jpg", "bird-lso2.jpg", "bird-lso3.jpg"];
+
 // 사진/영상을 같은 탭 안에서 크게 보여주는 라이트박스. 오버레이는 최초 호출 때 한 번만
 // 만들어서 재사용. 배경 클릭·닫기 버튼·Esc로 닫힘
 function openLightbox(src, isVideo) {
@@ -264,6 +272,9 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("seoyeon-deotmaru", "../images/personal/서연/덧마루/", SEOYEON_DEOTMARU_PHOTOS);
   expandPhotos("seoyeon-memo", "../images/personal/서연/메모/", SEOYEON_MEMO_PHOTOS);
   expandPhotos("seoyeon-pancake", "../images/personal/서연/팬케이크/", SEOYEON_PANCAKE_PHOTOS);
+  expandPhotos("alsham-gul", "../images/personal/알샴/굴-붙이기/", ALSHAM_GUL_PHOTOS);
+  expandPhotos("alsham-vestibular", "../images/personal/알샴/전정기관/", ALSHAM_VESTIBULAR_PHOTOS);
+  expandPhotos("alsham-bird-lso", "../images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
     document.getElementById("potato-pancake-video")
@@ -453,6 +464,11 @@ function setupMemberCards() {
       ...withBase("images/personal/서연/덧마루/", SEOYEON_DEOTMARU_PHOTOS),
       ...withBase("images/personal/서연/메모/", SEOYEON_MEMO_PHOTOS),
       ...withBase("images/personal/서연/팬케이크/", SEOYEON_PANCAKE_PHOTOS),
+    ],
+    "people/알샴.html": [
+      ...withBase("images/personal/알샴/굴-붙이기/", ALSHAM_GUL_PHOTOS),
+      ...withBase("images/personal/알샴/전정기관/", ALSHAM_VESTIBULAR_PHOTOS),
+      ...withBase("images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS),
     ],
   };
 
