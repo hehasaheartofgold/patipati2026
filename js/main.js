@@ -107,57 +107,17 @@ function closeLightbox() {
   overlay.querySelector(".lightbox-media").innerHTML = ""; // 재생 중인 영상 정지
 }
 
-// 지정한 figure 안에 "크게 보기" 버튼(iframe embed-open과 같은 스타일)을 만들어 붙임.
-// 이미 있으면 그거 재사용. 클릭하면 라이트박스로 현재 사진/영상을 같은 탭에서 크게 보여줌.
-// 버튼 클릭이 figure의 "다음 사진" 클릭으로 안 번지게 막음
-function ensureOpenButton(fig) {
-  let btn = fig.querySelector(".embed-open");
-  if (btn) return btn;
-  btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "embed-open";
-  btn.title = "크게 보기";
-  btn.setAttribute("aria-label", "크게 보기");
-  btn.textContent = "⧉";
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    openLightbox(btn.dataset.src, btn.dataset.video === "1");
-  });
-  fig.appendChild(btn);
-  return btn;
-}
-
-function setupRandomPhoto(figureId, basePath, photos, showOpenButton = true) {
-  const fig = document.getElementById(figureId);
-  const img = fig && fig.querySelector("img");
-  if (!img || !photos.length) return;
-  let i = Math.floor(Math.random() * photos.length);
-  const openBtn = showOpenButton ? ensureOpenButton(fig) : null;
-  const showPhoto = () => {
-    const src = basePath + photos[i];
-    img.src = src;
-    if (openBtn) openBtn.dataset.src = src;
-  };
-  showPhoto();
-  fig.addEventListener("click", () => {
-    i = (i + 1) % photos.length;
-    showPhoto();
-  });
-}
-
-// setupRandomPhoto와 동일하지만 사진·영상이 섞인 목록용. 확장자로 판단해 <img> 또는
-// <video>(자동재생·무음·반복)를 그때그때 만들어 넣음. 칸을 클릭하면 다음 항목
-function setupRandomMedia(figureId, basePath, items) {
-  const fig = document.getElementById(figureId);
-  if (!fig || !items.length) return;
-  let i = Math.floor(Math.random() * items.length);
-  const openBtn = ensureOpenButton(fig);
-  const showItem = () => {
-    const name = items[i];
+// 개인 페이지 — 사진 폴더 자리표시 figure(id)를 폴더 안 사진·영상 한 장당 한 칸(figure.block-image)씩으로 펼침.
+// 펼친 칸은 자리표시가 있던 위치에 순서대로 들어감. 클릭하면 라이트박스로 크게 보기. 영상은 자동재생·무음·반복
+function expandPhotos(figureId, basePath, items) {
+  const holder = document.getElementById(figureId);
+  if (!holder || !items.length) return;
+  const frag = document.createDocumentFragment();
+  items.forEach((name) => {
     const src = basePath + name;
     const isVideo = /\.(mp4|mov|webm)$/i.test(name);
-    const old = fig.querySelector("img, video");
-    if (old) old.remove();
+    const fig = document.createElement("figure");
+    fig.className = "block-image";
     let el;
     if (isVideo) {
       el = document.createElement("video");
@@ -170,17 +130,48 @@ function setupRandomMedia(figureId, basePath, items) {
     } else {
       el = document.createElement("img");
       el.alt = "";
+      el.loading = "lazy";
       el.decoding = "async";
       el.src = src;
     }
-    fig.insertBefore(el, fig.firstChild);
-    openBtn.dataset.src = src;
-    openBtn.dataset.video = isVideo ? "1" : "0";
-  };
-  showItem();
-  fig.addEventListener("click", () => {
-    i = (i + 1) % items.length;
-    showItem();
+    fig.appendChild(el);
+    fig.addEventListener("click", () => openLightbox(src, isVideo));
+    frag.appendChild(fig);
+  });
+  holder.replaceWith(frag);
+}
+
+// 대문 "PP 사진" 탭 — 폴더별 사진 목록을 전부 섞어서(새로고침마다 랜덤 순서) 정사각형 칸으로 채움.
+// 칸을 누르면 그 사진이 탭을 가득 채움(#photo-full), 다시 누르거나 Esc로 그리드로. sources = [[폴더 경로, 파일 목록], ...]
+function setupPhotoGrid(gridId, sources) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  const full = document.getElementById("photo-full");
+  const fullImg = full.querySelector("img");
+  const closeFull = () => full.classList.add("hidden");
+  full.addEventListener("click", closeFull);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeFull();
+  });
+  const srcs = sources.flatMap(([basePath, photos]) => photos.map((name) => basePath + name));
+  for (let i = srcs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [srcs[i], srcs[j]] = [srcs[j], srcs[i]];
+  }
+  srcs.forEach((src) => {
+    const fig = document.createElement("figure");
+    fig.className = "block-image";
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    fig.appendChild(img);
+    fig.addEventListener("click", () => {
+      fullImg.src = src;
+      full.classList.remove("hidden");
+    });
+    grid.appendChild(fig);
   });
 }
 
@@ -200,18 +191,23 @@ function shuffleGridKeepFirst(grid, keepFirstEl) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupRandomPhoto("pp-photo", "images/pp-photos/", PP_PHOTOS, false);
-  setupRandomPhoto("patipati-photo", "images/patipati/", PATIPATI_PHOTOS, false);
-  setupRandomPhoto("woosung-past-work", "../images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS);
-  setupRandomPhoto("woosung-sisyphus", "../images/personal/우성/시지프스/", WOOSUNG_SISYPHUS_PHOTOS);
-  setupRandomPhoto("oneuli-structural-kite", "../images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
-  setupRandomPhoto("oneuli-drawing", "../images/personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
-  setupRandomMedia("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
-  setupRandomPhoto("oneuli-watercolor", "../images/personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS);
-  setupRandomPhoto("oneuli-yeonham", "../images/personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS);
-  setupRandomPhoto("seoyeon-deotmaru", "../images/personal/서연/덧마루/", SEOYEON_DEOTMARU_PHOTOS);
-  setupRandomPhoto("seoyeon-memo", "../images/personal/서연/메모/", SEOYEON_MEMO_PHOTOS);
-  setupRandomPhoto("seoyeon-pancake", "../images/personal/서연/팬케이크/", SEOYEON_PANCAKE_PHOTOS);
+  // 대문 일정 탭 iframe 안에서 열린 경우 표시 — 이벤트 페이지 자체의 ←·푸터를 CSS로 숨김
+  if (window.self !== window.top) document.body.classList.add("embedded");
+
+  setupPhotoGrid("photo-grid", [
+    ["images/pp-photos/", PP_PHOTOS],
+    ["images/patipati/", PATIPATI_PHOTOS],
+  ]);
+  expandPhotos("woosung-past-work", "../images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS);
+  expandPhotos("woosung-sisyphus", "../images/personal/우성/시지프스/", WOOSUNG_SISYPHUS_PHOTOS);
+  expandPhotos("oneuli-structural-kite", "../images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
+  expandPhotos("oneuli-drawing", "../images/personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
+  expandPhotos("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
+  expandPhotos("oneuli-watercolor", "../images/personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS);
+  expandPhotos("oneuli-yeonham", "../images/personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS);
+  expandPhotos("seoyeon-deotmaru", "../images/personal/서연/덧마루/", SEOYEON_DEOTMARU_PHOTOS);
+  expandPhotos("seoyeon-memo", "../images/personal/서연/메모/", SEOYEON_MEMO_PHOTOS);
+  expandPhotos("seoyeon-pancake", "../images/personal/서연/팬케이크/", SEOYEON_PANCAKE_PHOTOS);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
     document.getElementById("potato-pancake-video")
@@ -226,8 +222,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/(^|\s)(P)/g, "$1<b>$2</b>"); // 한글 ㅍㅍ 버전 되살릴 땐 별도 처리 필요
   }
 
-  // 배우미 — 가로 무한 슬라이드
-  setupPeopleMarquee();
+  // 대문 탭 + 배우미 4분면 카드 + 일정 탭 안 페이지 표시
+  setupSheets();
+  setupMemberCards();
+  setupEventView();
 
   // 이메일 복사 버튼
   const btn = document.getElementById("copy-btn");
@@ -250,113 +248,194 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-function setupPeopleMarquee() {
-  const people = document.querySelector(".people");
-  const vp = people && people.querySelector(".people-viewport");
-  const track = vp && vp.querySelector(".people-track");
-  if (!track) return;
+// 대문 탭 (sonayong.com 식). 시트 i 는 펼쳐진 탭(active)보다 앞이면 왼쪽으로 밀려 오른쪽 끝 띠만 보이고,
+// 뒤면 제자리(i × 띠 폭)에서 앞 시트에 덮여 오른쪽 끝 띠만 보임. 앞 시트가 항상 위에 쌓이도록 z-index 는 역순.
+// 주소 해시(#people 등)로 탭을 기억 — 새로고침·뒤로가기해도 같은 탭
+function setupSheets() {
+  const sheets = Array.from(document.querySelectorAll(".sheet"));
+  if (!sheets.length) return;
+  document.body.style.setProperty("--sheet-count", sheets.length);
 
-  const GAP = 20;         // .people-track 의 gap
-  const AUTO = 0.35;      // px/frame 자동 드리프트 (≈ 21px/s). 낮출수록 천천히
-  const DRAG_THRESHOLD = 6;
+  const tabW = () => parseFloat(getComputedStyle(document.body).getPropertyValue("--tab-w")) || 72;
+  let active = 0;
 
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  // 원본을 한 벌 복제해 뒤에 붙임 → 이음새 없는 무한 루프
-  Array.from(track.children).forEach((node) => {
-    const clone = node.cloneNode(true);
-    clone.setAttribute("aria-hidden", "true");
-    clone.querySelectorAll("a").forEach((a) => (a.tabIndex = -1));
-    track.appendChild(clone);
-  });
-
-  let shift = (track.scrollWidth + GAP) / 2;   // 한 세트 폭 (+이음 gap)
-  window.addEventListener("resize", () => {
-    shift = (track.scrollWidth + GAP) / 2;
-  });
-
-  vp.scrollLeft = 0;
-
-  // 한 세트(shift)만큼 이동하면 복제본이 원본 자리에 옴 → [0, shift) 안으로 되감기
-  const wrap = () => {
-    if (vp.scrollLeft >= shift) vp.scrollLeft -= shift;
-    else if (vp.scrollLeft < 0) vp.scrollLeft += shift;
-  };
-
-  let down = false;      // 포인터 눌림 (클릭 후보)
-  let dragging = false;  // 임계값 넘어 실제 드래그 중
-  let hovering = false;  // 마우스가 스트립 위에 있음
-
-  function frame() {
-    if (!down && !hovering) {   // 누르고 있거나 마우스 호버 중이면 자동 드리프트 정지
-      if (!reduce) vp.scrollLeft += AUTO;
-      wrap();
-    }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-
-  // 마우스 호버 시 정지 (mouseenter/leave 는 마우스에서만 발생 → 터치엔 영향 없음)
-  vp.addEventListener("mouseenter", () => (hovering = true));
-  vp.addEventListener("mouseleave", () => (hovering = false));
-
-  // 드래그로 슬라이드. 포인터 캡처는 "실제로 드래그가 시작된 뒤"에만 잡는다
-  // (mousedown 마다 캡처하면 click 이 카드가 아니라 뷰포트로 잡혀서 카드 클릭이 씹힘)
-  let startX = 0;
-  let startScroll = 0;
-  let moved = 0;
-
-  vp.addEventListener("pointerdown", (e) => {
-    if (e.button && e.button !== 0) return;
-    down = true;
-    dragging = false;
-    moved = 0;
-    startX = e.clientX;
-    startScroll = vp.scrollLeft;
-  });
-  vp.addEventListener("pointermove", (e) => {
-    if (!down) return;
-    const dx = e.clientX - startX;
-    moved = Math.max(moved, Math.abs(dx));
-    if (!dragging && moved > DRAG_THRESHOLD && e.pointerType === "mouse") {
-      dragging = true;
-      vp.setPointerCapture(e.pointerId);
-      vp.classList.add("dragging");
-    }
-    if (dragging) {
-      vp.scrollLeft = startScroll - dx;
-      wrap();
-      e.preventDefault();
-    }
-  });
-  const endDrag = (e) => {
-    if (!down) return;
-    down = false;
-    if (dragging) {
-      vp.classList.remove("dragging");
-      try { vp.releasePointerCapture(e.pointerId); } catch (_) {}
-    }
-  };
-  vp.addEventListener("pointerup", endDrag);
-  vp.addEventListener("pointercancel", endDrag);
-
-  // 드래그였다면 뒤이어 오는 click 을 캡처 단계에서 무효화
-  vp.addEventListener(
-    "click",
-    (e) => {
-      if (moved > DRAG_THRESHOLD) {
-        e.preventDefault();
-        e.stopPropagation();
-        moved = 0;
+  // body.tabs-horizontal 이면 가로 띠 — 띠가 각 시트 위쪽 끝. 펼친 탭까지는 위에서부터 띠로 쌓이고(펼친 탭은 그 아래로 내용),
+  // 뒤 탭들은 화면 아래에 띠로 모임. 뒤 시트가 앞 시트를 덮도록 z-index는 순서대로.
+  // 아니면 세로 띠(왼→오른쪽, 앞 시트가 위)
+  function layout() {
+    const t = tabW();
+    const horizontal = document.body.classList.contains("tabs-horizontal");
+    const headerH = parseFloat(getComputedStyle(document.body).getPropertyValue("--header-h")) || 0;
+    const span = horizontal ? window.innerHeight - headerH : window.innerWidth;
+    const sheetLen = span - (sheets.length - 1) * t;
+    sheets.forEach((sheet, i) => {
+      if (horizontal) {
+        const pos = i <= active ? i * t : span - (sheets.length - i) * t;
+        sheet.style.top = headerH + pos + "px";
+        sheet.style.zIndex = i + 1;
+      } else {
+        sheet.style.left = (i < active ? (i + 1) * t - sheetLen : i * t) + "px";
+        sheet.style.zIndex = sheets.length - i;
       }
-    },
-    true
-  );
+      sheet.classList.toggle("active", i === active);
+      sheet.querySelector(".sheet-tab").setAttribute("aria-expanded", i === active ? "true" : "false");
+    });
+  }
 
-  // 카드 클릭 → 해당 배우미 페이지 (인스타 등 내부 링크는 그대로 동작)
-  vp.addEventListener("click", (e) => {
-    if (e.target.closest("a")) return;
-    const card = e.target.closest(".block[data-href]");
-    if (card) window.location.href = card.dataset.href;
+  function show(i, updateHash = true) {
+    active = i;
+    layout();
+    // file:// 로 열면 브라우저에 따라 replaceState가 보안 오류를 냄 — 주소 기록만 포기하고 탭 전환은 그대로
+    if (updateHash) {
+      try { history.replaceState(null, "", "#" + sheets[i].id); } catch (_) {}
+    }
+  }
+
+  sheets.forEach((sheet, i) => {
+    sheet.querySelector(".sheet-tab").addEventListener("click", () => {
+      if (i !== active) show(i);
+    });
+  });
+
+  const fromHash = () => {
+    const i = sheets.findIndex((s) => "#" + s.id === location.hash);
+    return i >= 0 ? i : 0;
+  };
+  // 첫 배치는 애니메이션 없이
+  sheets.forEach((s) => (s.style.transition = "none"));
+  show(fromHash(), false);
+  requestAnimationFrame(() => sheets.forEach((s) => (s.style.transition = "")));
+
+  window.addEventListener("resize", layout);
+  window.addEventListener("hashchange", () => show(fromHash(), false));
+}
+
+// 탭 안 페이지 표시 공용 — view(.in-tab-view) 안 iframe에 href를 띄우고, ←로 닫음. 닫을 때 onClose 호출.
+// 반환값 open(href)로 띄움
+function setupInTabView(view, onClose) {
+  const frame = view.querySelector("iframe");
+  view.querySelector(".in-tab-back").addEventListener("click", () => {
+    view.classList.add("hidden");
+    frame.src = "about:blank"; // 재생 중인 영상 정지
+    if (onClose) onClose();
+  });
+  return (href) => {
+    frame.src = href;
+    view.classList.remove("hidden");
+  };
+}
+
+// 일정 탭 — 항목(a.event)을 누르면 페이지 이동 대신 탭 안에 그 페이지를 띄움(목록은 숨김). ←로 목록 복귀.
+// cmd/ctrl/shift 클릭(새 탭 등)은 브라우저 기본 동작 그대로
+function setupEventView() {
+  const list = document.getElementById("event-list");
+  const view = document.getElementById("event-view");
+  if (!list || !view) return;
+  const open = setupInTabView(view, () => list.classList.remove("hidden"));
+  list.addEventListener("click", (e) => {
+    const link = e.target.closest("a.event[href]");
+    if (!link || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    list.classList.add("hidden");
+    open(link.getAttribute("href"));
+  });
+}
+
+// 배우미 4분면 카드 클릭 → 탭 안에 해당 배우미 페이지
+// + 개인 페이지에 사진이 있는 배우미는 카드에 마우스를 올리면 그 사진 중 랜덤 한 장이 탭 배경(.quad-photo)에 옅게 깔림.
+// 목록은 개인 페이지가 쓰는 폴더별 목록을 그대로 재사용(영상 제외) — 개인 페이지에 사진을 추가하면 여기도 추가할 것
+function setupMemberCards() {
+  const withBase = (base, names) => names.filter((n) => !/\.(mp4|mov|webm)$/i.test(n)).map((n) => base + n);
+  const MEMBER_PREVIEWS = {
+    "people/우성.html": [
+      ...withBase("images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS),
+      ...withBase("images/personal/우성/시지프스/", WOOSUNG_SISYPHUS_PHOTOS),
+    ],
+    "people/오늘이.html": [
+      ...withBase("images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS),
+      ...withBase("images/personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS),
+      ...withBase("images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA),
+      ...withBase("images/personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS),
+      ...withBase("images/personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS),
+    ],
+    "people/서연.html": [
+      ...withBase("images/personal/서연/덧마루/", SEOYEON_DEOTMARU_PHOTOS),
+      ...withBase("images/personal/서연/메모/", SEOYEON_MEMO_PHOTOS),
+      ...withBase("images/personal/서연/팬케이크/", SEOYEON_PANCAKE_PHOTOS),
+    ],
+  };
+
+  const bgPhoto = document.querySelector(".quad-photo");
+  // 카드를 누르면 페이지 이동 대신 배우미 탭 안(#member-view)에 그 배우미 페이지를 띄움. ←로 4분면 복귀
+  const view = document.getElementById("member-view");
+  const openInTab = view ? setupInTabView(view) : null;
+  const rand = (min, max) => min + Math.random() * (max - min);
+  document.querySelectorAll(".member[data-href]").forEach((card) => {
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return;
+      if (card.dataset.dragged === "1") { card.dataset.dragged = ""; return; } // 드래그였으면 열지 않음
+      if (!openInTab || e.metaKey || e.ctrlKey || e.shiftKey) {
+        window.location.href = card.dataset.href;
+        return;
+      }
+      if (bgPhoto) bgPhoto.classList.remove("show");
+      openInTab(card.dataset.href);
+    });
+
+    // 끌면 살짝 딸려오고(멀리 끌수록 덜 따라오는 고무줄), 놓으면 원래 자리로 튕기듯 복귀 — style.css .member / .member.dragging
+    let startX = 0, startY = 0, pressing = false;
+    card.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      pressing = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      card.dataset.dragged = "";
+    });
+    card.addEventListener("pointermove", (e) => {
+      if (!pressing) return;
+      const dx = e.clientX - startX, dy = e.clientY - startY;
+      const d = Math.hypot(dx, dy);
+      if (!card.classList.contains("dragging")) {
+        if (d < 5) return; // 5px 미만은 클릭으로 봄
+        card.classList.add("dragging");
+        card.setPointerCapture(e.pointerId);
+      }
+      const k = 0.3 / (1 + d / 300); // 멀리 끌수록 따라오는 비율이 줄어듦
+      card.style.setProperty("--dx", (dx * k).toFixed(1) + "px");
+      card.style.setProperty("--dy", (dy * k).toFixed(1) + "px");
+    });
+    const release = (e) => {
+      if (!pressing) return;
+      pressing = false;
+      if (!card.classList.contains("dragging")) return;
+      card.dataset.dragged = "1"; // 바로 뒤따르는 click 한 번만 무시 — 클릭이 안 생기는 경우(카드 밖에서 놓음) 대비해 곧 해제
+      setTimeout(() => { card.dataset.dragged = ""; }, 50);
+      card.classList.remove("dragging");
+      try { card.releasePointerCapture(e.pointerId); } catch (_) {}
+      card.style.setProperty("--dx", "0px"); // transition(튕김)으로 제자리 복귀
+      card.style.setProperty("--dy", "0px");
+    };
+    card.addEventListener("pointerup", release);
+    card.addEventListener("pointercancel", release);
+    // 포인터가 카드 밖에서 놓이거나 캡처가 풀린 경우에도 확실히 복귀
+    card.addEventListener("lostpointercapture", release);
+    window.addEventListener("pointerup", release);
+
+    // 둥실 모션 — 카드마다 방향·거리(4~9px)·속도(4~7초)·시작 시점을 달리해서 서로 엇갈리게 떠다님 (style.css member-float)
+    const angle = rand(0, Math.PI * 2);
+    const dist = rand(4, 9);
+    card.style.setProperty("--fx", (Math.cos(angle) * dist).toFixed(1) + "px");
+    card.style.setProperty("--fy", (Math.sin(angle) * dist).toFixed(1) + "px");
+    const dur = rand(4, 7);
+    card.style.setProperty("--float-dur", dur.toFixed(2) + "s");
+    card.style.setProperty("--float-delay", (-rand(0, dur)).toFixed(2) + "s");
+
+    const photos = MEMBER_PREVIEWS[card.dataset.href];
+    if (!photos || !photos.length || !bgPhoto) return;
+    card.addEventListener("mouseenter", () => {
+      bgPhoto.src = photos[Math.floor(Math.random() * photos.length)];
+      bgPhoto.classList.add("show");
+    });
+    card.addEventListener("mouseleave", () => bgPhoto.classList.remove("show"));
   });
 }

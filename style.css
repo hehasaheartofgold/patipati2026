@@ -3,12 +3,23 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* 본문 폰트: MinGothic (fonts/MinGothic-Regular.otf). Regular 한 굵기뿐이라 볼드는 브라우저가 흉내냄.
+   글자가 없는 경우 대비로 Pretendard(CDN)를 뒤에 둠 */
+@font-face {
+  font-family: "MinGothic";
+  src: url("fonts/MinGothic-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --accent: #7B68EE;        /* 포인트 그린 */
+  --accent: #ADFF2F;        /* 포인트 그린 */
   --bg-color: #F5F5F5	;      /* 배경 (오프화이트) */
   --hover: #ffd900;         /* 블록 hover 노랑 */
   --line: #000;
   --maxwidth: 1600px;
+  --radius: 10px;           /* 컨테이너 모서리 곡률 (extrapractice.space 식). 테두리는 전부 1px dashed */
 }
 
 body {
@@ -20,7 +31,7 @@ body {
   overflow-x: clip;   /* 가로 스크롤 방지 (배우미 슬라이드가 넘쳐도) */
   color: #000;
   background-color: var(--bg-color);
-  font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  font-family: "MinGothic", "Pretendard Variable", Pretendard, system-ui, sans-serif;
   font-size: 18px;
   letter-spacing: 0.01em;
   font-weight: 400;
@@ -73,8 +84,8 @@ main {
 /* Blocks */
 .block {
   padding: 10px;
-  border: 1px solid var(--line);
-  border-radius: 0;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
   overflow: auto;
 }
 .block:hover { background-color: var(--hover); }
@@ -90,8 +101,8 @@ main {
   gap: 12px;
   padding: 10px;
   margin: 10px 0;
-  border: 1px solid var(--accent);
-  border-radius: 0;
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius);
   text-decoration: none;
   cursor: pointer;
 }
@@ -101,15 +112,15 @@ main {
   height: 48px;
   flex-shrink: 0;
   object-fit: cover;
-  border: 1px solid var(--line);
+  border: 1px dashed var(--line);
 }
 
 /* Images */
 figure.block-image {
   position: relative;
   margin: 0;
-  border: 1px solid var(--line);
-  border-radius: 0;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
   overflow: hidden;
   min-height: 240px;
 }
@@ -120,7 +131,6 @@ figure.block-image video {
   aspect-ratio: 1 / 1;
   object-fit: cover;
 }
-#pp-photo, #patipati-photo { cursor: pointer; }   /* 클릭하면 다음 사진 */
 
 /* 사진 스트립 (기록 등 여러 장 나열용) */
 .photo-strip {
@@ -142,41 +152,11 @@ figure.block-image video {
   margin-bottom: 4px;
 }
 
-/* 배우미 — 가로 일렬 무한 슬라이드 (자동 드리프트 + 드래그/터치/휠, JS). 카드는 people/<이름>.html 링크 */
-.people-viewport {
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;          /* Firefox: 스크롤바 숨김 (기능은 유지) */
-  -ms-overflow-style: none;
-  cursor: grab;
-}
-.people-viewport::-webkit-scrollbar { display: none; }
-.people-viewport.dragging { cursor: grabbing; }
-.people-track {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 20px;
-  width: max-content;
-}
-.people .block {
-  flex: 0 0 180px;   /* 각 카드 폭 고정 */
-  cursor: pointer;   /* 카드 클릭 → people/<이름>.html (JS) */
-}
-.people .social {
-  display: block;
-  width: 100%;
-  margin-top: 4px;
-  font-size: 13px;   /* 배우미 카드의 인스타 링크만 작게 (본문 18px) */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /* 오시는 길 지도 */
 .map {
   position: relative;
-  border: 1px solid var(--line);
-  border-radius: 0;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
   overflow: hidden;
   min-height: 240px;
 }
@@ -211,7 +191,7 @@ figure.block-image video {
   line-height: 1;
   color: #000;
   background-color: #fff;
-  border: 1px solid #000;
+  border: 1px dashed #000;
   border-radius: 0;
   text-decoration: none;
   cursor: pointer;
@@ -262,7 +242,7 @@ figure.block-image video {
   line-height: 1;
   color: #fff;
   background: none;
-  border: 1px solid #fff;
+  border: 1px dashed #fff;
   cursor: pointer;
   padding: 0;
 }
@@ -288,7 +268,7 @@ figure.block-image video {
   font-family: inherit;
   font-size: 18px;
   background: none;
-  border: 1px solid #000;
+  border: 1px dashed #000;
   border-radius: 0;
   cursor: pointer;
 }
@@ -299,7 +279,7 @@ figure.block-image video {
 footer { margin-top: auto; }
 #footer-inner {
   padding: 20px;
-  border-top: 1px solid var(--line);
+  border-top: 1px dashed var(--line);
   background-color: var(--accent);
   color: #fff;
   text-align: center;
@@ -314,7 +294,6 @@ small { font-size: 14px; letter-spacing: 0.01em; }
     grid-auto-rows: auto;
   }
   .block { min-height: 120px; }
-  .people .block { min-height: 0; }
   figure.block-image, .map { min-height: 250px; }
   .block:hover, .event:hover { background-color: initial; color: inherit; }
   .photo-strip { grid-template-columns: 1fr 1fr; }
@@ -355,6 +334,34 @@ small { font-size: 14px; letter-spacing: 0.01em; }
   aspect-ratio: 1 / 1;
 }
 
+/* 개인 페이지(people/*.html, .people-grid) — PP 사진 탭처럼 정사각형 4열 그리드.
+   사진은 js/main.js expandPhotos()가 한 장당 한 칸씩 펼침. 텍스트·임베드 칸도 같은 크기 정사각형.
+   (일정 페이지는 .people-grid 가 없어 위 컬럼 레이아웃 그대로) */
+.person-grid.people-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  column-count: auto;
+}
+.person-grid.people-grid .block,
+.person-grid.people-grid figure.block-image {
+  margin-bottom: 0;
+  aspect-ratio: 1 / 1;
+  min-height: 0;
+}
+.person-grid.people-grid figure.block-image { cursor: zoom-in; }
+.person-grid.people-grid figure.block-image img,
+.person-grid.people-grid figure.block-image video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+@media only screen and (max-width: 800px) {
+  .person-grid.people-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}
+
 /* 사진 칸(figure.block-image)만 예외 — 가로는 칸 폭 그대로, 세로는 이미지 원본 비율대로.
    리사이징은 사진에만 적용(아이프레임은 위 .person-grid .block 규칙으로 정사각형 유지) */
 .person-grid figure.block-image {
@@ -365,4 +372,374 @@ small { font-size: 14px; letter-spacing: 0.01em; }
   display: block;        /* 인라인 이미지/영상 기본 여백(＝칸이 콘텐츠보다 살짝 커 보이던 원인) 제거 */
   height: auto;           /* 정사각형 강제(aspect-ratio:1/1) 대신 원본 비율 그대로 */
   aspect-ratio: auto;
+}
+
+/* =====================================================================
+   대문 탭 레이아웃 (index.html, body.tabs-page) — sonayong.com 참고
+   .sheet = 탭 하나. 모든 시트가 같은 폭(화면 - 나머지 탭 띠들)으로 겹쳐 쌓이고, 각 시트의 오른쪽 끝
+   세로 띠(.sheet-tab)만 보임. 위치(left)·쌓임(z-index)은 js/main.js setupSheets()가 계산.
+   하위 페이지(people/, images/event/)는 이 규칙과 무관 — 기존 스타일 그대로.
+   ===================================================================== */
+body.tabs-page {
+  --tab-w: 72px;              /* 탭 띠 하나의 폭 */
+  --header-h: 48px;           /* 위 고정 헤더 높이 — 탭(시트)은 그 아래부터 */
+  --header-bg: var(--accent); /* 헤더 색 = 포인트 색(--accent) */
+  --header-fg: #000;
+  --sheet-active: var(--bg-color);
+  /* 탭 띠 색 (왼쪽부터 순서대로). 펼쳐진 탭은 --sheet-active 로 바뀜 */
+  --tab-1: #ffd900;
+  --tab-2: #7B68EE;
+  --tab-3: #ff5a36;
+  --tab-4: #3ddc84;
+  --tab-5: #3fb6ff;
+  --tab-6: #ff8fd0;
+  --tab-7: #b8b8b8;
+  display: block;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* 헤더 — 모든 탭 위에 항상 고정, 제목(랜덤 PP 이름)은 본문과 같은 20px */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  color: var(--header-fg);
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--line);   /* 헤더만 실선 — 점선인 나머지 테두리와 구분 */
+}
+
+.sheet {
+  position: fixed;
+  top: var(--header-h);
+  bottom: 0;
+  left: 0;
+  width: calc(100vw - (var(--sheet-count, 6) - 1) * var(--tab-w));
+  transition: left 0.4s ease, background-color 0.2s ease;
+}
+.sheet:nth-of-type(1) { background-color: var(--tab-1); }
+.sheet:nth-of-type(2) { background-color: var(--tab-2); }
+.sheet:nth-of-type(3) { background-color: var(--tab-3); }
+.sheet:nth-of-type(4) { background-color: var(--tab-4); }
+.sheet:nth-of-type(5) { background-color: var(--tab-5); }
+.sheet:nth-of-type(6) { background-color: var(--tab-6); }
+.sheet:nth-of-type(7) { background-color: var(--tab-7); }
+.sheet.active { background-color: var(--sheet-active); }
+/* 탭 경계 점선 (extrapractice.space 식 1px dashed). 시트 오른쪽 끝 = 띠와 띠 사이 경계.
+   맨 오른쪽 시트는 화면 끝이라 생략 */
+.sheet::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border-right: 1px dashed var(--line);
+  pointer-events: none;
+}
+.sheet:last-of-type::after { display: none; }
+
+/* 시트 본문 — 띠를 뺀 나머지 영역, 펼쳐진 탭만 보이고 세로 스크롤 */
+.sheet-body {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: var(--tab-w);
+  overflow-y: auto;
+  padding: 20px;
+  visibility: hidden;
+}
+.sheet.active .sheet-body { visibility: visible; }
+
+/* 세로 띠 = 탭 이름. 글자를 한 자씩 세워서 위에서 아래로 */
+.sheet-tab {
+  position: absolute;
+  z-index: 3;                    /* 배우미 탭처럼 본문이 띠 밑까지 올 때도 제목이 위에 */
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--tab-w);
+  padding: 14px 4px 14px 0;      /* 오른쪽 4px — 제목을 띠 오른쪽 끝에 바짝 */
+  display: flex;
+  justify-content: flex-start;   /* 세로쓰기라 flex 주축이 세로 → 위쪽 정렬 */
+  align-items: flex-start;       /* 세로쓰기(vertical-rl)는 교차축 시작이 오른쪽 → 오른쪽 정렬 */
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.05em;
+  font-family: inherit;
+  font-size: 18px;
+  color: #000;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.sheet.active .sheet-tab { cursor: default; }
+.sheet:not(.active) .sheet-tab:hover { background-color: rgba(255, 255, 255, 0.35); }
+
+.sheet-empty { color: #888; }
+
+/* ---------------------------------------------------------------------
+   가로 띠 버전 (body.tabs-horizontal) — 위 세로 띠 레이아웃을 90° 돌린 것.
+   탭마다 위쪽 끝에 가로 띠(폴더 탭처럼 제목 아래로 내용이 펼쳐짐). 펼친 탭과 그 앞 탭들은 위에 띠로 쌓이고,
+   뒤 탭들은 화면 아래에 띠로 모임.
+   위치(top)는 js/main.js setupSheets()가 계산. 세로로 되돌리려면 index.html <body>에서 클래스만 빼면 됨
+   --------------------------------------------------------------------- */
+body.tabs-page.tabs-horizontal { --tab-w: 40px; }   /* 가로 띠에선 이 값이 띠 높이 */
+.tabs-horizontal .sheet {
+  left: 0;
+  right: 0;
+  bottom: auto;
+  width: auto;
+  height: calc(100dvh - var(--header-h) - (var(--sheet-count, 6) - 1) * var(--tab-w));
+  transition: top 0.4s ease, background-color 0.2s ease;
+}
+/* 띠 사이 점선 = 각 시트 위쪽 끝. 첫 시트는 헤더 점선과 겹치므로 생략 */
+.tabs-horizontal .sheet::after {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  border-right: 0;
+  border-top: 1px dashed var(--line);
+}
+.tabs-horizontal .sheet:last-of-type::after { display: block; }
+.tabs-horizontal .sheet:first-of-type::after { display: none; }
+.tabs-horizontal .sheet-body { right: 0; top: var(--tab-w); bottom: 0; }
+.tabs-horizontal .sheet-tab {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  width: auto;
+  height: var(--tab-w);
+  padding: 0 20px;
+  writing-mode: horizontal-tb;
+  justify-content: flex-start;
+  align-items: center;
+  letter-spacing: 0.01em;
+}
+.tabs-horizontal #people .sheet-body { top: 0; }   /* 배우미 평면은 띠 밑까지 */
+.tabs-horizontal .photo-full { right: 0; top: var(--tab-w); }
+
+/* --- 소개 탭: sonayong.com 첫 탭처럼 왼쪽 위부터 본문 크기(20px) 그대로. 제목(#pp-name)은 위 헤더에 --- */
+.tabs-page #pp-name {
+  display: block;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.tabs-page #pp-name b {
+  font-size: inherit;
+  font-weight: 700;
+  /* MinGothic은 Regular뿐이라 볼드가 안 살아서, 강조 P만 Pretendard 볼드 */
+  font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+}
+
+.tabs-page #pp-intro { background-color: transparent; }   /* 예전 대문의 노란 하이라이트 해제 */
+.home-intro {
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+/* --- 2. PP 사진: 정사각형 4열 그리드 (PP 사진 + PP 일상). 칸을 누르면 탭을 가득 채움 --- */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.photo-grid figure.block-image {
+  min-height: 0;
+  cursor: zoom-in;
+}
+/* 칸을 누르면 그 사진이 탭(띠 제외 영역)을 가득 채움. 다시 누르면 그리드로 */
+.photo-full {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: var(--tab-w);
+  margin: 0;
+  z-index: 1;
+  cursor: zoom-out;
+  visibility: hidden;
+}
+.sheet.active .photo-full { visibility: visible; }
+.photo-full.hidden { display: none; }
+.photo-full img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.photo-grid figure.block-image img {
+  display: block;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* --- PP 탭(대문): 배우미 4분면 지도 (supergijs.com 참고) --- */
+/* 배우미 탭은 오른쪽 띠까지 탭 공간으로 — 평면을 띠 밑까지 넓혀 탭 전체 기준으로 가운데 정렬
+   (띠 색 = 배경색이라 띠를 빼고 정렬하면 왼쪽으로 치우쳐 보였음). 띠 제목은 그 위에 그대로 */
+#people .sheet-body { padding: 0; right: 0; }
+.quad {
+  --quad-bg: var(--bg-color);   /* 다른 탭 기본 배경과 통일 */
+  --quad-line: var(--line);     /* 배경이 밝아져서 축·라벨은 검정 */
+  --quad-inset: 9%;           /* 카드가 가장자리·라벨에 붙지 않도록 좌표 ±1 을 안쪽으로 */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 640px;
+  overflow: hidden;
+  background-color: var(--quad-bg);
+}
+.quad-hair { position: absolute; }
+/* 축도 사이트 테두리와 같은 1px 점선 */
+.quad-hair-h { left: 4%; right: 4%; top: 50%; height: 0; border-top: 1px dashed var(--quad-line); }
+.quad-hair-v { top: 5%; bottom: 5%; left: 50%; width: 0; border-left: 1px dashed var(--quad-line); }
+.quad-label {
+  position: absolute;
+  color: var(--quad-line);
+  font-weight: 700;
+  font-size: 16px;
+  white-space: nowrap;
+}
+.quad-label-top    { top: 12px; left: 50%; transform: translateX(-50%); }
+.quad-label-bottom { bottom: 12px; left: 50%; transform: translateX(-50%); }
+.quad-label-left   { left: 12px; top: 50%; transform: translateY(-50%); }
+.quad-label-right  { right: 12px; top: 50%; transform: translateY(-50%); }
+
+/* 배우미 카드 — --x/--y(-1~1) 를 평면 안쪽(inset 제외) 좌표로 변환해 카드 중심을 놓음 */
+.member {
+  position: absolute;
+  left: calc(var(--quad-inset) + (var(--x) + 1) / 2 * (100% - 2 * var(--quad-inset)));
+  top: calc(var(--quad-inset) + (1 - var(--y)) / 2 * (100% - 2 * var(--quad-inset)));
+  /* 위치 보정+드래그(translate)·호버 확대(scale)·둥실 모션(transform)을 각각 다른 속성으로 둬서 서로 안 덮어씀.
+     --dx/--dy = 드래그로 딸려온 거리 (js/main.js setupMemberCards) */
+  translate: calc(-50% + var(--dx, 0px)) calc(-50% + var(--dy, 0px));
+  touch-action: none;              /* 터치로도 끌 수 있게 (카드 위에서 시작한 스크롤은 막힘) */
+  user-select: none;
+  /* 이름 글자 수와 상관없이 같은 크기의 원 */
+  width: var(--member-size, 110px);
+  height: var(--member-size, 110px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background-color: var(--bg-color);
+  border: 1px dashed var(--line);
+  border-radius: 50%;
+  text-align: center;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1;
+  /* 놓으면 제자리로 "팅" — 목표를 살짝 지나쳤다 돌아오는 곡선 */
+  transition: scale 0.2s ease, translate 0.5s cubic-bezier(0.34, 1.8, 0.5, 1);
+  /* 둥실 모션 (supergijs.com 참고) — 방향·거리(--fx/--fy)·속도·시작 시점은 카드마다 js/main.js setupMemberCards()가 랜덤으로 */
+  animation: member-float var(--float-dur, 5s) ease-in-out var(--float-delay, 0s) infinite;
+}
+@keyframes member-float {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(var(--fx, 0px), var(--fy, -6px)); }
+}
+.member:hover {
+  background-color: var(--hover);
+  z-index: 2;
+  scale: 1.08;                     /* 호버 시 살짝 커짐 */
+  animation-play-state: paused;    /* 누르기 쉽게 호버 중엔 멈춤 */
+}
+/* 끄는 중: 즉시 따라오고(복귀 transition 끔), 둥실 모션 멈춤, 맨 위로 */
+.member.dragging {
+  transition: scale 0.2s ease;
+  animation-play-state: paused;
+  cursor: grabbing;
+  z-index: 3;
+}
+@media (prefers-reduced-motion: reduce) {
+  .member { animation: none; }
+}
+/* 개인 페이지에 사진이 있는 배우미 — 호버 시 그 사람 사진이 탭 배경 전체에 옅게(30%) 깔림 (js/main.js setupMemberCards) */
+.quad-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.quad-photo.show { opacity: 0.3; }
+
+/* --- 오시는 길: 지도가 탭(띠 제외 영역)을 가득 채움 --- */
+.sheet-map { padding: 0; }
+.sheet-map .map {
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+}
+.sheet-map .map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.sheet-map #address { text-decoration: none; }
+
+/* --- 3. 일정 --- */
+#events .event { max-width: 760px; margin: 0 0 10px; }
+/* 페이지가 아직 없는 임시 항목 — 눌리지 않음 */
+#events .event-pending { cursor: default; }
+#events .event-pending:hover { background-color: transparent; color: inherit; }
+#events .event-pending .event-thumb { background-color: #e4e4e4; }
+/* 일정 항목·배우미 카드를 누르면 탭 안에 그 페이지(iframe) 표시 — ←로 복귀 (js/main.js setupInTabView) */
+.in-tab-view {
+  position: absolute;
+  inset: 0;
+  z-index: 2;                      /* 배우미 탭에선 4분면 카드들 위를 덮음 */
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+}
+/* 배우미 탭 본문은 띠 밑까지 넓혀놨으므로, 페이지 표시는 띠를 뺀 영역만 */
+#member-view { right: var(--tab-w); }
+.tabs-horizontal #member-view { right: 0; top: var(--tab-w); }
+/* 배우미 페이지가 떠 있는 동안 4분면은 숨김 (띠 영역으로 라벨·카드가 비쳐 보이지 않게) */
+#people .sheet-body:has(#member-view:not(.hidden)) .quad { visibility: hidden; }
+.in-tab-view.hidden, #event-list.hidden { display: none; }
+.in-tab-view .back { margin: 20px 20px 0; }
+.in-tab-back {
+  padding: 0;
+  font-family: inherit;
+  font-size: 18px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.in-tab-back:hover { color: #00f; }
+.in-tab-view iframe {
+  flex: 1;
+  width: 100%;
+  border: 0;
+}
+/* 일정·배우미 탭 iframe 안에 들어간 페이지 — 자체 ←·푸터는 숨김(탭 쪽 ← 사용) */
+body.embedded .person-head .back,
+body.embedded footer { display: none; }
+
+/* 모바일: 띠 폭을 줄이고, 4분면은 화면보다 크게(스크롤) */
+@media only screen and (max-width: 800px) {
+  body.tabs-page { --tab-w: 30px; }   /* 탭 6개 → 띠 5개가 화면을 너무 먹지 않게 */
+  .photo-grid { gap: 10px; }
+  .sheet-tab { font-size: 14px; padding: 10px 2px 10px 0; }
+  .sheet-body { padding: 16px; }
+  /* 좁은 화면에선 카드가 겹치므로 평면을 화면보다 크게 두고 가로·세로 스크롤 */
+  #people .sheet-body { overflow: auto; }
+  .quad { min-width: 640px; min-height: 820px; --quad-inset: 10%; }
+  .member { --member-size: 80px; font-size: 16px; }
 }

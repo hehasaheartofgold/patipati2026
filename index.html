@@ -7,81 +7,100 @@
   <meta name="description" content="PP — PaTI 한배곳 4학년 콜렉티브의 온라인 공간.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="style.css?v=0.1">
+  <link rel="stylesheet" href="style.css?v=0.2">
   <link rel="icon" href="images/favicon.png" type="image/x-icon">
 </head>
 
-<body>
-  <main>
-    <header>
-      <!-- 콜렉티브 이름. 새로고침할 때마다 8/30 전체모임에서 나온 PP 예시 중 하나로 바뀜 (js/main.js PP_NAMES) -->
-      <h1 id="pp-name">PP</h1>
-    </header>
+<body class="tabs-page tabs-horizontal">
+  <!-- 헤더 — 모든 탭 위에 항상 고정. 콜렉티브 이름은 새로고침할 때마다 8/30 전체모임에서 나온 PP 예시 중 하나로 바뀜 (js/main.js PP_NAMES) -->
+  <header class="site-header">
+    <h1 id="pp-name">PP</h1>
+  </header>
 
-    <div class="grid-3">
-      <!-- 랜덤 사진: images/pp-photos/ 에서 새로고침마다 한 장 (파일 목록은 js/main.js 의 PP_PHOTOS) -->
-      <figure id="pp-photo" class="block-image">
-        <img alt="PP 사진" decoding="async">
-      </figure>
+  <!-- 탭 레이아웃 (sonayong.com 참고): .sheet 하나 = 탭 하나. 겹쳐 쌓인 종이처럼 오른쪽 끝 세로 띠(.sheet-tab)만
+       보이고, 띠를 누르면 그 탭이 펼쳐짐 — 앞 탭들은 왼쪽으로 밀려 띠만 남고, 뒤 탭들은 오른쪽에 띠로 남음.
+       위치 계산·전환은 js/main.js setupSheets(). id가 곧 주소 해시(#people 등) -->
 
+  <!-- 1. PP(대문) — 배우미 4분면 지도 (supergijs.com 참고). 가운데 십자축 + 네 끝에 주제 라벨, 카드는 주제와 가까운 쪽에 놓임.
+       카드 위치 = style의 --x(왼쪽 -1 ~ 오른쪽 1), --y(아래 -1 ~ 위 1). 주제 정해지면 라벨 글자와 각 카드 --x/--y만 고치면 됨.
+       카드 클릭 시 탭 안에 people/<이름>.html 표시. 인스타는 개인 페이지 이름 옆에 -->
+  <section class="sheet" id="people">
+    <div class="sheet-body">
+      <div class="quad">
+        <!-- 사진 있는 배우미 카드 호버 시 이 배경에 그 사람 사진이 옅게 깔림 (js/main.js setupMemberCards) -->
+        <img class="quad-photo" alt="">
+        <div class="quad-hair quad-hair-h"></div>
+        <div class="quad-hair quad-hair-v"></div>
+        <!-- TODO: 4분면 주제 확정 -->
+        <div class="quad-label quad-label-top">주제 1</div>
+        <div class="quad-label quad-label-right">주제 2</div>
+        <div class="quad-label quad-label-bottom">주제 3</div>
+        <div class="quad-label quad-label-left">주제 4</div>
+
+        <!-- TODO: 주제 확정 후 --x/--y 조정 (지금은 임시로 고르게 흩어둠) -->
+        <div class="member" data-href="people/현.html" style="--x:-0.62; --y:0.72"><p>현</p></div>
+        <div class="member" data-href="people/서연.html" style="--x:-0.22; --y:0.55"><p>서연</p></div>
+        <div class="member" data-href="people/시대.html" style="--x:-0.82; --y:0.3"><p>시대</p></div>
+        <div class="member" data-href="people/승민.html" style="--x:-0.45; --y:0.18"><p>승민</p></div>
+        <div class="member" data-href="people/바치.html" style="--x:0.3; --y:0.75"><p>바치</p></div>
+        <div class="member" data-href="people/도노.html" style="--x:0.72; --y:0.62"><p>도노</p></div>
+        <div class="member" data-href="people/오늘이.html" style="--x:0.52; --y:0.28"><p>오늘이</p></div>
+        <div class="member" data-href="people/서로.html" style="--x:0.18; --y:0.4"><p>서로</p></div>
+        <div class="member" data-href="people/우성.html" style="--x:-0.7; --y:-0.28"><p>우성</p></div>
+        <div class="member" data-href="people/무루골.html" style="--x:-0.3; --y:-0.42"><p>무루골</p></div>
+        <div class="member" data-href="people/알샴.html" style="--x:-0.6; --y:-0.72"><p>알샴</p></div>
+        <div class="member" data-href="people/소요.html" style="--x:-0.22; --y:-0.8"><p>소요</p></div>
+        <div class="member" data-href="people/준현.html" style="--x:0.3; --y:-0.3"><p>준현</p></div>
+        <div class="member" data-href="people/희주.html" style="--x:0.72; --y:-0.42"><p>희주</p></div>
+        <div class="member" data-href="people/휘.html" style="--x:0.4; --y:-0.75"><p>휘</p></div>
+        <div class="member" data-href="people/재이.html" style="--x:0.8; --y:-0.82"><p>재이</p></div>
+        <div class="member" data-href="people/지원.html" style="--x:0.02; --y:-0.12"><p>지원</p></div>
+      </div>
+      <!-- 카드를 누르면 페이지 이동 없이 이 탭 안에 그 배우미 페이지를 띄움 — ←로 4분면 복귀 (js/main.js setupMemberCards) -->
+      <div id="member-view" class="in-tab-view hidden">
+        <p class="back"><button type="button" class="in-tab-back" aria-label="배우미로">←</button></p>
+        <iframe title="배우미"></iframe>
+      </div>
+    </div>
+    <button type="button" class="sheet-tab">PP</button>
+  </section>
+
+  <!-- 2. 소개 -->
+  <section class="sheet" id="about">
+    <div class="sheet-body">
       <!-- PP 소개 -->
-      <div id="pp-intro" class="block">
-        <p>PP</p><br>
-          <p><!-- TODO: 확정 소개문 -->
-            PP는 파주타이포그라피배곳(PaTI) 한배곳 4학년 17명으로 마친보람을 함께 꾸리는 콜렉티브입니다.
-            <br><br>
-            PP라는 이름의 뜻은 하나로 정해두지 않았습니다. Pati, Practice, Possibilities처럼 필요에 따라 다르게 채워집니다.
-            <br><br>
-            워크숍, 공연, 강연, 식사, 전시, 대화 등 그 형태는 아직 정해져 있지 않습니다.
-            <br><br>
-            이곳은 그 과정에서 우리가 무엇을 했고, 누구를 만났고, 무엇을 생각했는지를 모아두는 공간입니다.
-          </p>
-      </div>
-
-      <!-- 파티파티(PatiPati) 사진: pp-photo와 동일 구조. 새로고침마다 images/patipati/ 에서 랜덤 한 장 (목록은 js/main.js 의 PATIPATI_PHOTOS). 클릭하면 다음 사진 -->
-      <figure id="patipati-photo" class="block-image">
-        <img alt="파티파티 사진" decoding="async">
-      </figure>
-    </div>
-
-    <!-- 배우미 — 카드 클릭 시 people/<이름>.html 로. TODO: 명단·링크 확정 (8/30 전체모임 기준 17명) -->
-    <!-- 가로 일렬 무한 슬라이드: 자동 드리프트 + 드래그/터치/휠. JS가 트랙을 복제해 루프 -->
-    <div class="people">
-      <div class="people-viewport">
-      <div class="people-track">
-      <div class="block" data-href="people/현.html"><p>현</p><p class="social"> <a href="https://www.instagram.com/radwhale_/" target="_blank" rel="noopener">@radwhale_</a></p></div>
-      <div class="block" data-href="people/서연.html"><p>서연</p><p class="social"> <a href="https://www.instagram.com/my__snowball/" target="_blank" rel="noopener">@my__snowball</a></p></div>
-      <div class="block" data-href="people/시대.html"><p>시대</p><p class="social"> <a href="https://www.instagram.com/sidaeraera/" target="_blank" rel="noopener">@sidaeraera</a></p></div>
-      <div class="block" data-href="people/승민.html"><p>승민</p><p class="social"> <a href="https://www.instagram.com/seungmin.yii" target="_blank" rel="noopener">@seungmin.yii</a></p></div>
-      <div class="block" data-href="people/바치.html"><p>바치</p><p class="social"> <a href="https://www.instagram.com/bacci.kr" target="_blank" rel="noopener">@bacci.kr</a></p></div>
-      <div class="block" data-href="people/도노.html"><p>도노</p><p class="social"> <a href="https://www.instagram.com/dounooo" target="_blank" rel="noopener">@dounooo</a></p></div>
-      <div class="block" data-href="people/오늘이.html"><p>오늘이</p><p class="social"> <a href="https://www.instagram.com/hwing.ing/" target="_blank" rel="noopener">@hwing.ing</a></p></div>
-      <div class="block" data-href="people/서로.html"><p>서로</p><p class="social"> <a href="https://www.instagram.com/jyngprk" target="_blank" rel="noopener">@jyngprk</a></p></div>
-      <div class="block" data-href="people/우성.html"><p>우성</p><p class="social"> <a href="https://www.instagram.com/9499ppp/" target="_blank" rel="noopener">@9499ppp</a></p></div>
-      <div class="block" data-href="people/무루골.html"><p>무루골</p><p class="social"> <a href="https://www.instagram.com/doitee_ee" target="_blank" rel="noopener">@doitee_ee</a></p></div>
-      <div class="block" data-href="people/알샴.html"><p>알샴</p><p class="social"> <a href="https://www.instagram.com/choihyoeun7377" target="_blank" rel="noopener">@choihyoeun7377</a></p></div>
-      <div class="block" data-href="people/소요.html"><p>소요</p><p class="social"> <a href="https://www.instagram.com/leessoyo" target="_blank" rel="noopener">@leessoyo</a></p></div>
-      <div class="block" data-href="people/준현.html"><p>준현</p><p class="social"> <a href="https://www.instagram.com/nohjunhyun" target="_blank" rel="noopener">@nohjunhyun</a></p></div>
-      <div class="block" data-href="people/희주.html"><p>희주</p><p class="social"> <a href="https://www.instagram.com/heyizc" target="_blank" rel="noopener">@heyizc</a></p></div>
-      <div class="block" data-href="people/휘.html"><p>휘</p><p class="social"> <a href="https://www.instagram.com/03_k.h.s_22" target="_blank" rel="noopener">@03_k.h.s_22</a></p></div>
-      <div class="block" data-href="people/재이.html"><p>재이</p><p class="social"> <a href="https://www.instagram.com/instagram/" target="_blank" rel="noopener">@instagram</a></p></div>
-      <div class="block" data-href="people/지원.html"><p>지원</p><p class="social"> <a href="https://www.instagram.com/zlwon.e" target="_blank" rel="noopener">@zlwon.e</a></p></div>
-      </div>
+      <div id="pp-intro" class="home-intro">
+        <p><!-- TODO: 확정 소개문 -->
+          PP는 파주타이포그라피배곳(PaTI) 한배곳 4학년 17명으로 마친보람을 함께 꾸리는 콜렉티브입니다.
+          <br><br>
+          PP라는 이름의 뜻은 하나로 정해두지 않았습니다. Pati, Practice, Possibilities처럼 필요에 따라 다르게 채워집니다.
+          <br><br>
+          워크숍, 공연, 강연, 식사, 전시, 대화 등 그 형태는 아직 정해져 있지 않습니다.
+          <br><br>
+          이곳은 그 과정에서 우리가 무엇을 했고, 누구를 만났고, 무엇을 생각했는지를 모아두는 공간입니다.
+        </p>
       </div>
     </div>
+    <button type="button" class="sheet-tab">소개</button>
+  </section>
 
-    <div class="grid-3">
-      <!-- Q&A (일단 비움) -->
-      <div class="block"></div>
+  <!-- 3. PP 사진 — PP 사진(images/pp-photos/, PP_PHOTOS) + PP 일상(images/patipati/, PATIPATI_PHOTOS)을 한 탭에.
+       정사각형 4열 그리드, 칸은 js/main.js setupPhotoGrid()가 랜덤 순서로 채움.
+       칸을 누르면 #photo-full 이 그 사진으로 탭을 가득 채움 — 사진을 다시 누르거나 Esc로 그리드로 돌아감 -->
+  <section class="sheet" id="photos">
+    <div class="sheet-body">
+      <div id="photo-grid" class="photo-grid"></div>
+    </div>
+    <figure id="photo-full" class="photo-full hidden"><img alt=""></figure>
+    <button type="button" class="sheet-tab">PP 사진</button>
+  </section>
 
-      <!-- 오시는 길 (일단 비움) -->
-      <div class="block"></div>
-
-      <!-- 파티파티 일정 (extrapractice.space Events 참고). .event 하나 = 이벤트 하나, 클릭하면
-           해당 이벤트 페이지(개인 페이지와 동일 레이아웃)로 이동. 전체 목록은 images/event/index.html.
-           이벤트가 더 생기면 .event 블록을 그만큼 반복 (페이지도 images/event/index.html 목록에 추가) -->
-      <div class="block">
-        <p>일정</p><br>
+  <!-- 4. 일정 (extrapractice.space Events 참고). .event 하나 = 이벤트 하나. 페이지가 있는 항목(a.event)을 누르면
+       페이지 이동 없이 이 탭 안(#event-view iframe)에 그 이벤트 페이지를 띄움 — ←로 목록 복귀 (js/main.js setupEventView).
+       이벤트가 더 생기면 .event 블록을 그만큼 반복. 페이지가 아직 없는 항목은 div.event.event-pending (눌리지 않음) -->
+  <section class="sheet" id="events">
+    <div class="sheet-body">
+      <div id="event-list">
         <a class="event" href="images/event/potato-pancake.html">
           <img class="event-thumb" src="images/event/potato-pancake.png" alt="">
           <div>
@@ -89,17 +108,65 @@
             <p>Potato Pancake</p>
           </div>
         </a>
+        <!-- TODO: 임시 항목 — 날짜·장소·페이지 생기면 a.event 로 교체 -->
+        <div class="event event-pending">
+          <div class="event-thumb"></div>
+          <div>
+            <p>날짜 미정</p>
+            <p>공간팀 리서치</p>
+          </div>
+        </div>
+        <div class="event event-pending">
+          <div class="event-thumb"></div>
+          <div>
+            <p>날짜 미정</p>
+            <p>디자인팀 깃발제작</p>
+          </div>
+        </div>
+        <div class="event event-pending">
+          <div class="event-thumb"></div>
+          <div>
+            <p>날짜 미정</p>
+            <p>홍보팀 4학년 책상 연구</p>
+          </div>
+        </div>
+        <div class="event event-pending">
+          <div class="event-thumb"></div>
+          <div>
+            <p>날짜 미정</p>
+            <p>디자인팀 모보 페스티벌</p>
+          </div>
+        </div>
+      </div>
+      <div id="event-view" class="in-tab-view hidden">
+        <p class="back"><button type="button" class="in-tab-back" aria-label="목록으로">←</button></p>
+        <iframe title="일정"></iframe>
       </div>
     </div>
-  </main>
+    <button type="button" class="sheet-tab">일정</button>
+  </section>
 
-  <footer>
-    <div id="footer-inner">
-      <small>PP · PaTI 한배곳 4학년 &nbsp;|&nbsp; <a href="https://www.instagram.com/pp.can.be___" target="_blank" rel="noopener">@pp.can.be___</a> &nbsp;|&nbsp; hello [at] example.com</small>
+  <!-- 5. 물음 — Q&A (아직 비움) -->
+  <section class="sheet" id="qa">
+    <div class="sheet-body">
+      <p class="sheet-empty">준비 중</p>
     </div>
-  </footer>
+    <button type="button" class="sheet-tab">물음</button>
+  </section>
 
-  <script src="js/main.js?v=0.1"></script>
+  <!-- 6. 오시는 길 — 구글 지도 임베드가 탭을 가득 채움. 장소: 뜨인돌출판(주), 파주출판도시.
+       좌표는 공유 링크(maps.app.goo.gl/pTsmmDY3stB3yCAD8)에서 확인. 오른쪽 위 이름을 누르면 구글 지도로 열림 -->
+  <section class="sheet" id="map">
+    <div class="sheet-body sheet-map">
+      <div class="map">
+        <iframe src="https://maps.google.com/maps?q=37.7094691,126.6843648&amp;z=17&amp;hl=ko&amp;output=embed" title="오시는 길 — 뜨인돌출판" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <a id="address" href="https://maps.app.goo.gl/pTsmmDY3stB3yCAD8" target="_blank" rel="noopener">뜨인돌출판 ↗</a>
+      </div>
+    </div>
+    <button type="button" class="sheet-tab">오시는 길</button>
+  </section>
+
+  <script src="js/main.js?v=0.2"></script>
 </body>
 
 </html>
