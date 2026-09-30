@@ -72,6 +72,8 @@ const ALSHAM_VESTIBULAR_PHOTOS = [
   "vestibular5.jpg", "vestibular6.jpg", "vestibular7.jpg",
 ];
 const ALSHAM_BIRD_LSO_PHOTOS = ["bird-lso1.jpg", "bird-lso2.jpg", "bird-lso3.jpg"];
+// personal/소요/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
+const SOYO_WORK_PHOTOS = ["soyo1.jpg", "soyo2.jpg"];
 
 // 사진/영상을 같은 탭 안에서 크게 보여주는 라이트박스. 오버레이는 최초 호출 때 한 번만
 // 만들어서 재사용. 배경 클릭·닫기 버튼·Esc로 닫힘
@@ -275,6 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("alsham-gul", "../images/personal/알샴/굴-붙이기/", ALSHAM_GUL_PHOTOS);
   expandPhotos("alsham-vestibular", "../images/personal/알샴/전정기관/", ALSHAM_VESTIBULAR_PHOTOS);
   expandPhotos("alsham-bird-lso", "../images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS);
+  expandPhotos("soyo-work", "../images/personal/소요/작업/", SOYO_WORK_PHOTOS);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
     document.getElementById("potato-pancake-video")
@@ -470,9 +473,11 @@ function setupMemberCards() {
       ...withBase("images/personal/알샴/전정기관/", ALSHAM_VESTIBULAR_PHOTOS),
       ...withBase("images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS),
     ],
+    "people/소요.html": withBase("images/personal/소요/작업/", SOYO_WORK_PHOTOS),
   };
 
   const bgPhoto = document.querySelector(".quad-photo");
+  let hoverToken = 0; // 호버 배경 사진 — 마지막으로 호버한 카드만 반영
   // 카드를 누르면 페이지 이동 대신 배우미 탭 안(#member-view)에 그 배우미 페이지를 띄움. ←로 4분면 복귀
   const view = document.getElementById("member-view");
   const openInTab = view ? setupInTabView(view) : null;
@@ -539,10 +544,81 @@ function setupMemberCards() {
 
     const photos = MEMBER_PREVIEWS[card.dataset.href];
     if (!photos || !photos.length || !bgPhoto) return;
+    // 새 사진을 먼저 다 불러온 뒤에 바꿔 끼우고 보여줌 — 바로 src를 바꾸면 로딩 동안 직전 카드 사진이 잠깐 보였음.
+    // 불러오는 사이 다른 카드로 옮기거나 마우스를 떼면(hoverToken 바뀜) 늦게 도착한 사진은 무시
     card.addEventListener("mouseenter", () => {
-      bgPhoto.src = photos[Math.floor(Math.random() * photos.length)];
-      bgPhoto.classList.add("show");
+      const src = photos[Math.floor(Math.random() * photos.length)];
+      const token = ++hoverToken;
+      const pre = new Image();
+      pre.src = src;
+      pre.decode().catch(() => {}).then(() => {
+        if (token !== hoverToken) return;
+        bgPhoto.src = src;
+        bgPhoto.classList.add("show");
+      });
     });
-    card.addEventListener("mouseleave", () => bgPhoto.classList.remove("show"));
+    card.addEventListener("mouseleave", () => {
+      hoverToken++;
+      bgPhoto.classList.remove("show");
+    });
   });
+
+  // 모바일(마우스 호버가 없는 기기) 전용 — 화면을 안 만지고 있으면 사진 있는 배우미를 번갈아 배경에 띄우고,
+  // 그 사람 카드를 호버 색(.spotlight)으로 바꿔 누구 사진인지 보이게. 화면을 만지면 멈췄다가 잠시 뒤 다시 시작.
+  // 패널이 열려 있거나 개인 페이지가 떠 있으면 쉼
+  if (bgPhoto && window.matchMedia("(hover: none)").matches) {
+    const STEP_MS = 3500;   // 한 사람당 보여주는 시간
+    const IDLE_MS = 4000;   // 만진 뒤 다시 시작하기까지
+    const FADE_MS = 250;    // 사진 바꿀 때 잠깐 꺼졌다 켜지는 시간 (style.css .quad-photo transition과 비슷하게)
+    const cards = Array.from(document.querySelectorAll(".member[data-href]"))
+      .filter((c) => (MEMBER_PREVIEWS[c.dataset.href] || []).length);
+    for (let i = cards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    let idx = -1, timer = null, current = null;
+    const setSpotlight = (card) => {
+      if (current) current.classList.remove("spotlight");
+      current = card;
+      if (card) card.classList.add("spotlight");
+    };
+    const clear = () => {
+      hoverToken++;
+      setSpotlight(null);
+      bgPhoto.classList.remove("show");
+    };
+    const busy = () =>
+      document.hidden || document.body.classList.contains("panel-open") || (view && !view.classList.contains("hidden"));
+    const step = () => {
+      if (busy() || !cards.length) {
+        clear();
+      } else {
+        idx = (idx + 1) % cards.length;
+        const card = cards[idx];
+        const photos = MEMBER_PREVIEWS[card.dataset.href];
+        const src = photos[Math.floor(Math.random() * photos.length)];
+        const token = ++hoverToken;
+        const pre = new Image();
+        pre.src = src;
+        pre.decode().catch(() => {}).then(() => {
+          if (token !== hoverToken) return;
+          bgPhoto.classList.remove("show");
+          setTimeout(() => {
+            if (token !== hoverToken) return;
+            bgPhoto.src = src;
+            bgPhoto.classList.add("show");
+            setSpotlight(card);
+          }, FADE_MS);
+        });
+      }
+      timer = setTimeout(step, STEP_MS);
+    };
+    const pause = () => {
+      clearTimeout(timer);
+      clear();
+      timer = setTimeout(step, IDLE_MS);
+    };
+    document.getElementById("people").addEventListener("pointerdown", pause);
+    timer = setTimeout(step, 1500);
+  }
 }

@@ -737,6 +737,8 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
   0%, 100% { transform: translate(0, 0); }
   50%      { transform: translate(var(--fx, 0px), var(--fy, -6px)); }
 }
+/* .spotlight = 모바일 자동 순환 중 배경 사진의 주인 카드 (js/main.js setupMemberCards) */
+.member.spotlight { background-color: var(--hover); z-index: 2; }
 .member:hover {
   background-color: var(--hover);
   z-index: 2;
