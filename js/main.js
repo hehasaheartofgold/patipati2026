@@ -18,6 +18,7 @@ const PP_NAMES = [
 const PP_PHOTOS = [
   "pp-bag.jpg", "pp-cake.jpg", "pp-cake2.jpg", "pp-can.jpg",
   "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg", "pp-letters.jpg",
+  "pp-planet.jpg",
 ];
 
 // images/patipati/ 안의 사진 파일 목록 (파티파티=PatiPati 컨테이너). 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -74,6 +75,13 @@ const ALSHAM_VESTIBULAR_PHOTOS = [
 const ALSHAM_BIRD_LSO_PHOTOS = ["bird-lso1.jpg", "bird-lso2.jpg", "bird-lso3.jpg"];
 // personal/소요/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const SOYO_WORK_PHOTOS = ["soyo1.jpg", "soyo2.jpg"];
+// personal/서로/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
+const SEORO_WORK_PHOTOS = ["seoro1.jpg", "seoro2.jpg", "seoro3.jpg", "seoro4.jpg", "seoro5.jpg"];
+// personal/무루골/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
+const MURUGOL_WORK_PHOTOS = [
+  "murugol1.jpg", "murugol2.jpg", "murugol3.jpg", "murugol4.jpg",
+  "murugol5.jpg", "murugol6.jpg", "murugol7.jpg",
+];
 
 // 사진/영상을 같은 탭 안에서 크게 보여주는 라이트박스. 오버레이는 최초 호출 때 한 번만
 // 만들어서 재사용. 배경 클릭·닫기 버튼·Esc로 닫힘
@@ -153,17 +161,10 @@ function expandPhotos(figureId, basePath, items) {
 }
 
 // 대문 "PP 사진" 탭 — 폴더별 사진 목록을 전부 섞어서(새로고침마다 랜덤 순서) 정사각형 칸으로 채움.
-// 칸을 누르면 그 사진이 탭을 가득 채움(#photo-full), 다시 누르거나 Esc로 그리드로. sources = [[폴더 경로, 파일 목록], ...]
+// 칸을 누르면 개인 페이지처럼 라이트박스로 전체 화면 크게 보기. sources = [[폴더 경로, 파일 목록], ...]
 function setupPhotoGrid(gridId, sources) {
   const grid = document.getElementById(gridId);
   if (!grid) return;
-  const full = document.getElementById("photo-full");
-  const fullImg = full.querySelector("img");
-  const closeFull = () => full.classList.add("hidden");
-  full.addEventListener("click", closeFull);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeFull();
-  });
   const srcs = sources.flatMap(([basePath, photos]) => photos.map((name) => basePath + name));
   for (let i = srcs.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -178,10 +179,7 @@ function setupPhotoGrid(gridId, sources) {
     img.loading = "lazy";
     img.decoding = "async";
     fig.appendChild(img);
-    fig.addEventListener("click", () => {
-      fullImg.src = src;
-      full.classList.remove("hidden");
-    });
+    fig.addEventListener("click", () => openLightbox(src, false));
     grid.appendChild(fig);
   });
 }
@@ -278,6 +276,8 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("alsham-vestibular", "../images/personal/알샴/전정기관/", ALSHAM_VESTIBULAR_PHOTOS);
   expandPhotos("alsham-bird-lso", "../images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS);
   expandPhotos("soyo-work", "../images/personal/소요/작업/", SOYO_WORK_PHOTOS);
+  expandPhotos("seoro-work", "../images/personal/서로/작업/", SEORO_WORK_PHOTOS);
+  expandPhotos("murugol-work", "../images/personal/무루골/작업/", MURUGOL_WORK_PHOTOS);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
     document.getElementById("potato-pancake-video")
@@ -446,6 +446,25 @@ function setupEventView() {
   });
 }
 
+// 셔플 백 — 목록을 섞어 두고 한 장씩 꺼냄. 한 바퀴 다 꺼내기 전엔 같은 항목이 다시 안 나오고,
+// 다시 섞을 때도 직전 항목이 바로 첫 번째로 오지 않게 함. 반환값 draw()를 부를 때마다 다음 항목
+function makeShuffleBag(items) {
+  let bag = [];
+  let last = null;
+  return () => {
+    if (!bag.length) {
+      bag = items.slice();
+      for (let i = bag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bag[i], bag[j]] = [bag[j], bag[i]];
+      }
+      if (bag.length > 1 && bag[bag.length - 1] === last) [bag[0], bag[bag.length - 1]] = [bag[bag.length - 1], bag[0]];
+    }
+    last = bag.pop();
+    return last;
+  };
+}
+
 // 배우미 4분면 카드 클릭 → 탭 안에 해당 배우미 페이지
 // + 개인 페이지에 사진이 있는 배우미는 카드에 마우스를 올리면 그 사진 중 랜덤 한 장이 탭 배경(.quad-photo)에 옅게 깔림.
 // 목록은 개인 페이지가 쓰는 폴더별 목록을 그대로 재사용(영상 제외) — 개인 페이지에 사진을 추가하면 여기도 추가할 것
@@ -474,9 +493,14 @@ function setupMemberCards() {
       ...withBase("images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS),
     ],
     "people/소요.html": withBase("images/personal/소요/작업/", SOYO_WORK_PHOTOS),
+    "people/서로.html": withBase("images/personal/서로/작업/", SEORO_WORK_PHOTOS),
+    "people/무루골.html": withBase("images/personal/무루골/작업/", MURUGOL_WORK_PHOTOS),
   };
 
   const bgPhoto = document.querySelector(".quad-photo");
+  // 배우미마다 사진 셔플 백 — 호버·모바일 자동 순환 둘 다 여기서 꺼냄(같은 사진이 금방 또 나오지 않게)
+  const photoBags = {};
+  const drawPhoto = (href) => (photoBags[href] ||= makeShuffleBag(MEMBER_PREVIEWS[href]))();
   let hoverToken = 0; // 호버 배경 사진 — 마지막으로 호버한 카드만 반영
   // 카드를 누르면 페이지 이동 대신 배우미 탭 안(#member-view)에 그 배우미 페이지를 띄움. ←로 4분면 복귀
   const view = document.getElementById("member-view");
@@ -547,7 +571,7 @@ function setupMemberCards() {
     // 새 사진을 먼저 다 불러온 뒤에 바꿔 끼우고 보여줌 — 바로 src를 바꾸면 로딩 동안 직전 카드 사진이 잠깐 보였음.
     // 불러오는 사이 다른 카드로 옮기거나 마우스를 떼면(hoverToken 바뀜) 늦게 도착한 사진은 무시
     card.addEventListener("mouseenter", () => {
-      const src = photos[Math.floor(Math.random() * photos.length)];
+      const src = drawPhoto(card.dataset.href);
       const token = ++hoverToken;
       const pre = new Image();
       pre.src = src;
@@ -595,8 +619,7 @@ function setupMemberCards() {
       } else {
         idx = (idx + 1) % cards.length;
         const card = cards[idx];
-        const photos = MEMBER_PREVIEWS[card.dataset.href];
-        const src = photos[Math.floor(Math.random() * photos.length)];
+        const src = drawPhoto(card.dataset.href);
         const token = ++hoverToken;
         const pre = new Image();
         pre.src = src;

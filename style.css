@@ -519,7 +519,6 @@ body.tabs-page.tabs-horizontal { --tab-w: 40px; }   /* 가로 띠에선 이 값�
   letter-spacing: 0.01em;
 }
 .tabs-horizontal #people .sheet-body { top: 0; }   /* 배우미 평면은 띠 밑까지 */
-.tabs-horizontal .photo-full { right: 0; top: var(--tab-w); }
 
 /* ---------------------------------------------------------------------
    패널 버전 (body.tabs-overlay) — 띠를 쌓지 않음. 첫 탭(PP 평면)이 헤더 아래 화면 전체에 늘 깔리고,
@@ -604,8 +603,7 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
 .tabs-overlay.panel-open #people .quad::after { background-color: rgba(0, 0, 0, 0.12); }
 .tabs-overlay.panel-open #people { cursor: pointer; }
 .tabs-overlay.panel-open .quad-photo { opacity: 0; }   /* 패널 열린 동안 평면 호버 배경 사진은 안 띄움 */
-.tabs-overlay #member-view,
-.tabs-overlay .photo-full { right: 0; top: 0; }
+.tabs-overlay #member-view { right: 0; top: 0; }
 @media only screen and (max-width: 800px) {
   /* 헤더 두 줄: 윗줄 제목, 아랫줄 탭 칸(폭 균등 분할) */
   body.tabs-page.tabs-overlay { --panel-w: 100vw; --header-h: 84px; }
@@ -646,26 +644,6 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
 .photo-grid figure.block-image {
   min-height: 0;
   cursor: zoom-in;
-}
-/* 칸을 누르면 그 사진이 탭(띠 제외 영역)을 가득 채움. 다시 누르면 그리드로 */
-.photo-full {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: var(--tab-w);
-  margin: 0;
-  z-index: 1;
-  cursor: zoom-out;
-  visibility: hidden;
-}
-.sheet.active .photo-full { visibility: visible; }
-.photo-full.hidden { display: none; }
-.photo-full img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 .photo-grid figure.block-image img {
   display: block;
