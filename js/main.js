@@ -31,7 +31,8 @@ const PATIPATI_PHOTOS = [
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
 const WOOSUNG_WORK_PHOTOS = [
-  "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade-side.jpeg", "arcade1.jpeg", "arcade2.jpeg",
+  "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade-side.jpeg", "arcade1.jpeg",
+  "arcade-encoder.jpeg", "arcade-buttons.jpeg",
 ];
 // personal/우성/시지프스/ 안의 사진 파일 목록
 const WOOSUNG_SISYPHUS_PHOTOS = [
