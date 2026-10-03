@@ -78,6 +78,10 @@ const ALSHAM_BIRD_LSO_PHOTOS = ["bird-lso1.jpg", "bird-lso2.jpg", "bird-lso3.jpg
 const SOYO_WORK_PHOTOS = ["soyo1.jpg", "soyo2.jpg"];
 // personal/서로/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const SEORO_WORK_PHOTOS = ["seoro1.jpg", "seoro2.jpg", "seoro3.jpg", "seoro4.jpg", "seoro5.jpg"];
+// personal/바치/텔레마키아/ — 전시 「텔레마키아」 사진 + 영상
+const BACCI_TELEMACHIA_MEDIA = [
+  "telemachia1.jpg", "telemachia2.jpg", "telemachia3.jpg", "telemachia4.jpg", "telemachia-video1.mp4",
+];
 // personal/무루골/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const MURUGOL_WORK_PHOTOS = [
   "murugol1.jpg", "murugol2.jpg", "murugol3.jpg", "murugol4.jpg",
@@ -279,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("soyo-work", "../images/personal/소요/작업/", SOYO_WORK_PHOTOS);
   expandPhotos("seoro-work", "../images/personal/서로/작업/", SEORO_WORK_PHOTOS);
   expandPhotos("murugol-work", "../images/personal/무루골/작업/", MURUGOL_WORK_PHOTOS);
+  expandPhotos("bacci-telemachia", "../images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
     document.getElementById("potato-pancake-video")
@@ -496,6 +501,7 @@ function setupMemberCards() {
     "people/소요.html": withBase("images/personal/소요/작업/", SOYO_WORK_PHOTOS),
     "people/서로.html": withBase("images/personal/서로/작업/", SEORO_WORK_PHOTOS),
     "people/무루골.html": withBase("images/personal/무루골/작업/", MURUGOL_WORK_PHOTOS),
+    "people/바치.html": withBase("images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA),
   };
 
   const bgPhoto = document.querySelector(".quad-photo");
