@@ -18,7 +18,6 @@ const PP_NAMES = [
 const PP_PHOTOS = [
   "pp-bag.jpg", "pp-cake.jpg", "pp-cake2.jpg", "pp-can.jpg",
   "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg", "pp-letters.jpg",
-  "pp-planet.jpg",
 ];
 
 // images/patipati/ 안의 사진 파일 목록 (파티파티=PatiPati 컨테이너). 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -27,6 +26,7 @@ const PATIPATI_PHOTOS = [
   "patipati-design-meeting1.jpg", "patipati-design-meeting2.jpg", "patipati-design-meeting3.jpg",
   "patipati-murugol-carrier.jpg", "patipati-soyo-site.jpg", "patipati-img6695.jpg", "patipati-meal.jpg",
   "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg", "patipati-carry-box.jpg",
+  "patipati-studio.jpg", "patipati-planet.jpg",
 ];
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -39,6 +39,8 @@ const WOOSUNG_SISYPHUS_PHOTOS = [
   "sisyphus1.jpg", "sisyphus2.jpg", "sisyphus3.jpg",
   "sisyphus4.jpg", "sisyphus5.jpg", "sisyphus6.jpg",
 ];
+// personal/우성/작업/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
+const WOOSUNG_ETC_PHOTOS = ["woosung-work1.jpg", "woosung-work2.jpg"];
 
 // personal/오늘이/ 안의 폴더별 사진(+영상) 목록. 개인 페이지 이미지는 personal/<이름>/<폴더>/ 에 정리
 const ONEULI_STRUCTURAL_KITE_PHOTOS = [
@@ -74,15 +76,25 @@ const ALSHAM_VESTIBULAR_PHOTOS = [
   "vestibular5.jpg", "vestibular6.jpg", "vestibular7.jpg",
 ];
 const ALSHAM_BIRD_LSO_PHOTOS = ["bird-lso1.jpg", "bird-lso2.jpg", "bird-lso3.jpg"];
+const ALSHAM_WORK_PHOTOS = ["alsham-work1.jpg"]; // 주제 폴더 이름 미정 → 임시 "작업"
 // personal/소요/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const SOYO_WORK_PHOTOS = ["soyo1.jpg", "soyo2.jpg"];
 // personal/서로/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
-const SEORO_WORK_PHOTOS = ["seoro1.jpg", "seoro2.jpg", "seoro3.jpg", "seoro4.jpg", "seoro5.jpg"];
+const SEORO_WORK_PHOTOS = ["seoro1.jpg", "seoro2.jpg", "seoro3.jpg", "seoro4.jpg", "seoro5.jpg", "seoro6.jpg", "seoro7.jpg", "seoro8.jpg", "seoro9.jpg", "seoro10.jpg", "seoro11.jpg"];
 // personal/바치/텔레마키아/ — 전시 「텔레마키아」 사진 + 영상
 const BACCI_TELEMACHIA_MEDIA = [
   "telemachia1.jpg", "telemachia2.jpg", "telemachia3.jpg", "telemachia4.jpg", "telemachia-video1.mp4",
 ];
 // personal/무루골/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
+// personal/희주/ 안의 폴더별 사진 목록 (원본은 투명 PNG → 페이지 배경색 #F5F5F5 깔고 JPG)
+const HEEJU_DRAWING_PHOTOS = [
+  "heeju-drawing1.jpg", "heeju-drawing2.jpg", "heeju-drawing3.jpg",
+  "heeju-drawing4.jpg", "heeju-drawing5.jpg", "heeju-drawing6.jpg",
+];
+const HEEJU_MOTION_PHOTOS = [
+  "heeju-motion1.jpg", "heeju-motion2.jpg", "heeju-motion3.jpg", "heeju-motion4.jpg",
+  "heeju-motion5.jpg", "heeju-motion6.jpg", "heeju-motion7.jpg", "heeju-motion8.jpg",
+];
 const MURUGOL_WORK_PHOTOS = [
   "murugol1.jpg", "murugol2.jpg", "murugol3.jpg", "murugol4.jpg",
   "murugol5.jpg", "murugol6.jpg", "murugol7.jpg",
@@ -189,6 +201,24 @@ function setupPhotoGrid(gridId, sources) {
   });
 }
 
+// 소개 탭 왼쪽 아래 PP 그림 한 장 — 탭을 열 때마다(setupSheets의 "sheet:open") 랜덤, 누르면 다음 랜덤 (직전과 안 겹치게)
+function setupAboutPhoto(figId, basePath, photos) {
+  const fig = document.getElementById(figId);
+  const img = fig && fig.querySelector("img");
+  if (!img || !photos.length) return;
+  let current = -1;
+  const next = () => {
+    let i = Math.floor(Math.random() * photos.length);
+    if (photos.length > 1 && i === current) i = (i + 1) % photos.length;
+    current = i;
+    img.src = basePath + photos[i];
+  };
+  next();
+  fig.addEventListener("click", next);
+  const sheet = fig.closest(".sheet");
+  if (sheet) sheet.addEventListener("sheet:open", next);
+}
+
 // 일정 페이지처럼 HTML에 직접 넣은 사진·영상 칸(.person-grid 안 figure)도 누르면 라이트박스로 크게 보기
 function setupZoomFigures() {
   document.querySelectorAll(".person-grid figure.block-image").forEach((fig) => {
@@ -264,11 +294,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (window.self !== window.top) document.body.classList.add("embedded");
 
   setupPhotoGrid("photo-grid", [
-    ["images/pp-photos/", PP_PHOTOS],
     ["images/patipati/", PATIPATI_PHOTOS],
   ]);
+  setupAboutPhoto("about-pp-photo", "images/pp-photos/", PP_PHOTOS);
   expandPhotos("woosung-past-work", "../images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS);
   expandPhotos("woosung-sisyphus", "../images/personal/우성/시지프스/", WOOSUNG_SISYPHUS_PHOTOS);
+  expandPhotos("woosung-etc", "../images/personal/우성/작업/", WOOSUNG_ETC_PHOTOS);
   expandPhotos("oneuli-structural-kite", "../images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
   expandPhotos("oneuli-drawing", "../images/personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
   expandPhotos("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
@@ -280,9 +311,12 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("alsham-gul", "../images/personal/알샴/굴-붙이기/", ALSHAM_GUL_PHOTOS);
   expandPhotos("alsham-vestibular", "../images/personal/알샴/전정기관/", ALSHAM_VESTIBULAR_PHOTOS);
   expandPhotos("alsham-bird-lso", "../images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS);
+  expandPhotos("alsham-work", "../images/personal/알샴/작업/", ALSHAM_WORK_PHOTOS);
   expandPhotos("soyo-work", "../images/personal/소요/작업/", SOYO_WORK_PHOTOS);
   expandPhotos("seoro-work", "../images/personal/서로/작업/", SEORO_WORK_PHOTOS);
   expandPhotos("murugol-work", "../images/personal/무루골/작업/", MURUGOL_WORK_PHOTOS);
+  expandPhotos("heeju-drawing", "../images/personal/희주/드로잉/", HEEJU_DRAWING_PHOTOS);
+  expandPhotos("heeju-motion", "../images/personal/희주/모션/", HEEJU_MOTION_PHOTOS);
   expandPhotos("bacci-telemachia", "../images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
@@ -393,8 +427,10 @@ function setupSheets() {
   }
 
   function show(i, updateHash = true) {
+    const changed = i !== active;
     active = i;
     layout();
+    if (changed) sheets[i].dispatchEvent(new CustomEvent("sheet:open")); // 탭이 새로 열림 (소개 탭 랜덤 그림 등)
     // file:// 로 열면 브라우저에 따라 replaceState가 보안 오류를 냄 — 주소 기록만 포기하고 탭 전환은 그대로
     if (updateHash) {
       try { history.replaceState(null, "", "#" + sheets[i].id); } catch (_) {}
@@ -480,6 +516,7 @@ function setupMemberCards() {
     "people/우성.html": [
       ...withBase("images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS),
       ...withBase("images/personal/우성/시지프스/", WOOSUNG_SISYPHUS_PHOTOS),
+      ...withBase("images/personal/우성/작업/", WOOSUNG_ETC_PHOTOS),
     ],
     "people/오늘이.html": [
       ...withBase("images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS),
@@ -497,10 +534,15 @@ function setupMemberCards() {
       ...withBase("images/personal/알샴/굴-붙이기/", ALSHAM_GUL_PHOTOS),
       ...withBase("images/personal/알샴/전정기관/", ALSHAM_VESTIBULAR_PHOTOS),
       ...withBase("images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS),
+      ...withBase("images/personal/알샴/작업/", ALSHAM_WORK_PHOTOS),
     ],
     "people/소요.html": withBase("images/personal/소요/작업/", SOYO_WORK_PHOTOS),
     "people/서로.html": withBase("images/personal/서로/작업/", SEORO_WORK_PHOTOS),
     "people/무루골.html": withBase("images/personal/무루골/작업/", MURUGOL_WORK_PHOTOS),
+    "people/희주.html": [
+      ...withBase("images/personal/희주/드로잉/", HEEJU_DRAWING_PHOTOS),
+      ...withBase("images/personal/희주/모션/", HEEJU_MOTION_PHOTOS),
+    ],
     "people/바치.html": withBase("images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA),
   };
 

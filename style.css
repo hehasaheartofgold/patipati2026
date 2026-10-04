@@ -634,6 +634,21 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
   font-size: 20px;
   line-height: 1.2;
 }
+/* 소개 탭: 글 아래 남는 공간을 밀어서 PP 그림을 왼쪽 아래에 붙임 (글이 길어도 겹치지 않음) */
+#about .sheet-body { display: flex; flex-direction: column; }
+.about-pp-photo {
+  margin: auto 0 0;
+  padding-top: 20px;
+  align-self: flex-start;
+  cursor: pointer;
+}
+.about-pp-photo img {
+  display: block;
+  max-width: min(360px, 60vw);
+  max-height: 40vh;
+  width: auto;
+  height: auto;
+}
 
 /* --- 2. PP 사진: 정사각형 4열 그리드 (PP 사진 + PP 일상). 칸을 누르면 탭을 가득 채움 --- */
 .photo-grid {
