@@ -17,16 +17,16 @@ const PP_NAMES = [
 // images/pp-photos/ 안의 사진 파일 목록. 사진을 추가/삭제하면 여기도 맞춰줄 것
 const PP_PHOTOS = [
   "pp-bag.jpg", "pp-cake.jpg", "pp-cake2.jpg", "pp-can.jpg",
-  "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg", "pp-letters.jpg",
+  "pp-coffee.jpg", "pp-lot.jpg", "pp-lot2.png", "pp-neon.jpg", "pp-letters.jpg", "pp-origami.jpg",
 ];
 
 // images/patipati/ 안의 사진 파일 목록 (파티파티=PatiPati 컨테이너). 사진을 추가/삭제하면 여기도 맞춰줄 것
 const PATIPATI_PHOTOS = [
   "patipati-space1.jpg", "patipati-space2.jpg", "patipati-space3.jpg", "patipati-space-site.jpg",
   "patipati-design-meeting1.jpg", "patipati-design-meeting2.jpg", "patipati-design-meeting3.jpg",
-  "patipati-murugol-carrier.jpg", "patipati-soyo-site.jpg", "patipati-img6695.jpg", "patipati-meal.jpg",
+  "patipati-murugol-carrier.jpg", "patipati-soyo-site.jpg", "patipati-meal.jpg",
   "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg", "patipati-carry-box.jpg",
-  "patipati-studio.jpg", "patipati-planet.jpg",
+  "patipati-studio.jpg", "patipati-planet.jpg", "patipati-selfie.jpg",
 ];
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -95,6 +95,8 @@ const HEEJU_MOTION_PHOTOS = [
   "heeju-motion1.jpg", "heeju-motion2.jpg", "heeju-motion3.jpg", "heeju-motion4.jpg",
   "heeju-motion5.jpg", "heeju-motion6.jpg", "heeju-motion7.jpg", "heeju-motion8.jpg",
 ];
+// personal/현/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업". 원본 투명 PNG는 #F5F5F5 깔고 JPG)
+const HYUN_WORK_PHOTOS = ["hyun1.jpg", "hyun2.jpg", "hyun3.jpg", "hyun4.jpg", "hyun5.jpg"];
 const MURUGOL_WORK_PHOTOS = [
   "murugol1.jpg", "murugol2.jpg", "murugol3.jpg", "murugol4.jpg",
   "murugol5.jpg", "murugol6.jpg", "murugol7.jpg",
@@ -177,7 +179,8 @@ function expandPhotos(figureId, basePath, items) {
   holder.replaceWith(frag);
 }
 
-// 대문 "PP 사진" 탭 — 폴더별 사진 목록을 전부 섞어서(새로고침마다 랜덤 순서) 정사각형 칸으로 채움.
+// 대문 "PP 사진" 탭 — 폴더별 사진 목록을 전부 섞어서(새로고침마다 랜덤 순서) 칸으로 채움.
+// 칸은 개인 페이지처럼 원본 비율(masonry, setupMasonry는 DOMContentLoaded에서) + setupRatioSnap으로 비슷한 비율끼리 맞춤.
 // 칸을 누르면 개인 페이지처럼 라이트박스로 전체 화면 크게 보기. sources = [[폴더 경로, 파일 목록], ...]
 function setupPhotoGrid(gridId, sources) {
   const grid = document.getElementById(gridId);
@@ -196,9 +199,11 @@ function setupPhotoGrid(gridId, sources) {
     img.loading = "lazy";
     img.decoding = "async";
     fig.appendChild(img);
+    fig.dataset.zoom = "1";
     fig.addEventListener("click", () => openLightbox(src, false));
     grid.appendChild(fig);
   });
+  setupRatioSnap(grid);
 }
 
 // 소개 탭 왼쪽 아래 PP 그림 한 장 — 탭을 열 때마다(setupSheets의 "sheet:open") 랜덤, 누르면 다음 랜덤 (직전과 안 겹치게)
@@ -274,6 +279,48 @@ function setupRatioSnap(grid, tolerance = 0.1) {
   apply();
 }
 
+// 개인·일정 페이지(.person-grid)·PP 사진 탭(.photo-grid) masonry 쌓기 — 그리드 행이 1px 단위라
+// 칸마다 실제 높이 + 세로 간격만큼 행을 차지하게(grid-row-end: span N) 맞춤 (style.css .person-grid 주석 참고).
+// 가로 사진(영상 포함)은 대략 wideChance 확률로 2열 폭(.wide) — 칸마다 한 번만 뽑아서 새로고침 전까지 유지.
+// 사진 로드·비율 스냅·창 크기·탭 열림(숨김 → 보임) 등 크기가 바뀔 때마다 ResizeObserver로 다시 계산
+function setupMasonry(grid, wideChance = 1 / 3) {
+  if (!grid) return;
+  const wish = new WeakMap();
+  let queued = false;
+
+  function layout() {
+    queued = false;
+    const items = Array.from(grid.children);
+    // 1) 넓힐 칸 정하기 (원본 비율을 알아야 해서 로드된 사진·영상만)
+    items.forEach((el) => {
+      if (!wish.has(el)) wish.set(el, Math.random() < wideChance);
+      const media = el.matches("figure.block-image") && el.querySelector("img, video");
+      const w = media ? media.naturalWidth || media.videoWidth : 0;
+      const h = media ? media.naturalHeight || media.videoHeight : 0;
+      el.classList.toggle("wide", !!(w && h && w / h > 1.05 && wish.get(el)));
+    });
+    // 2) 높이 재서 행 차지 (읽기를 한 번에 몰아서 → 그다음 쓰기)
+    const gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+    const spans = items.map((el) => Math.max(1, Math.ceil(el.getBoundingClientRect().height + gap)));
+    items.forEach((el, i) => (el.style.gridRowEnd = "span " + spans[i]));
+  }
+  const schedule = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(layout);
+  };
+
+  const ro = new ResizeObserver(schedule);
+  ro.observe(grid);
+  Array.from(grid.children).forEach((el) => ro.observe(el));
+  // 가로/세로 판정은 로드 후에야 가능 — 로드 직후 높이가 그대로인 경우(스냅 등)도 확실히 다시 계산
+  grid.querySelectorAll("img, video").forEach((m) => {
+    m.addEventListener("load", schedule);
+    m.addEventListener("loadedmetadata", schedule);
+  });
+  layout();
+}
+
 // grid 안에서 keepFirstEl(예: 영상 임베드)만 맨 앞에 고정하고 나머지 컨테이너는 새로고침마다 랜덤 순서로.
 // appendChild는 이미 있는 노드를 옮기는 것이라 iframe/video 등을 다시 만들지 않음
 function shuffleGridKeepFirst(grid, keepFirstEl) {
@@ -317,6 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("murugol-work", "../images/personal/무루골/작업/", MURUGOL_WORK_PHOTOS);
   expandPhotos("heeju-drawing", "../images/personal/희주/드로잉/", HEEJU_DRAWING_PHOTOS);
   expandPhotos("heeju-motion", "../images/personal/희주/모션/", HEEJU_MOTION_PHOTOS);
+  expandPhotos("hyun-work", "../images/personal/현/작업/", HYUN_WORK_PHOTOS);
   expandPhotos("bacci-telemachia", "../images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
@@ -325,6 +373,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // 개인·일정 페이지: 비슷한 비율 사진은 하나의 비율로 맞춤 + 누르면 크게 보기 (expandPhotos로 펼친 뒤에)
   document.querySelectorAll(".person-grid").forEach((grid) => setupRatioSnap(grid));
   setupZoomFigures();
+  // 개인·일정 페이지·PP 사진 탭: masonry 쌓기 + 가로 사진 일부 2열 폭 (순서 섞기·펼치기·스냅 설정이 다 끝난 뒤에)
+  document.querySelectorAll(".person-grid, .photo-grid").forEach((grid) => setupMasonry(grid));
 
   // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
   const nameEl = document.getElementById("pp-name");
@@ -543,6 +593,7 @@ function setupMemberCards() {
       ...withBase("images/personal/희주/드로잉/", HEEJU_DRAWING_PHOTOS),
       ...withBase("images/personal/희주/모션/", HEEJU_MOTION_PHOTOS),
     ],
+    "people/현.html": withBase("images/personal/현/작업/", HYUN_WORK_PHOTOS),
     "people/바치.html": withBase("images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA),
   };
 

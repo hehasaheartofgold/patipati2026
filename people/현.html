@@ -21,27 +21,9 @@
 
     <!-- 3x3 정사각형 컨테이너 9개 (메인과 같은 가로 3분할). 내용은 배우미별로 채움 -->
     <div class="grid-3 person-grid people-grid">
-      <div class="block">
-        <p>소개</p><br>
-        <p><!-- TODO: 현 소개 --></p>
-      </div>
-      <div class="block">
-        <p>지난 작업</p><br>
-        <p><!-- TODO: 작업 목록 · 이미지 · 링크 --></p>
-      </div>
-      <div class="block">
-        <p>사소한 이야기</p><br>
-        <p><!-- TODO: 과정 · 잡담 · 취향 등 --></p>
-      </div>
-      <div class="block">
-        <p>링크</p><br>
-        <p>→ <a href="#" target="_blank" rel="noopener">작업</a></p>
-      </div>
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
+      <!-- 사진(personal/현/<폴더>/) 자리표시 — js/main.js expandPhotos()가 폴더 안 사진 한 장당 한 칸씩으로 펼침.
+           주제 폴더 이름이 없어서 임시로 "작업" -->
+      <figure id="hyun-work" class="block-image"><img alt="현 작업" decoding="async"></figure>
     </div>
   </main>
 
