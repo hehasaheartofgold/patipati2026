@@ -696,6 +696,11 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
   font-size: 16px;
   white-space: nowrap;
 }
+/* 라벨 앞글자 p 강조 — 헤더 PP와 같은 방식(MinGothic은 볼드가 없어 Pretendard 볼드) */
+.quad-label b {
+  font-weight: 700;
+  font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+}
 .quad-label-top    { top: 12px; left: 50%; transform: translateX(-50%); }
 .quad-label-bottom { bottom: 12px; left: 50%; transform: translateX(-50%); }
 .quad-label-left   { left: 12px; top: 50%; transform: translateY(-50%); }

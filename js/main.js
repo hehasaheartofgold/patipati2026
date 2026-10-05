@@ -2,16 +2,11 @@
 
 // 8/30 전체모임에서 나온 PP 약자 예시 (새로고침마다 헤더에 하나씩)
 const PP_NAMES = [
-  // 디자인팀 — 뜻 버전
-  "Paju Practice", "Practice Project", "Practice People", "Prism Pool", "Post PaTI Practice",
-  "Project Pool", "Parallel People", "Playing People", "Personal Project", "Public Program",
-  "Possible Product", "Problem People", "Pixel & Paper", "Print & Publish", "Prototype Process",
-  // 디자인팀 — 유머/위트 버전
-  "Ping Pong", "Pasta Practice", "Panic Point", "Pajama Place", "Practice Place",
-  "Practice Playground", "Poundcake Party", "Purple Pigeon", "Paper Plane", "Potato People",
-  "Potato Pancake", "Pink Potato", "Perfect Pizza", "Pocket Picnic", "Portable Party",
-  "Potluck Party", "Pepper Party", "Poster Party", "Pencil Practice", "Pickle Punch",
-  "Public Pantry", "Printing Poster", "Paper People",
+  "Paju Practice", "Practice Project", "Personal Project", "Post Production", 
+  "Pixel & Paper", "Print & Publish", "Prototype Process", "Ping Pong", 
+  "Panic Point", "Pajama Party", "Purple Pigeon", "Potato Pancake", "Pink Pigeon", 
+  "Pineapple Pizza", "Printing Poster", "Profile Picture", "Piano Player", "Pay Phone",
+  "Party Popper", "Pet Peeve", "Perfect Pitch", "Pumpkin Pie", "Pablo Picasso", "Peter Pan" 
 ];
 
 // images/pp-photos/ 안의 사진 파일 목록. 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -27,6 +22,7 @@ const PATIPATI_PHOTOS = [
   "patipati-murugol-carrier.jpg", "patipati-soyo-site.jpg", "patipati-meal.jpg",
   "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg", "patipati-carry-box.jpg",
   "patipati-studio.jpg", "patipati-planet.jpg", "patipati-selfie.jpg",
+  "patipati-sunlight.jpg", "patipati-sunglasses.jpg",
 ];
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
