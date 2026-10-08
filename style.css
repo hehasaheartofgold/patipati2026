@@ -687,7 +687,7 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
 }
 .quad-hair { position: absolute; }
 /* 축도 사이트 테두리와 같은 1px 점선 */
-.quad-hair-h { left: 4%; right: 4%; top: 50%; height: 0; border-top: 1px dashed var(--quad-line); }
+.quad-hair-h { left: max(4%, 88px); right: max(4%, 88px); top: 50%; height: 0; border-top: 1px dashed var(--quad-line); }   /* 좌우 라벨(premise·process) 폭만큼은 항상 비움 */
 .quad-hair-v { top: 5%; bottom: 5%; left: 50%; width: 0; border-left: 1px dashed var(--quad-line); }
 .quad-label {
   position: absolute;
@@ -701,6 +701,14 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
   font-weight: 700;
   font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
 }
+/* 라벨에 마우스를 올리면 영문 키워드 → 한글 뜻 */
+.quad-label .quad-ko { display: none; }
+.quad-label:hover .quad-en { display: none; }
+.quad-label:hover .quad-ko { display: inline; }
+/* 왼쪽·오른쪽 한글 뜻은 길어서 가로 점선과 겹침 → 그 라벨에 마우스가 있는 동안만 점선을 그쪽에서 라벨 길이만큼 짧게 */
+.quad-hair-h { transition: left 0.15s, right 0.15s; }
+.quad:has(.quad-label-left:hover) .quad-hair-h  { left: 170px; }
+.quad:has(.quad-label-right:hover) .quad-hair-h { right: 170px; }
 .quad-label-top    { top: 12px; left: 50%; transform: translateX(-50%); }
 .quad-label-bottom { bottom: 12px; left: 50%; transform: translateX(-50%); }
 .quad-label-left   { left: 12px; top: 50%; transform: translateY(-50%); }
@@ -859,6 +867,8 @@ body.embedded footer { display: none; }
   .quad { min-height: 0; --quad-inset: 10%; }
   .quad-label { font-size: 12px; }
   /* 좁은 화면에선 4%가 너무 짧아 가로축이 좌우 라벨(주제 4·2)과 겹침 → 라벨 폭만큼 비워둠 (주제 이름이 길어지면 이 값도 늘릴 것) */
-  .quad-hair-h { left: 60px; right: 60px; }
+  .quad-hair-h { left: 70px; right: 70px; }
+  .quad:has(.quad-label-left:hover) .quad-hair-h  { left: 125px; }
+  .quad:has(.quad-label-right:hover) .quad-hair-h { right: 125px; }
   .member { --member-size: 56px; font-size: 13px; padding: 4px; }
 }

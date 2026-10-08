@@ -93,6 +93,12 @@ const HEEJU_MOTION_PHOTOS = [
 ];
 // personal/현/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업". 원본 투명 PNG는 #F5F5F5 깔고 JPG)
 const HYUN_WORK_PHOTOS = ["hyun1.jpg", "hyun2.jpg", "hyun3.jpg", "hyun4.jpg", "hyun5.jpg"];
+// personal/도노/ 안의 폴더별 목록 (관계도·PDF 페이지는 글씨가 읽히게 긴 변 2400, PDF는 쪽마다 JPG)
+const DONO_GRAPHIC_MEDIA = ["dono-graphic1.jpg", "dono-graphic-video1.mp4"];
+const DONO_RESEARCH_PHOTOS = [
+  "dono-research1.jpg", "dono-research2.jpg", "dono-research3.jpg", "dono-research4.jpg",
+  "dono-research-pdf1.jpg", "dono-research-pdf2.jpg", "dono-research-pdf3.jpg",
+];
 const MURUGOL_WORK_PHOTOS = [
   "murugol1.jpg", "murugol2.jpg", "murugol3.jpg", "murugol4.jpg",
   "murugol5.jpg", "murugol6.jpg", "murugol7.jpg",
@@ -361,6 +367,8 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("heeju-drawing", "../images/personal/희주/드로잉/", HEEJU_DRAWING_PHOTOS);
   expandPhotos("heeju-motion", "../images/personal/희주/모션/", HEEJU_MOTION_PHOTOS);
   expandPhotos("hyun-work", "../images/personal/현/작업/", HYUN_WORK_PHOTOS);
+  expandPhotos("dono-graphic", "../images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA);
+  expandPhotos("dono-research", "../images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS);
   expandPhotos("bacci-telemachia", "../images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
@@ -590,6 +598,10 @@ function setupMemberCards() {
       ...withBase("images/personal/희주/모션/", HEEJU_MOTION_PHOTOS),
     ],
     "people/현.html": withBase("images/personal/현/작업/", HYUN_WORK_PHOTOS),
+    "people/도노.html": [
+      ...withBase("images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA),
+      ...withBase("images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS),
+    ],
     "people/바치.html": withBase("images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA),
   };
 
