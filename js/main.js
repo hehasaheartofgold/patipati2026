@@ -99,6 +99,9 @@ const DONO_RESEARCH_PHOTOS = [
   "dono-research1.jpg", "dono-research2.jpg", "dono-research3.jpg", "dono-research4.jpg",
   "dono-research-pdf1.jpg", "dono-research-pdf2.jpg", "dono-research-pdf3.jpg",
 ];
+const DONO_ALPS_PHOTOS = [
+  "dono-alps1.jpg", "dono-alps2.jpg", "dono-alps3.jpg", "dono-alps4.jpg", "dono-alps5.jpg", "dono-alps6.jpg",
+];
 const MURUGOL_WORK_PHOTOS = [
   "murugol1.jpg", "murugol2.jpg", "murugol3.jpg", "murugol4.jpg",
   "murugol5.jpg", "murugol6.jpg", "murugol7.jpg",
@@ -288,23 +291,48 @@ function setupRatioSnap(grid, tolerance = 0.1) {
 function setupMasonry(grid, wideChance = 1 / 3) {
   if (!grid) return;
   const wish = new WeakMap();
+  const blocked = new WeakMap(); // 칸 → 넓히면 빈자리가 생겼던 열 개수들 (그 열 개수에선 다시 안 넓힘)
   let queued = false;
 
   function layout() {
     queued = false;
     const items = Array.from(grid.children);
+    const cols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
     // 1) 넓힐 칸 정하기 (원본 비율을 알아야 해서 로드된 사진·영상만)
     items.forEach((el) => {
       if (!wish.has(el)) wish.set(el, Math.random() < wideChance);
       const media = el.matches("figure.block-image") && el.querySelector("img, video");
       const w = media ? media.naturalWidth || media.videoWidth : 0;
       const h = media ? media.naturalHeight || media.videoHeight : 0;
-      el.classList.toggle("wide", !!(w && h && w / h > 1.05 && wish.get(el)));
+      const ok = !(blocked.get(el) && blocked.get(el).has(cols));
+      el.classList.toggle("wide", !!(w && h && w / h > 1.05 && wish.get(el) && ok));
     });
     // 2) 높이 재서 행 차지 (읽기를 한 번에 몰아서 → 그다음 쓰기)
     const gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
     const spans = items.map((el) => Math.max(1, Math.ceil(el.getBoundingClientRect().height + gap)));
     items.forEach((el, i) => (el.style.gridRowEnd = "span " + spans[i]));
+    // 3) 넓은 칸은 두 열 중 긴 쪽 아래에 놓이므로, 짧은 열 쪽에 빈자리가 생김 (모바일 2열에서 특히 눈에 띔).
+    //    빈자리가 생긴 넓은 칸은 (위에서부터 하나씩) 이 열 개수에선 넓히지 않고 다시 계산
+    const gridTop = grid.getBoundingClientRect().top;
+    const rects = items.map((el) => el.getBoundingClientRect());
+    const holeAbove = (left, right, top) => {
+      let bottom = gridTop - gap; // 위에 아무것도 없으면 그리드 맨 위가 기준
+      rects.forEach((r) => {
+        if (r.left < right - 1 && r.right > left + 1 && r.bottom <= top + 1) bottom = Math.max(bottom, r.bottom);
+      });
+      return top - (bottom + gap);
+    };
+    const bad = items.find((el, i) => {
+      if (!el.classList.contains("wide")) return false;
+      const r = rects[i];
+      const half = (r.width - gap) / 2;
+      return Math.max(holeAbove(r.left, r.left + half, r.top), holeAbove(r.right - half, r.right, r.top)) > 4;
+    });
+    if (bad) {
+      if (!blocked.has(bad)) blocked.set(bad, new Set());
+      blocked.get(bad).add(cols);
+      schedule();
+    }
   }
   const schedule = () => {
     if (queued) return;
@@ -369,6 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("hyun-work", "../images/personal/현/작업/", HYUN_WORK_PHOTOS);
   expandPhotos("dono-graphic", "../images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA);
   expandPhotos("dono-research", "../images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS);
+  expandPhotos("dono-alps", "../images/personal/도노/북알프스/", DONO_ALPS_PHOTOS);
   expandPhotos("bacci-telemachia", "../images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA);
   shuffleGridKeepFirst(
     document.getElementById("potato-pancake-grid"),
@@ -601,6 +630,7 @@ function setupMemberCards() {
     "people/도노.html": [
       ...withBase("images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA),
       ...withBase("images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS),
+      ...withBase("images/personal/도노/북알프스/", DONO_ALPS_PHOTOS),
     ],
     "people/바치.html": withBase("images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA),
   };

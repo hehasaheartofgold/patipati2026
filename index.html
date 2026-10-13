@@ -7,7 +7,7 @@
   <meta name="description" content="PP — PaTI 한배곳 4학년 콜렉티브의 온라인 공간.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="style.css?v=0.8">
+  <link rel="stylesheet" href="style.css?v=0.9">
   <link rel="icon" href="images/favicon.png" type="image/x-icon">
 </head>
 
@@ -64,7 +64,7 @@
         <iframe title="배우미"></iframe>
       </div>
     </div>
-    <button type="button" class="sheet-tab">PP</button>
+    <button type="button" class="sheet-tab">People</button>
   </section>
 
   <!-- 2. 소개 -->
@@ -85,7 +85,7 @@
       <!-- PP 그림(images/pp-photos/, PP_PHOTOS) 한 장 — 탭 열 때마다 랜덤, 누르면 다음 그림 (js/main.js setupAboutPhoto) -->
       <figure id="about-pp-photo" class="about-pp-photo"><img alt="PP" decoding="async"></figure>
     </div>
-    <button type="button" class="sheet-tab">소개</button>
+    <button type="button" class="sheet-tab">PP</button>
   </section>
 
   <!-- 3. PP 사진 — PP 일상(images/patipati/, PATIPATI_PHOTOS). PP 그림(pp-photos)은 소개 탭 왼쪽 아래로 옮김.
@@ -95,7 +95,7 @@
     <div class="sheet-body">
       <div id="photo-grid" class="photo-grid"></div>
     </div>
-    <button type="button" class="sheet-tab">PP 사진</button>
+    <button type="button" class="sheet-tab">Photos</button>
   </section>
 
   <!-- 4. 일정 (extrapractice.space Events 참고). .event 하나 = 이벤트 하나. 페이지가 있는 항목(a.event)을 누르면
@@ -116,24 +116,18 @@
           <p class="event-place">파주 고물상</p>
           <p class="event-date">2026.09.29</p>
         </a>
-        <!-- TODO: 임시 항목 — 날짜·장소·페이지 생기면 a.event 로 교체. 한 줄 = 썸네일 / 일정 이름 / 위치 / 날짜 -->
-        <div class="event event-pending">
-          <div class="event-thumb"></div>
+        <a class="event" href="images/event/디자인팀-깃발.html">
+          <img class="event-thumb" src="images/event/디자인팀-깃발/flag1.jpg" alt="">
           <p class="event-title">디자인팀 깃발제작</p>
-          <p class="event-place">—</p>
-          <p class="event-date">날짜 미정</p>
-        </div>
+          <p class="event-place">이상집 303셀</p>
+          <p class="event-date">2026.10.08 – 10.09</p>
+        </a>
+        <!-- TODO: 임시 항목 — 페이지(사진) 생기면 a.event 로 교체. 한 줄 = 썸네일 / 일정 이름 / 위치 / 날짜 -->
         <div class="event event-pending">
           <div class="event-thumb"></div>
-          <p class="event-title">홍보팀 4학년 책상 연구</p>
-          <p class="event-place">—</p>
-          <p class="event-date">날짜 미정</p>
-        </div>
-        <div class="event event-pending">
-          <div class="event-thumb"></div>
-          <p class="event-title">디자인팀 모보 페스티벌</p>
-          <p class="event-place">—</p>
-          <p class="event-date">날짜 미정</p>
+          <p class="event-title">PP 모보페스티벌 잠입</p>
+          <p class="event-place">아시아출판문화정보센터</p>
+          <p class="event-date">2026.10.10</p>
         </div>
       </div>
       <div id="event-view" class="in-tab-view hidden">
@@ -141,22 +135,22 @@
         <iframe title="일정"></iframe>
       </div>
     </div>
-    <button type="button" class="sheet-tab">일정</button>
+    <button type="button" class="sheet-tab">Program</button>
   </section>
 
   <!-- 5. 오시는 길 — 구글 지도 임베드가 탭을 가득 채움. 장소: 뜨인돌출판(주), 파주출판도시.
-       좌표는 공유 링크(maps.app.goo.gl/pTsmmDY3stB3yCAD8)에서 확인. 오른쪽 위 이름을 누르면 구글 지도로 열림 -->
+       좌표는 공유 링크(maps.app.goo.gl/JxBnwWJn75FYknSJA)의 장소 좌표 (2026-10-13 수정 — 이전 좌표는 약 1km 남서쪽으로 어긋나 있었음). 오른쪽 위 이름을 누르면 구글 지도로 열림 -->
   <section class="sheet" id="map">
     <div class="sheet-body sheet-map">
       <div class="map">
-        <iframe src="https://maps.google.com/maps?q=37.7094691,126.6843648&amp;z=17&amp;hl=ko&amp;output=embed" title="오시는 길 — 뜨인돌출판" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <a id="address" href="https://maps.app.goo.gl/pTsmmDY3stB3yCAD8" target="_blank" rel="noopener">뜨인돌출판 ↗</a>
+        <iframe src="https://maps.google.com/maps?q=37.7160375,126.6916719&amp;z=17&amp;hl=ko&amp;output=embed" title="오시는 길 — 뜨인돌출판" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <a id="address" href="https://maps.app.goo.gl/JxBnwWJn75FYknSJA" target="_blank" rel="noopener">뜨인돌출판 ↗</a>
       </div>
     </div>
-    <button type="button" class="sheet-tab">오시는 길</button>
+    <button type="button" class="sheet-tab">Path</button>
   </section>
 
-  <script src="js/main.js?v=0.8"></script>
+  <script src="js/main.js?v=0.9"></script>
 </body>
 
 </html>
