@@ -23,20 +23,25 @@ const PATIPATI_PHOTOS = [
   "patipati-meeting.jpeg", "patipati-woosung-hyundae.jpeg", "patipati-pr-zoom.jpg", "patipati-carry-box.jpg",
   "patipati-studio.jpg", "patipati-planet.jpg", "patipati-selfie.jpg",
   "patipati-sunlight.jpg", "patipati-sunglasses.jpg",
+  "patipati-silkscreen.jpg", "patipati-knitting.jpg", "patipati-board.jpg", "patipati-gathering.jpg",
+  "patipati-postit1.jpg", "patipati-postit2.jpg", "patipati-postit3.jpg",
+  "patipati-night1.jpg", "patipati-night2.jpg", "patipati-night3.jpg",
 ];
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
 const WOOSUNG_WORK_PHOTOS = [
-  "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade-side.jpeg", "arcade1.jpeg",
+  "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade1.jpeg",
   "arcade-encoder.jpeg", "arcade-buttons.jpeg",
 ];
 // personal/우성/시지프스/ 안의 사진 파일 목록
 const WOOSUNG_SISYPHUS_PHOTOS = [
   "sisyphus1.jpg", "sisyphus2.jpg", "sisyphus3.jpg",
-  "sisyphus4.jpg", "sisyphus5.jpg", "sisyphus6.jpg",
+  "sisyphus4.jpg",
 ];
 // personal/우성/작업/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const WOOSUNG_ETC_PHOTOS = ["woosung-work1.jpg", "woosung-work2.jpg"];
+const WOOSUNG_OHHYUK_PHOTOS = ["ohhyuk1.jpg", "ohhyuk2.jpg", "ohhyuk3.jpg", "ohhyuk4.jpg"];
+const WOOSUNG_MOBO_MEDIA = ["mobo1.jpg", "mobo-video1.mp4", "mobo-video2.mp4"];
 
 // personal/오늘이/ 안의 폴더별 사진(+영상) 목록. 개인 페이지 이미지는 personal/<이름>/<폴더>/ 에 정리
 const ONEULI_STRUCTURAL_KITE_PHOTOS = [
@@ -377,6 +382,8 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("woosung-past-work", "../images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS);
   expandPhotos("woosung-sisyphus", "../images/personal/우성/시지프스/", WOOSUNG_SISYPHUS_PHOTOS);
   expandPhotos("woosung-etc", "../images/personal/우성/작업/", WOOSUNG_ETC_PHOTOS);
+  expandPhotos("woosung-ohhyuk", "../images/personal/우성/OHHYUK/", WOOSUNG_OHHYUK_PHOTOS);
+  expandPhotos("woosung-mobo", "../images/personal/우성/모보페스티벌/", WOOSUNG_MOBO_MEDIA);
   expandPhotos("oneuli-structural-kite", "../images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS);
   expandPhotos("oneuli-drawing", "../images/personal/오늘이/드로잉/", ONEULI_DRAWING_PHOTOS);
   expandPhotos("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
@@ -600,6 +607,8 @@ function setupMemberCards() {
       ...withBase("images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS),
       ...withBase("images/personal/우성/시지프스/", WOOSUNG_SISYPHUS_PHOTOS),
       ...withBase("images/personal/우성/작업/", WOOSUNG_ETC_PHOTOS),
+      ...withBase("images/personal/우성/OHHYUK/", WOOSUNG_OHHYUK_PHOTOS),
+      ...withBase("images/personal/우성/모보페스티벌/", WOOSUNG_MOBO_MEDIA),
     ],
     "people/오늘이.html": [
       ...withBase("images/personal/오늘이/구조적-연/", ONEULI_STRUCTURAL_KITE_PHOTOS),
