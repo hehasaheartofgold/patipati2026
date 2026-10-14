@@ -65,6 +65,53 @@ h1, h2 {
 
 p { margin: 0; }
 
+/* 첫 화면 인트로 (index.html #loader, js/main.js setupLoader) — 화면 전체를 덮고 가운데에 PP 이름.
+   .lp = 앞 글자 P (굵고 크게), .lr = 나머지 글자 칸 (폭 0 → 글자 폭으로 벌어짐), .lr-in = 나머지 글자 (기준선 아래 → 위로) */
+.intro-seen #loader { display: none; }   /* 같은 탭에서 이미 봤으면 (index.html <head> 스크립트가 붙임) */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  background-color: var(--bg-color);
+  transition: opacity 0.56s ease;
+}
+#loader.done { opacity: 0; pointer-events: none; }
+#loader .loader-name {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: clamp(16px, 3.2vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+#loader .loader-name.show { opacity: 1; }
+#loader .lg { display: inline-flex; align-items: baseline; }
+#loader .lp { font-weight: 700; font-size: 1.6em; line-height: 1; }
+#loader .lr {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  /* 옆은 칸 폭에서 자르고, 아래는 글자 칸 맨 밑(p·j·y 꼬리까지 들어가는 선)에서 자름 — 기준선에서 자르면 글자 아래가 잘려 보였음 */
+  clip-path: inset(-1em 0 -0.08em 0);
+  transition: width 0.56s cubic-bezier(0.65, 0, 0.35, 1), clip-path 0.44s ease-in;
+}
+/* 사라질 때: 글자는 그대로 두고 위쪽 자르는 선을 맨 아래까지 내려서 위→아래로 지움 */
+#loader .lr.wipe { clip-path: inset(100% 0 -0.08em 0); }
+#loader .lr-in {
+  display: inline-block;
+  white-space: pre;
+  transform: translateY(calc(var(--drop, 1.2em) + 0.1em));
+  transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#loader .lr-in.up { transform: translateY(0); }
+
 a, a::after { color: inherit; }
 a:hover { color: var(--link-hover); }
 
@@ -791,6 +838,31 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
   height: 100%;
   border: 0;
 }
+/* 오시는 길 지도 (index.html #path-map, js/main.js setupPathMap) — MapLibre. 구글 지도에 맞춘 색·핀·버튼 */
+#path-map { position: absolute; inset: 0; z-index: 0; background-color: #f8f9fa; }
+/* 구글식 핀 + 이름: 빨간 물방울 핀, 이름은 진한 글씨 + 흰 테두리 */
+#path-map .path-pin { position: relative; width: 27px; height: 38px; cursor: default; }
+#path-map .path-pin svg { display: block; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.35)); }
+#path-map .path-pin span {
+  position: absolute;
+  left: 30px;
+  top: 6px;
+  white-space: nowrap;
+  font: 600 15px/1.2 "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  color: #3c3c3c;
+  text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 3px #fff;
+}
+/* 구글식 확대/축소 버튼: 오른쪽 아래, 흰 사각 + 그림자, 사이에 얇은 선 */
+#path-map .maplibregl-ctrl-group {
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px -1px;
+}
+#path-map .maplibregl-ctrl-group button { width: 40px; height: 40px; }
+#path-map .maplibregl-ctrl-group button + button { border-top: 1px solid #e6e6e6; }
+#path-map .maplibregl-ctrl-bottom-right .maplibregl-ctrl { margin: 0 10px 10px 0; }
+#path-map .maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon,
+#path-map .maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon { opacity: 0.7; }
+#path-map .maplibregl-ctrl-attrib { font-size: 10px; }
 .sheet-map #address { text-decoration: none; }
 
 /* --- 3. 일정 --- */

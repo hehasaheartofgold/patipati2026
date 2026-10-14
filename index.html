@@ -7,11 +7,18 @@
   <meta name="description" content="PP — PaTI 한배곳 4학년 콜렉티브의 온라인 공간.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="style.css?v=0.11">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css?v=0.13">
   <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  <!-- 첫 화면 인트로는 탭마다 첫 입장에서만 — 이미 봤으면 그리기 전에 숨김 (js/main.js setupLoader) -->
+  <script>try { if (sessionStorage.getItem("pp-intro-seen")) document.documentElement.classList.add("intro-seen"); } catch (e) {}</script>
 </head>
 
 <body class="tabs-page tabs-overlay">
+  <!-- 첫 화면 인트로 — PP가 벌어지며 이름이 올라왔다 거꾸로 모여 사라짐. 그동안 사진을 미리 받음 (js/main.js setupLoader) -->
+  <!-- 2026-10-14 잠깐 꺼둠 — 다시 켜려면 아래 줄의 주석만 풀면 됨 (#loader가 없으면 js/main.js setupLoader가 아무것도 안 함)
+  <div id="loader" aria-hidden="true"><p class="loader-name"></p></div>
+  -->
   <!-- 헤더 — 모든 탭 위에 항상 고정. 콜렉티브 이름은 새로고침할 때마다 8/30 전체모임에서 나온 PP 예시 중 하나로 바뀜 (js/main.js PP_NAMES) -->
   <header class="site-header">
     <h1 id="pp-name">PP</h1>
@@ -43,20 +50,20 @@
         <div class="member" data-href="people/현.html" style="--x:-0.52; --y:-0.82"><p>현</p></div>
         <div class="member" data-href="people/서연.html" style="--x:0.70; --y:-0.26"><p>서연</p></div>
         <div class="member" data-href="people/시대.html" style="--x:-0.27; --y:0.56"><p>시대</p></div>
-        <div class="member" data-href="people/승민.html" style="--x:0.32; --y:-0.50"><p>승민</p></div>
-        <div class="member" data-href="people/바치.html" style="--x:0.14; --y:0.21"><p>바치</p></div>
+        <div class="member" data-href="people/승민.html" style="--x:0.32; --y:-0.49"><p>승민</p></div>
+        <div class="member" data-href="people/바치.html" style="--x:0.13; --y:0.22"><p>바치</p></div>
         <div class="member" data-href="people/도노.html" style="--x:-0.59; --y:0.67"><p>도노</p></div>
-        <div class="member" data-href="people/오늘이.html" style="--x:0.92; --y:-0.50"><p>오늘이</p></div>
-        <div class="member" data-href="people/서로.html" style="--x:1.07; --y:0.59"><p>서로</p></div>
+        <div class="member" data-href="people/오늘이.html" style="--x:0.92; --y:-0.49"><p>오늘이</p></div>
+        <div class="member" data-href="people/서로.html" style="--x:1.06; --y:0.59"><p>서로</p></div>
         <div class="member" data-href="people/우성.html" style="--x:0.43; --y:1.01"><p>우성</p></div>
-        <div class="member" data-href="people/무루골.html" style="--x:-0.10; --y:-0.74"><p>무루골</p></div>
+        <div class="member" data-href="people/무루골.html" style="--x:-0.46; --y:-0.15"><p>무루골</p></div>
         <div class="member" data-href="people/알샴.html" style="--x:0.02; --y:0.65"><p>알샴</p></div>
         <div class="member" data-href="people/소요.html" style="--x:0.57; --y:0.45"><p>소요</p></div>
         <div class="member" data-href="people/준현.html" style="--x:-0.16; --y:0.12"><p>준현</p></div>
-        <div class="member" data-href="people/희주.html" style="--x:0.50; --y:-0.86"><p>희주</p></div>
+        <div class="member" data-href="people/희주.html" style="--x:0.50; --y:-0.85"><p>희주</p></div>
         <div class="member" data-href="people/휘.html" style="--x:-0.84; --y:0.85"><p>휘</p></div>
         <div class="member" data-href="people/재이.html" style="--x:0.88; --y:0.37"><p>재이</p></div>
-        <div class="member" data-href="people/지원.html" style="--x:0.45; --y:-0.11"><p>지원</p></div>
+        <div class="member" data-href="people/지원.html" style="--x:0.45; --y:-0.10"><p>지원</p></div>
       </div>
       <!-- 카드를 누르면 페이지 이동 없이 이 탭 안에 그 배우미 페이지를 띄움 — ←로 4분면 복귀 (js/main.js setupMemberCards) -->
       <div id="member-view" class="in-tab-view hidden">
@@ -122,13 +129,12 @@
           <p class="event-place">이상집 303셀</p>
           <p class="event-date">2026.10.08 – 10.09</p>
         </a>
-        <!-- TODO: 임시 항목 — 페이지(사진) 생기면 a.event 로 교체. 한 줄 = 썸네일 / 일정 이름 / 위치 / 날짜 -->
-        <div class="event event-pending">
-          <div class="event-thumb"></div>
+        <a class="event" href="images/event/모보페스티벌.html">
+          <img class="event-thumb" src="images/event/모보페스티벌/mobo1.jpg" alt="">
           <p class="event-title">PP 모보페스티벌 잠입</p>
           <p class="event-place">아시아출판문화정보센터</p>
           <p class="event-date">2026.10.10</p>
-        </div>
+        </a>
       </div>
       <div id="event-view" class="in-tab-view hidden">
         <p class="back"><button type="button" class="in-tab-back" aria-label="목록으로">←</button></p>
@@ -138,19 +144,23 @@
     <button type="button" class="sheet-tab">Program</button>
   </section>
 
-  <!-- 5. 오시는 길 — 구글 지도 임베드가 탭을 가득 채움. 장소: 뜨인돌출판(주), 파주출판도시.
-       좌표는 공유 링크(maps.app.goo.gl/JxBnwWJn75FYknSJA)의 장소 좌표 (2026-10-13 수정 — 이전 좌표는 약 1km 남서쪽으로 어긋나 있었음). 오른쪽 위 이름을 누르면 구글 지도로 열림 -->
+  <!-- 5. 오시는 길 — 지도가 탭을 가득 채움. 장소: 뜨인돌출판(주), 파주출판도시.
+       2026-10-14 구글 지도 임베드에서 교체(구글은 휠 확대 때 "⌘ 누르고 확대" 안내가 떠서) → MapLibre + OpenFreeMap 벡터 지도(키·비용 없음)를
+       구글 지도 느낌으로 색·핀·버튼을 맞춤. 뜨인돌 앞 길(회동길 + PaTI 블록 한 바퀴 = p 모양)을 리소 오렌지로 강조하고 p가 서 보이게 지도를 돌림.
+       뜨인돌·PaTI는 핀 + 이름 (js/main.js setupPathMap). 오른쪽 위 이름을 누르면 구글 지도로 열림 -->
   <section class="sheet" id="map">
     <div class="sheet-body sheet-map">
       <div class="map">
-        <iframe src="https://maps.google.com/maps?q=37.7160375,126.6916719&amp;z=17&amp;hl=ko&amp;output=embed" title="오시는 길 — 뜨인돌출판" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div id="path-map" aria-label="오시는 길 — 뜨인돌출판"></div>
         <a id="address" href="https://maps.app.goo.gl/JxBnwWJn75FYknSJA" target="_blank" rel="noopener">뜨인돌출판 ↗</a>
       </div>
     </div>
     <button type="button" class="sheet-tab">Path</button>
   </section>
 
-  <script src="js/main.js?v=0.11"></script>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="js/path-buildings.js?v=0.13"></script>
+  <script src="js/main.js?v=0.13"></script>
 </body>
 
 </html>

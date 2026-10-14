@@ -26,6 +26,7 @@ const PATIPATI_PHOTOS = [
   "patipati-silkscreen.jpg", "patipati-knitting.jpg", "patipati-board.jpg", "patipati-gathering.jpg",
   "patipati-postit1.jpg", "patipati-postit2.jpg", "patipati-postit3.jpg",
   "patipati-night1.jpg", "patipati-night2.jpg", "patipati-night3.jpg",
+  "patipati-night-tree.jpg", "patipati-meeting2.jpg", // 2026-10-14 추가
 ];
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -57,18 +58,9 @@ const ONEULI_WATERCOLOR_PHOTOS = [
 const ONEULI_YEONHAM_PHOTOS = ["yeonham1.jpg", "yeonham2.jpg", "yeonham3.jpg"];
 
 // personal/서연/ 안의 폴더별 사진 목록
-const SEOYEON_DEOTMARU_PHOTOS = [
-  "deotmaru1.jpg", "deotmaru2.jpg", "deotmaru3.jpg",
-  "deotmaru4.jpg", "deotmaru5.jpg", "deotmaru6.jpg",
-];
-const SEOYEON_MEMO_PHOTOS = [
-  "memo1.jpg", "memo2.jpg", "memo3.jpg", "memo4.jpg",
-  "memo5.jpg", "memo6.jpg", "memo7.jpg",
-];
-const SEOYEON_PANCAKE_PHOTOS = [
-  "pancake1.jpg", "pancake2.jpg", "pancake3.jpg", "pancake4.jpg",
-  "pancake5.jpg", "pancake6.jpg", "pancake7.jpg", "pancake8.jpg",
-];
+// 2026-10-14 전체 교체 (이전 덧마루·메모·팬케이크 사진은 내림). 1차·2차에 똑같이 있던 사진 8장은 1차에만 넣음
+const SEOYEON_1ST_PHOTOS = Array.from({ length: 21 }, (_, i) => `seoyeon-1st${i + 1}.jpg`);
+const SEOYEON_2ND_PHOTOS = Array.from({ length: 21 }, (_, i) => `seoyeon-2nd${i + 1}.jpg`);
 
 // personal/알샴/ 안의 폴더별 사진 목록
 const ALSHAM_GUL_PHOTOS = ["gul1.jpg"];
@@ -81,7 +73,10 @@ const ALSHAM_WORK_PHOTOS = ["alsham-work1.jpg"]; // 주제 폴더 이름 미정 
 // personal/소요/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const SOYO_WORK_PHOTOS = ["soyo1.jpg", "soyo2.jpg"];
 // personal/서로/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
-const SEORO_WORK_PHOTOS = ["seoro1.jpg", "seoro2.jpg", "seoro3.jpg", "seoro4.jpg", "seoro5.jpg", "seoro6.jpg", "seoro7.jpg", "seoro8.jpg", "seoro9.jpg", "seoro10.jpg", "seoro11.jpg"];
+const SEORO_WORK_PHOTOS = [ // 2026-10-14 전체 교체 — 원본 파일명 순서, 영상 2개 포함
+  "seoro1.jpg", "seoro2.jpg", "seoro3.jpg", "seoro4.jpg", "seoro5.jpg", "seoro6.jpg", "seoro7.jpg", "seoro8.jpg",
+  "seoro-video1.mp4", "seoro-video2.mp4", "seoro9.jpg", "seoro10.jpg", "seoro11.jpg",
+];
 // personal/바치/텔레마키아/ — 전시 「텔레마키아」 사진 + 영상
 const BACCI_TELEMACHIA_MEDIA = [
   "telemachia1.jpg", "telemachia2.jpg", "telemachia3.jpg", "telemachia4.jpg", "telemachia-video1.mp4",
@@ -218,6 +213,19 @@ function setupPhotoGrid(gridId, sources) {
     grid.appendChild(fig);
   });
   setupRatioSnap(grid);
+  // 탭을 닫았다 다시 열 때마다 순서와 넓은 칸(.wide)을 새로 랜덤 (2026-10-14 요청). 맨 위부터 보이게
+  const sheet = grid.closest(".sheet");
+  if (sheet) sheet.addEventListener("sheet:open", () => {
+    const figs = Array.from(grid.children);
+    for (let i = figs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [figs[i], figs[j]] = [figs[j], figs[i]];
+    }
+    figs.forEach((f) => grid.appendChild(f));
+    grid.dispatchEvent(new Event("masonry:reroll"));
+    const body = grid.closest(".sheet-body");
+    if (body) body.scrollTop = 0;
+  });
 }
 
 // 소개 탭 왼쪽 아래 PP 그림 한 장 — 탭을 열 때마다(setupSheets의 "sheet:open") 랜덤, 누르면 다음 랜덤 (직전과 안 겹치게)
@@ -299,8 +307,8 @@ function setupRatioSnap(grid, tolerance = 0.1) {
 // 사진 로드·비율 스냅·창 크기·탭 열림(숨김 → 보임) 등 크기가 바뀔 때마다 ResizeObserver로 다시 계산
 function setupMasonry(grid, wideChance = 1 / 3) {
   if (!grid) return;
-  const wish = new WeakMap();
-  const blocked = new WeakMap(); // 칸 → 넓히면 빈자리가 생겼던 열 개수들 (그 열 개수에선 다시 안 넓힘)
+  let wish = new WeakMap();
+  let blocked = new WeakMap(); // 칸 → 넓히면 빈자리가 생겼던 열 개수들 (그 열 개수에선 다시 안 넓힘)
   let queued = false;
 
   function layout() {
@@ -349,6 +357,12 @@ function setupMasonry(grid, wideChance = 1 / 3) {
     requestAnimationFrame(layout);
   };
 
+  // 칸 순서를 다시 섞었을 때(PP 사진 탭) 넓은 칸도 새로 뽑음
+  grid.addEventListener("masonry:reroll", () => {
+    wish = new WeakMap();
+    blocked = new WeakMap();
+    schedule();
+  });
   const ro = new ResizeObserver(schedule);
   ro.observe(grid);
   Array.from(grid.children).forEach((el) => ro.observe(el));
@@ -360,17 +374,17 @@ function setupMasonry(grid, wideChance = 1 / 3) {
   layout();
 }
 
-// grid 안에서 keepFirstEl(예: 영상 임베드)만 맨 앞에 고정하고 나머지 컨테이너는 새로고침마다 랜덤 순서로.
+// grid 안에서 keepFirstEl(예: 영상 임베드, 없으면 null)만 맨 앞에 고정하고 나머지 컨테이너는 새로고침마다 랜덤 순서로.
 // appendChild는 이미 있는 노드를 옮기는 것이라 iframe/video 등을 다시 만들지 않음
 function shuffleGridKeepFirst(grid, keepFirstEl) {
-  if (!grid || !keepFirstEl) return;
+  if (!grid) return;
   const rest = Array.from(grid.children).filter((el) => el !== keepFirstEl);
   for (let i = rest.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [rest[i], rest[j]] = [rest[j], rest[i]];
   }
   const frag = document.createDocumentFragment();
-  frag.appendChild(keepFirstEl);
+  if (keepFirstEl) frag.appendChild(keepFirstEl);
   rest.forEach((el) => frag.appendChild(el));
   grid.appendChild(frag);
 }
@@ -381,6 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupPhotoGrid("photo-grid", [
     ["images/patipati/", PATIPATI_PHOTOS],
+    ["images/event/potato-pancake/", ["potato30.jpg", "potato31.jpg", "potato32.jpg"]], // Potato Pancake 일정 사진 중 일상 사진에도 (2026-10-14)
   ]);
   setupAboutPhoto("about-pp-photo", "images/pp-photos/", PP_PHOTOS);
   expandPhotos("woosung-past-work", "../images/personal/우성/아케이드/", WOOSUNG_WORK_PHOTOS);
@@ -393,9 +408,8 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("oneuli-biobio", "../images/personal/오늘이/비오비오/", ONEULI_BIOBIO_MEDIA);
   expandPhotos("oneuli-watercolor", "../images/personal/오늘이/수채화/", ONEULI_WATERCOLOR_PHOTOS);
   expandPhotos("oneuli-yeonham", "../images/personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS);
-  expandPhotos("seoyeon-deotmaru", "../images/personal/서연/덧마루/", SEOYEON_DEOTMARU_PHOTOS);
-  expandPhotos("seoyeon-memo", "../images/personal/서연/메모/", SEOYEON_MEMO_PHOTOS);
-  expandPhotos("seoyeon-pancake", "../images/personal/서연/팬케이크/", SEOYEON_PANCAKE_PHOTOS);
+  expandPhotos("seoyeon-1st", "../images/personal/서연/1차/", SEOYEON_1ST_PHOTOS);
+  expandPhotos("seoyeon-2nd", "../images/personal/서연/2차/", SEOYEON_2ND_PHOTOS);
   expandPhotos("alsham-gul", "../images/personal/알샴/굴-붙이기/", ALSHAM_GUL_PHOTOS);
   expandPhotos("alsham-vestibular", "../images/personal/알샴/전정기관/", ALSHAM_VESTIBULAR_PHOTOS);
   expandPhotos("alsham-bird-lso", "../images/personal/알샴/새의-LSO/", ALSHAM_BIRD_LSO_PHOTOS);
@@ -412,10 +426,14 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("dono-research", "../images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS);
   expandPhotos("dono-alps", "../images/personal/도노/북알프스/", DONO_ALPS_PHOTOS);
   expandPhotos("bacci-telemachia", "../images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA);
-  shuffleGridKeepFirst(
-    document.getElementById("potato-pancake-grid"),
-    document.getElementById("potato-pancake-video")
-  );
+  // 일정 페이지(images/event/*.html): 열 때마다 사진·영상 순서를 랜덤으로 (2026-10-14 — 전엔 Potato Pancake만).
+  // 대문 일정 탭에서 항목을 누를 때마다 페이지를 새로 불러오므로 다시 들어가도 순서가 바뀜. 맨 앞 유튜브 영상은 고정
+  if (/\/images\/event\/[^/]+\.html$/.test(decodeURI(location.pathname))) {
+    document.querySelectorAll(".person-grid").forEach((grid) => {
+      const first = grid.firstElementChild;
+      shuffleGridKeepFirst(grid, first && first.classList.contains("video-embed") ? first : null);
+    });
+  }
   // 개인·일정 페이지: 비슷한 비율 사진은 하나의 비율로 맞춤 + 누르면 크게 보기 (expandPhotos로 펼친 뒤에)
   document.querySelectorAll(".person-grid").forEach((grid) => setupRatioSnap(grid));
   setupZoomFigures();
@@ -424,17 +442,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
   const nameEl = document.getElementById("pp-name");
-  if (nameEl) {
-    const pick = PP_NAMES[Math.floor(Math.random() * PP_NAMES.length)];
-    nameEl.innerHTML = pick
-      .replace(/&/g, "&amp;")
-      .replace(/(^|\s)(P)/g, "$1<b>$2</b>"); // 한글 ㅍㅍ 버전 되살릴 땐 별도 처리 필요
-  }
+  const firstName = PP_NAMES[Math.floor(Math.random() * PP_NAMES.length)];
+  if (nameEl) nameEl.innerHTML = ppNameHTML(firstName);
 
   // 대문 탭 + 배우미 4분면 카드 + 일정 탭 안 페이지 표시
   setupSheets();
-  setupMemberCards();
+  const memberPreviews = setupMemberCards();
   setupEventView();
+  setupPathMap();
+
+  // 첫 화면 로딩 (index.html #loader) — 대문에서 쓰는 사진을 전부 미리 받음: 화면에 있는 img + PP 그림 전부 + 배우미 호버 사진
+  const preload = [
+    ...Array.from(document.querySelectorAll("img[src]")).map((img) => img.getAttribute("src")),
+    ...PP_PHOTOS.map((n) => "images/pp-photos/" + n),
+    ...Object.values(memberPreviews || {}).flat(),
+  ];
+  setupLoader(firstName, preload, (name) => { if (nameEl) nameEl.innerHTML = ppNameHTML(name); });
 
   // 이메일 복사 버튼
   const btn = document.getElementById("copy-btn");
@@ -456,6 +479,156 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// 오시는 길 지도 (MapLibre + OpenFreeMap 벡터 타일, 키 없음). 구글 지도 느낌으로 색·글씨·핀·버튼을 맞춤.
+// 강조한 길 = 회동길을 따라 북동쪽으로 와서 뜨인돌 앞 블록(PaTI)을 한 바퀴 — 모양이 p.
+// 회동길 방향(북동 약 60°)이 화면 위로 오게 지도를 돌려서 p가 똑바로 서 보이게 함. 글씨는 돌려도 똑바로 섬.
+// 좌표는 OpenStreetMap 도로 노드(회동길 way 499654689 + 뜨인돌 옆 골목 way 472159393) 그대로 ([경도, 위도] 순서)
+const PATH_BEARING = 60;
+const PATH_PLACES = [
+  { name: "뜨인돌출판", at: [126.6916719, 37.7160375] },                 // 구글 지도 공유 링크 좌표
+  { name: "파주타이포그라피배곳 PaTI", at: [126.6915625, 37.7155625] },  // 구글 지도 플러스코드 8Q98PM8R+6J
+];
+const PATH_ROUTE = [
+  [126.6902209, 37.7151737], [126.690415, 37.7153272], [126.6907062, 37.7154693], // 회동길 (p의 세로 획)
+  [126.6912921, 37.7156852], [126.6919537, 37.715964],                            // 책마을1사거리 → 동쪽 교차로
+  [126.6921514, 37.7156275], [126.6921596, 37.7154733], [126.6921141, 37.7153404], // 골목을 따라 내려가
+  [126.692038, 37.7152324], [126.69173, 37.7150811], [126.6916436, 37.7151932],     // 아래에서 돌아
+  [126.6912921, 37.7156852],                                                       // 책마을1사거리로 (p의 동그라미)
+];
+// OSM 도로 데이터에 이름이 없는 골목 (way 472159393 / 472159395 / 472159398) — [이름, 좌표]
+const PATH_EXTRA_ROAD_NAMES = [
+  ["회동길", [[126.6904253, 37.7169905], [126.6907569, 37.7165211], [126.6912921, 37.7156852], [126.6916436, 37.7151932], [126.69173, 37.7150811],
+    [126.692038, 37.7152324], [126.6921141, 37.7153404], [126.6921596, 37.7154733], [126.6921514, 37.7156275], [126.6919537, 37.715964],
+    [126.691648, 37.7164134], [126.6913871, 37.7167957]]],
+  ["회동길", [[126.6920084, 37.7175944], [126.6919066, 37.7172795], [126.6918398, 37.7171444], [126.6917507, 37.7170334], [126.6916278, 37.7169309],
+    [126.6913871, 37.7167957], [126.6907569, 37.7165211]]],
+  ["회동길", [[126.691648, 37.7164134], [126.6922114, 37.7166309], [126.6923179, 37.7166791], [126.6924613, 37.7167282], [126.6925829, 37.7167354],
+    [126.6927211, 37.7167291], [126.6929682, 37.7166823]]],
+];
+// 구글 지도 기본(컬러) 색 — 2026-10-14 "흑백일 필요 없음"
+const G = {
+  land: "#f8f9fa", green: "#ceead6", water: "#9fd3f7", building: "#e8eaed", buildingLine: "#dadce0",
+  road: "#ffffff", roadLine: "#dadce0", major: "#fde293", majorLine: "#f2c84b", rail: "#bdc1c6", text: "#5f6368",
+};
+// 장소 종류별 핀 색 (구글: 음식 주황, 쇼핑 파랑, 교통 파랑, 문화 청록, 공원 초록, 숙박 분홍, 병원 빨강, 그 외 회색)
+const POI_COLOR = ["match", ["get", "class"],
+  ["restaurant", "cafe", "fast_food", "bar", "beer", "ice_cream", "bakery", "food"], "#f29900",
+  ["shop", "grocery", "clothing_store", "convenience", "department_store", "books", "furniture", "jewelry", "hardware", "alcohol_shop", "music", "gift"], "#1a73e8",
+  ["bus", "railway", "ferry_terminal", "aerialway", "car", "fuel", "parking", "bicycle"], "#4285f4",
+  ["museum", "art_gallery", "attraction", "theatre", "cinema", "library", "castle", "monument"], "#12b5cb",
+  ["park", "garden", "playground", "campsite", "zoo"], "#34a853",
+  ["lodging"], "#e8467c",
+  ["hospital", "doctors", "pharmacy", "dentist"], "#ea4335",
+  "#7b8085"];
+// 도로 폭 배율 — OpenFreeMap 기본 도로는 구글보다 가늘어서 굵게 (줌별 폭 값만 곱함). 3.5 = 구글 스크린샷과 같은 축척에서 폭(약 30px)이 비슷해지는 값
+const PATH_ROAD_SCALE = 3.5;
+function scaleWidth(v, f) {
+  if (typeof v === "number") return v * f;
+  if (!Array.isArray(v)) return v;
+  if (v[0] === "interpolate") return v.map((x, i) => (i >= 4 && i % 2 === 0 ? scaleWidth(x, f) : x));
+  if (v[0] === "step") return v.map((x, i) => (i >= 2 && i % 2 === 0 ? scaleWidth(x, f) : x));
+  return v;
+}
+function googleize(map) {
+  for (const layer of map.getStyle().layers) {
+    const { id, type } = layer;
+    const sl = layer["source-layer"];
+    if (type === "background") map.setPaintProperty(id, "background-color", G.land);
+    else if (type === "raster" || type === "fill-extrusion" || id.includes("shield") || id.includes("one_way")) map.setLayoutProperty(id, "visibility", "none");
+    else if (type === "fill") {
+      const green = sl === "park" || (sl === "landcover" && /wood|grass/.test(id)) || /pitch|track|cemetery/.test(id);
+      const c = sl === "building" ? G.building : sl === "water" ? G.water : green ? G.green : G.land;
+      map.setPaintProperty(id, "fill-color", c);
+      map.setPaintProperty(id, "fill-opacity", 1);
+      map.setPaintProperty(id, "fill-outline-color", sl === "building" ? G.buildingLine : c);
+      if (layer.paint && layer.paint["fill-pattern"]) map.setLayoutProperty(id, "visibility", "none");
+    } else if (type === "line") {
+      if (sl === "transportation") {
+        const rail = /rail/.test(id), casing = /casing/.test(id), path = /path|pedestrian/.test(id);
+        const major = /motorway|trunk|primary/.test(id); // 큰 도로는 구글처럼 노란색
+        map.setPaintProperty(id, "line-color", rail ? G.rail : path ? "#ffffff" : major ? (casing ? G.majorLine : G.major) : casing ? G.roadLine : G.road);
+        if (!rail) {
+          for (const prop of ["line-width", "line-gap-width"]) {
+            const w = layer.paint && layer.paint[prop];
+            if (w !== undefined) map.setPaintProperty(id, prop, scaleWidth(w, PATH_ROAD_SCALE));
+          }
+        }
+      } else if (sl === "boundary") map.setLayoutProperty(id, "visibility", "none");
+      else map.setPaintProperty(id, "line-color", sl === "waterway" ? G.water : sl === "park" ? G.green : G.land);
+    } else if (type === "symbol") {
+      if (layer.layout && layer.layout["text-field"] !== undefined) {
+        map.setLayoutProperty(id, "text-field", ["coalesce", ["get", "name:ko"], ["get", "name"]]);
+        map.setPaintProperty(id, "text-color", G.text);
+        map.setPaintProperty(id, "text-halo-color", "#ffffff");
+        map.setPaintProperty(id, "text-halo-width", 1.5);
+        if (sl === "transportation_name") map.setLayoutProperty(id, "text-size", 13);
+      }
+      // 장소(POI): 아이콘 대신 구글처럼 종류별 색 동그라미 + 같은 색 이름
+      if (sl === "poi") {
+        map.setPaintProperty(id, "icon-opacity", 0);
+        map.setPaintProperty(id, "text-color", POI_COLOR);
+        map.setLayoutProperty(id, "text-anchor", "left");
+        map.setLayoutProperty(id, "text-offset", [1.1, 0]);
+        map.setLayoutProperty(id, "text-justify", "left");
+        const dot = { id: id + "-dot", type: "circle", source: layer.source, "source-layer": "poi",
+          paint: { "circle-radius": 6, "circle-color": POI_COLOR, "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } };
+        if (layer.filter) dot.filter = layer.filter;
+        if (layer.minzoom !== undefined) dot.minzoom = layer.minzoom;
+        map.addLayer(dot, id);
+      }
+    }
+  }
+}
+function setupPathMap() {
+  const el = document.getElementById("path-map");
+  if (!el || !window.maplibregl) return;
+  const center = PATH_ROUTE.reduce((a, p) => [a[0] + p[0] / PATH_ROUTE.length, a[1] + p[1] / PATH_ROUTE.length], [0, 0]);
+  const map = new maplibregl.Map({
+    container: el,
+    style: "https://tiles.openfreemap.org/styles/liberty",
+    center, zoom: 17.4, bearing: PATH_BEARING, pitch: 0,
+    dragRotate: false, pitchWithRotate: false, touchPitch: false,
+    attributionControl: { compact: true, customAttribution: "건물 © Overture Maps" },
+    localIdeographFontFamily: "'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif",
+  });
+  map.touchZoomRotate.disableRotation();
+  map.keyboard.disableRotation();
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+  // 스타일(JSON)만 받으면 바로 색을 바꿈 — "load"는 타일·아이콘까지 다 받아야 떠서 원래 색이 잠깐 보임
+  map.once("style.load", () => {
+    googleize(map);
+    const orange = getComputedStyle(document.documentElement).getPropertyValue("--riso-orange").trim() || "#FF6C2F";
+    map.addSource("path-route", { type: "geojson", data: { type: "Feature", geometry: { type: "LineString", coordinates: PATH_ROUTE } } });
+    // 강조 길은 글씨 층 아래에 — 구글처럼 길 이름이 오렌지 선 위로 보이게
+    const firstLabel = (map.getStyle().layers.find((l) => l.type === "symbol") || {}).id;
+    // 건물 윤곽 (js/path-buildings.js, Overture Maps) — 타일 건물 위에 겹쳐 그림
+    if (typeof PATH_BUILDINGS !== "undefined") {
+      map.addSource("path-buildings", { type: "geojson", data: PATH_BUILDINGS });
+      map.addLayer({ id: "path-buildings", type: "fill", source: "path-buildings",
+        paint: { "fill-color": G.building, "fill-outline-color": G.buildingLine } }, firstLabel);
+    }
+    map.addLayer({ id: "path-route-casing", type: "line", source: "path-route", layout: { "line-join": "round", "line-cap": "round" },
+      paint: { "line-color": "#ffffff", "line-width": ["interpolate", ["exponential", 1.5], ["zoom"], 14, 5, 17, 14, 20, 40] } }, firstLabel);
+    map.addLayer({ id: "path-route", type: "line", source: "path-route", layout: { "line-join": "round", "line-cap": "round" },
+      paint: { "line-color": orange, "line-width": ["interpolate", ["exponential", 1.5], ["zoom"], 14, 3, 17, 10, 20, 32] } }, firstLabel);
+    // OSM에 이름이 비어 있는 뜨인돌 주변 골목 — 구글 지도엔 모두 "회동길"로 나와서 이름을 직접 붙임
+    map.addSource("path-road-names", { type: "geojson", data: { type: "FeatureCollection", features: PATH_EXTRA_ROAD_NAMES.map(([name, coordinates]) => (
+      { type: "Feature", properties: { name }, geometry: { type: "LineString", coordinates } })) } });
+    map.addLayer({ id: "path-road-names", type: "symbol", source: "path-road-names",
+      layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-font": ["Noto Sans Regular"], "text-size": 13, "text-rotation-alignment": "map" },
+      paint: { "text-color": G.text, "text-halo-color": "#ffffff", "text-halo-width": 1.5 } });
+  });
+  // 구글식 핀 + 이름 (지도를 돌려도 똑바로 섬)
+  for (const p of PATH_PLACES) {
+    const m = document.createElement("div");
+    m.className = "path-pin";
+    m.innerHTML = '<svg viewBox="0 0 24 34" width="27" height="38" aria-hidden="true"><path d="M12 33s11-12.2 11-20.5A11 11 0 0 0 1 12.5C1 20.8 12 33 12 33z" fill="#ea4335" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12.5" r="4" fill="#a50e0e"/></svg><span></span>';
+    m.querySelector("span").textContent = p.name;
+    new maplibregl.Marker({ element: m, anchor: "bottom-left", offset: [-13.5, 0] }).setLngLat(p.at).addTo(map);
+  }
+  new ResizeObserver(() => map.resize()).observe(el);
+}
 
 // 대문 탭 (sonayong.com 식). 시트 i 는 펼쳐진 탭(active)보다 앞이면 왼쪽으로 밀려 오른쪽 끝 띠만 보이고,
 // 뒤면 제자리(i × 띠 폭)에서 앞 시트에 덮여 오른쪽 끝 띠만 보임. 앞 시트가 항상 위에 쌓이도록 z-index 는 역순.
@@ -553,18 +726,132 @@ function setupSheets() {
   window.addEventListener("hashchange", () => show(fromHash(), false));
 }
 
+// 헤더·로딩 화면의 PP 이름 — 약자 P 두 글자만 굵게 (한글 ㅍㅍ 버전 되살릴 땐 별도 처리 필요)
+function ppNameHTML(name) {
+  return name.replace(/&/g, "&amp;").replace(/(^|\s)(P)/g, "$1<b>$2</b>");
+}
+
+// 첫 화면 인트로 (index.html #loader, 2026-10-14) — 사진을 미리 받는 동안 PP 이름 하나를 보여줌.
+// 움직임: PP 두 글자만 붙어서 나타남 → 가운데를 기준으로 이름 길이만큼 벌어짐 → 벌어진 자리에 나머지 글자가
+// 아래에서 위로 올라옴 → 잠시 머문 뒤 글자가 제자리에서 위→아래로 지워짐 → PP로 모임 → 페이드 아웃.
+// 한 바퀴 약 4초 (2026-10-14 20% 빠르게). 그때 사진을 다 받았으면 걷고, 아직이면 다른 이름으로 한 바퀴 더 (느린 회선 대비 최대 20초).
+// 첫 입장에서만 — 같은 탭에서 새로고침하면 안 뜸(sessionStorage). index.html <head>의 한 줄이 미리 숨겨서 깜빡임 없음.
+// 마지막에 나온 이름이 그대로 헤더 이름이 됨 (onName)
+function setupLoader(firstName, srcs, onName) {
+  const loader = document.getElementById("loader");
+  if (!loader) return;
+  if (document.documentElement.classList.contains("intro-seen")) { loader.remove(); return; }
+  try { sessionStorage.setItem("pp-intro-seen", "1"); } catch (_) {}
+  const nameEl = loader.querySelector(".loader-name");
+  const MAX_MS = 20000;
+  const t0 = performance.now();
+  const unique = Array.from(new Set(srcs.filter(Boolean)));
+  let left = unique.length;
+  let ready = left === 0;
+  unique.forEach((src) => {
+    const img = new Image();
+    img.onload = img.onerror = () => { if (--left <= 0) ready = true; };
+    img.src = src;
+  });
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+  // "Pixel & Paper" → [P + "ixel & "] [P + "aper"] — P로 시작하는 단어마다 한 묶음, 나머지 글자·띄어쓰기는 앞 묶음 꼬리로
+  function build(name) {
+    const groups = [];
+    name.split(" ").forEach((tok) => {
+      if (tok[0] === "P" || !groups.length) groups.push({ p: tok[0], rest: tok.slice(1) });
+      else groups[groups.length - 1].rest += " " + tok;
+    });
+    nameEl.textContent = "";
+    return groups.map((g, i) => {
+      const wrap = document.createElement("span");
+      wrap.className = "lg";
+      const p = document.createElement("b");
+      p.className = "lp";
+      p.textContent = g.p;
+      const rest = document.createElement("span");
+      rest.className = "lr";
+      const inner = document.createElement("span");
+      inner.className = "lr-in";
+      inner.textContent = g.rest + (i < groups.length - 1 ? "\u00a0" : "");
+      rest.append(inner);
+      wrap.append(p, rest);
+      nameEl.appendChild(wrap);
+      return { rest, inner };
+    });
+  }
+
+  async function play(name) {
+    const parts = build(name);
+    onName(name);
+    // 재기: 나머지 글자 폭, 글자 칸 높이(글자를 그만큼 아래로 내려놨다가 올림)
+    parts.forEach((q) => {
+      q.w = q.inner.scrollWidth;
+      q.rest.style.setProperty("--drop", q.rest.getBoundingClientRect().height.toFixed(1) + "px");
+    });
+    await frame();
+    nameEl.classList.add("show");                                     // PP 나타남
+    await wait(720);
+    parts.forEach((q) => (q.rest.style.width = q.w + "px"));         // 가운데 기준으로 벌어짐
+    await wait(600);
+    parts.forEach((q) => q.inner.classList.add("up"));               // 글자가 아래에서 올라옴
+    await wait(520 + 720);                                           // 올라오는 시간 + 머묾
+    parts.forEach((q) => q.rest.classList.add("wipe"));              // 거꾸로: 글자는 제자리, 위에서 아래로 지워지며 사라짐
+    await wait(440);                                                 // (내려가며 사라지면 P보다 한참 밑에서 없어져 보였음)
+    parts.forEach((q) => (q.rest.style.width = "0px"));              // PP로 모임
+    await wait(640);
+    nameEl.classList.remove("show");                                 // 페이드 아웃
+    await wait(480);
+  }
+
+  (async () => {
+    try { await document.fonts.ready; } catch (_) {} // 글꼴이 늦게 오면 글자 폭을 잘못 잼
+    let name = firstName;
+    for (;;) {
+      await play(name);
+      if (ready || performance.now() - t0 > MAX_MS) break;
+      let next = name;
+      while (PP_NAMES.length > 1 && next === name) next = PP_NAMES[Math.floor(Math.random() * PP_NAMES.length)];
+      name = next;
+    }
+    loader.classList.add("done");
+    await wait(560);
+    loader.remove();
+  })();
+}
+
 // 탭 안 페이지 표시 공용 — view(.in-tab-view) 안 iframe에 href를 띄우고, ←로 닫음. 닫을 때 onClose 호출.
-// 반환값 open(href)로 띄움
+// 반환값 open(href)로 띄움.
+// 브라우저 뒤로가기(모바일 스와이프 포함)도 ←처럼 목록/4분면으로 바로 돌아가게 — 띄울 때 기록을 하나 쌓고(pushState)
+// 뒤로가기(popstate)가 오면 닫음. iframe 주소는 location.replace로 바꿔서 iframe 자체엔 기록이 안 쌓이게
+// (frame.src를 바꾸면 기록이 쌓여, 뒤로가기가 iframe 안에서만 한 칸 물러나고 개인 페이지가 안 닫혔음 — 2026-10-14 수정)
 function setupInTabView(view, onClose) {
   const frame = view.querySelector("iframe");
-  view.querySelector(".in-tab-back").addEventListener("click", () => {
+  let pushed = false;
+  const load = (href) => {
+    try { frame.contentWindow.location.replace(new URL(href, location.href).href); }
+    catch (_) { frame.src = href; }
+  };
+  const close = () => {
+    if (view.classList.contains("hidden")) return;
     view.classList.add("hidden");
-    frame.src = "about:blank"; // 재생 중인 영상 정지
+    load("about:blank"); // 재생 중인 영상 정지
     if (onClose) onClose();
+  };
+  view.querySelector(".in-tab-back").addEventListener("click", () => {
+    if (pushed) history.back(); // → popstate에서 닫힘
+    else close();
+  });
+  window.addEventListener("popstate", () => {
+    pushed = false;
+    close();
   });
   return (href) => {
-    frame.src = href;
+    load(href);
     view.classList.remove("hidden");
+    // file:// 에선 브라우저에 따라 pushState가 막힘 — 그땐 ←로만 닫힘
+    try { history.pushState({ inTab: view.id }, "", location.href); pushed = true; } catch (_) { pushed = false; }
   };
 }
 
@@ -624,9 +911,8 @@ function setupMemberCards() {
       ...withBase("images/personal/오늘이/연함/", ONEULI_YEONHAM_PHOTOS),
     ],
     "people/서연.html": [
-      ...withBase("images/personal/서연/덧마루/", SEOYEON_DEOTMARU_PHOTOS),
-      ...withBase("images/personal/서연/메모/", SEOYEON_MEMO_PHOTOS),
-      ...withBase("images/personal/서연/팬케이크/", SEOYEON_PANCAKE_PHOTOS),
+      ...withBase("images/personal/서연/1차/", SEOYEON_1ST_PHOTOS),
+      ...withBase("images/personal/서연/2차/", SEOYEON_2ND_PHOTOS),
     ],
     "people/알샴.html": [
       ...withBase("images/personal/알샴/굴-붙이기/", ALSHAM_GUL_PHOTOS),
@@ -799,4 +1085,5 @@ function setupMemberCards() {
     document.getElementById("people").addEventListener("pointerdown", pause);
     timer = setTimeout(step, 1500);
   }
+  return MEMBER_PREVIEWS; // 첫 화면 로딩에서 미리 받을 사진 목록으로도 씀
 }
