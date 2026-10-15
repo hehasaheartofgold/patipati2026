@@ -77,10 +77,15 @@ const SEORO_WORK_PHOTOS = [ // 2026-10-14 전체 교체 — 원본 파일명 순
   "seoro1.jpg", "seoro2.jpg", "seoro3.jpg", "seoro4.jpg", "seoro5.jpg", "seoro6.jpg", "seoro7.jpg", "seoro8.jpg",
   "seoro-video1.mp4", "seoro-video2.mp4", "seoro9.jpg", "seoro10.jpg", "seoro11.jpg",
 ];
-// personal/바치/텔레마키아/ — 전시 「텔레마키아」 사진 + 영상
-const BACCI_TELEMACHIA_MEDIA = [
-  "telemachia1.jpg", "telemachia2.jpg", "telemachia3.jpg", "telemachia4.jpg", "telemachia-video1.mp4",
-];
+// personal/바치/ 안의 폴더별 사진·영상 (2026-10-15 전체 교체 — 받은 폴더 구조 그대로, 폴더 없이 있던 건 "작업")
+const numbered = (prefix, count) => Array.from({ length: count }, (_, i) => `${prefix}${i + 1}.jpg`);
+const BACCI_WORK_MEDIA = [...numbered("bacci", 6), "bacci-video1.mp4", "bacci7.jpg", "bacci8.jpg", "bacci9.jpg",
+  "bacci10.jpg", "bacci11.jpg", "bacci12.jpg", "bacci13.jpg"]; // 7~13 = 참가한 행사 포스터
+const BACCI_HANDWRITING_PHOTOS = numbered("handwriting", 11);                                   // 손글씨 수집
+const BACCI_TELEMACHIA_MEDIA = ["telemachia1.jpg", "telemachia2.jpg", "telemachia-video1.mp4", "telemachia3.jpg"]; // 전시 「텔레마키아」
+const BACCI_TUMBLBUG_PHOTOS = ["tumblbug4.jpg", "tumblbug1.jpg", "tumblbug2.jpg", "tumblbug3.jpg",                 // 텀블벅 프로젝트 (대표사진 → 2·3·4 → 굿즈)
+  "tumblbug5.jpg", "tumblbug6.jpg", "tumblbug7.jpg", "tumblbug8.jpg"];
+const BACCI_REVERSE_HANGUL_PHOTOS = numbered("reverse-hangul", 28);                              // 한글 거꾸로 쓰기
 // personal/무루골/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 // personal/희주/ 안의 폴더별 사진 목록 (원본은 투명 PNG → 페이지 배경색 #F5F5F5 깔고 JPG)
 const HEEJU_DRAWING_PHOTOS = [
@@ -428,7 +433,11 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("dono-graphic", "../images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA);
   expandPhotos("dono-research", "../images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS);
   expandPhotos("dono-alps", "../images/personal/도노/북알프스/", DONO_ALPS_PHOTOS);
+  expandPhotos("bacci-work", "../images/personal/바치/작업/", BACCI_WORK_MEDIA);
+  expandPhotos("bacci-handwriting", "../images/personal/바치/손글씨-수집/", BACCI_HANDWRITING_PHOTOS);
   expandPhotos("bacci-telemachia", "../images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA);
+  expandPhotos("bacci-tumblbug", "../images/personal/바치/텀블벅-프로젝트/", BACCI_TUMBLBUG_PHOTOS);
+  expandPhotos("bacci-reverse-hangul", "../images/personal/바치/한글-거꾸로-쓰기/", BACCI_REVERSE_HANGUL_PHOTOS);
   // 일정 페이지(images/event/*.html): 열 때마다 사진·영상 순서를 랜덤으로 (2026-10-14 — 전엔 Potato Pancake만).
   // 대문 일정 탭에서 항목을 누를 때마다 페이지를 새로 불러오므로 다시 들어가도 순서가 바뀜. 맨 앞 유튜브 영상은 고정
   if (/\/images\/event\/[^/]+\.html$/.test(decodeURI(location.pathname))) {
@@ -939,7 +948,13 @@ function setupMemberCards() {
       ...withBase("images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS),
       ...withBase("images/personal/도노/북알프스/", DONO_ALPS_PHOTOS),
     ],
-    "people/바치.html": withBase("images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA),
+    "people/바치.html": [
+      ...withBase("images/personal/바치/작업/", BACCI_WORK_MEDIA),
+      ...withBase("images/personal/바치/손글씨-수집/", BACCI_HANDWRITING_PHOTOS),
+      ...withBase("images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA),
+      ...withBase("images/personal/바치/텀블벅-프로젝트/", BACCI_TUMBLBUG_PHOTOS),
+      ...withBase("images/personal/바치/한글-거꾸로-쓰기/", BACCI_REVERSE_HANGUL_PHOTOS),
+    ],
   };
 
   const bgPhoto = document.querySelector(".quad-photo");
