@@ -97,6 +97,8 @@ const HYUN_WORK_PHOTOS = ["hyun1.jpg", "hyun2.jpg", "hyun3.jpg", "hyun4.jpg", "h
 const JIWON_WORK_PHOTOS = ["jiwon1.jpg", "jiwon2.jpg", "jiwon3.jpg", "jiwon4.jpg", "jiwon5.jpg"];
 // personal/휘/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업". 원본 PNG는 JPG로)
 const HWI_WORK_PHOTOS = ["hwi1.jpg", "hwi2.jpg", "hwi3.jpg", "hwi4.jpg", "hwi5.jpg", "hwi6.jpg", "hwi7.jpg"];
+// personal/승민/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업". 원본 투명 PNG 2장은 #F5F5F5 깔고 JPG)
+const SEUNGMIN_WORK_PHOTOS = Array.from({ length: 19 }, (_, i) => `seungmin${i + 1}.jpg`);
 // personal/도노/ 안의 폴더별 목록 (관계도·PDF 페이지는 글씨가 읽히게 긴 변 2400, PDF는 쪽마다 JPG)
 const DONO_GRAPHIC_MEDIA = ["dono-graphic1.jpg", "dono-graphic-video1.mp4"];
 const DONO_RESEARCH_PHOTOS = [
@@ -422,6 +424,7 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("hyun-work", "../images/personal/현/작업/", HYUN_WORK_PHOTOS);
   expandPhotos("jiwon-work", "../images/personal/지원/작업/", JIWON_WORK_PHOTOS);
   expandPhotos("hwi-work", "../images/personal/휘/작업/", HWI_WORK_PHOTOS);
+  expandPhotos("seungmin-work", "../images/personal/승민/작업/", SEUNGMIN_WORK_PHOTOS);
   expandPhotos("dono-graphic", "../images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA);
   expandPhotos("dono-research", "../images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS);
   expandPhotos("dono-alps", "../images/personal/도노/북알프스/", DONO_ALPS_PHOTOS);
@@ -930,6 +933,7 @@ function setupMemberCards() {
     "people/현.html": withBase("images/personal/현/작업/", HYUN_WORK_PHOTOS),
     "people/지원.html": withBase("images/personal/지원/작업/", JIWON_WORK_PHOTOS),
     "people/휘.html": withBase("images/personal/휘/작업/", HWI_WORK_PHOTOS),
+    "people/승민.html": withBase("images/personal/승민/작업/", SEUNGMIN_WORK_PHOTOS),
     "people/도노.html": [
       ...withBase("images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA),
       ...withBase("images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS),
