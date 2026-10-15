@@ -27,6 +27,8 @@ const PATIPATI_PHOTOS = [
   "patipati-postit1.jpg", "patipati-postit2.jpg", "patipati-postit3.jpg",
   "patipati-night1.jpg", "patipati-night2.jpg", "patipati-night3.jpg",
   "patipati-night-tree.jpg", "patipati-meeting2.jpg", // 2026-10-14 추가
+  "patipati-daily1.jpg", "patipati-daily2.jpg", "patipati-daily3.jpg", "patipati-daily4.jpg", // 2026-10-15 추가 (일상2)
+  "patipati-daily5.jpg", "patipati-daily6.jpg", "patipati-daily7.jpg", "patipati-daily8.jpg",
 ];
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
