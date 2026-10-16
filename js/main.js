@@ -457,6 +457,11 @@ document.addEventListener("DOMContentLoaded", () => {
       shuffleGridKeepFirst(grid, first && first.classList.contains("video-embed") ? first : null);
     });
   }
+  // 개인 페이지(people/*.html): 열 때마다 사진·영상·임베드 전부 랜덤 순서 (2026-10-16 — 전엔 폴더 순서 고정).
+  // 4분면에서 카드를 누를 때마다 페이지를 새로 불러오므로 다시 들어가도 순서가 바뀜
+  if (/\/people\/[^/_][^/]*\.html$/.test(decodeURI(location.pathname))) {
+    document.querySelectorAll(".person-grid").forEach((grid) => shuffleGridKeepFirst(grid, null));
+  }
   // 개인·일정 페이지: 비슷한 비율 사진은 하나의 비율로 맞춤 + 누르면 크게 보기 (expandPhotos로 펼친 뒤에)
   document.querySelectorAll(".person-grid").forEach((grid) => setupRatioSnap(grid));
   setupZoomFigures();
