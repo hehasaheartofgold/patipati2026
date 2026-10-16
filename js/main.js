@@ -669,6 +669,7 @@ function setupSheets() {
 
   const tabW = () => parseFloat(getComputedStyle(document.body).getPropertyValue("--tab-w")) || 72;
   let active = 0;
+  let ready = false; // 첫 배치가 끝난 뒤부터 탭 전환을 방문 분석에 기록
 
   // body.tabs-overlay (패널 버전) — 첫 시트(PP 평면)는 늘 바닥에 깔리고, 나머지 탭은 오른쪽에서 패널로 미끄러져 들어와 덮음.
   // 탭 버튼은 헤더 오른쪽(.site-nav)으로 옮겨 알약 모양으로. 위치 계산 없이 .active 클래스만으로 CSS가 처리
@@ -729,6 +730,10 @@ function setupSheets() {
     active = i;
     layout();
     if (changed) sheets[i].dispatchEvent(new CustomEvent("sheet:open")); // 탭이 새로 열림 (소개 탭 랜덤 그림 등)
+    // 방문 분석(Umami): 사람이 탭을 바꿀 때만 "tab" 이벤트로 기록 (첫 화면 배치는 제외). 스크립트가 없거나 막혀 있으면 그냥 넘어감
+    if (changed && ready && window.umami) {
+      try { window.umami.track("tab", { tab: sheets[i].id }); } catch (_) {}
+    }
     // file:// 로 열면 브라우저에 따라 replaceState가 보안 오류를 냄 — 주소 기록만 포기하고 탭 전환은 그대로
     if (updateHash) {
       try { history.replaceState(null, "", "#" + sheets[i].id); } catch (_) {}
@@ -749,6 +754,7 @@ function setupSheets() {
   // 첫 배치는 애니메이션 없이
   sheets.forEach((s) => (s.style.transition = "none"));
   show(fromHash(), false);
+  ready = true;
   requestAnimationFrame(() => sheets.forEach((s) => (s.style.transition = "")));
 
   window.addEventListener("resize", layout);
