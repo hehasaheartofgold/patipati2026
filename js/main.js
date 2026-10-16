@@ -74,7 +74,10 @@ const ALSHAM_VESTIBULAR_PHOTOS = [
 const ALSHAM_BIRD_LSO_PHOTOS = ["bird-lso1.jpg", "bird-lso2.jpg", "bird-lso3.jpg"];
 const ALSHAM_WORK_PHOTOS = ["alsham-work1.jpg"]; // 주제 폴더 이름 미정 → 임시 "작업"
 // personal/소요/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
-const SOYO_WORK_PHOTOS = ["soyo1.jpg", "soyo2.jpg"];
+const SOYO_WORK_PHOTOS = [ // 2026-10-16 전체 교체 — 원본 파일명 순서, 영상 1개 포함
+  ...Array.from({ length: 34 }, (_, i) => `soyo${i + 1}.jpg`), "soyo-video1.mp4",
+  ...Array.from({ length: 10 }, (_, i) => `soyo${i + 35}.jpg`),
+];
 // personal/서로/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const SEORO_WORK_PHOTOS = [ // 2026-10-14 전체 교체 — 원본 파일명 순서, 영상 2개 포함
   "seoro1.jpg", "seoro2.jpg", "seoro3.jpg", "seoro4.jpg", "seoro5.jpg", "seoro6.jpg", "seoro7.jpg", "seoro8.jpg",
