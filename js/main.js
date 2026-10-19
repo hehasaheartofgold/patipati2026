@@ -94,6 +94,9 @@ const BACCI_TELEMACHIA_MEDIA = ["telemachia1.jpg", "telemachia2.jpg", "telemachi
 const BACCI_TUMBLBUG_PHOTOS = ["tumblbug4.jpg", "tumblbug1.jpg", "tumblbug2.jpg", "tumblbug3.jpg",                 // 텀블벅 프로젝트 (대표사진 → 2·3·4 → 굿즈)
   "tumblbug5.jpg", "tumblbug6.jpg", "tumblbug7.jpg", "tumblbug8.jpg"];
 const BACCI_REVERSE_HANGUL_PHOTOS = numbered("reverse-hangul", 28);                              // 한글 거꾸로 쓰기
+// personal/시대/ 안의 폴더별 사진·영상 (2026-10-19 — 받은 폴더 "2026"·"이전 작업" 그대로, 원본 파일명 순서)
+const SIDAE_2026_PHOTOS = numbered("sidae", 151);
+const SIDAE_PREV_MEDIA = [...numbered("prev", 3), "prev-video1.mp4", ...numbered("prev", 14).slice(3)];
 // personal/무루골/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 // personal/희주/ 안의 폴더별 사진 목록 (원본은 투명 PNG → 페이지 배경색 #F5F5F5 깔고 JPG)
 const HEEJU_DRAWING_PHOTOS = [
@@ -114,15 +117,11 @@ const HWI_WORK_PHOTOS = ["hwi1.jpg", "hwi2.jpg", "hwi3.jpg", "hwi4.jpg", "hwi5.j
 const SEUNGMIN_WORK_PHOTOS = Array.from({ length: 19 }, (_, i) => `seungmin${i + 1}.jpg`);
 // personal/재이/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const JAEI_WORK_PHOTOS = ["jaei1.jpg", "jaei2.jpg", "jaei3.jpg"];
-// personal/도노/ 안의 폴더별 목록 (관계도·PDF 페이지는 글씨가 읽히게 긴 변 2400, PDF는 쪽마다 JPG)
+// personal/도노/ 안의 폴더별 목록 (2026-10-19 전체 교체. 관계도·참조 개념 이미지 research4~8은 글씨가 읽히게 긴 변 2400)
 const DONO_GRAPHIC_MEDIA = ["dono-graphic1.jpg", "dono-graphic-video1.mp4"];
-const DONO_RESEARCH_PHOTOS = [
-  "dono-research1.jpg", "dono-research2.jpg", "dono-research3.jpg", "dono-research4.jpg",
-  "dono-research-pdf1.jpg", "dono-research-pdf2.jpg", "dono-research-pdf3.jpg",
-];
-const DONO_ALPS_PHOTOS = [
-  "dono-alps1.jpg", "dono-alps2.jpg", "dono-alps3.jpg", "dono-alps4.jpg", "dono-alps5.jpg", "dono-alps6.jpg",
-];
+const DONO_SLED_PHOTOS = ["dono-sled1.jpg"];                                                       // 썰매 작업
+const DONO_RESEARCH_PHOTOS = numbered("dono-research", 8);                                       // 리서치 과정 및 자료
+const DONO_ALPS_PHOTOS = numbered("dono-alps", 26);                                              // 북알프스 사진
 const MURUGOL_WORK_PHOTOS = [
   "murugol1.jpg", "murugol2.jpg", "murugol3.jpg", "murugol4.jpg",
   "murugol5.jpg", "murugol6.jpg", "murugol7.jpg",
@@ -443,6 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("seungmin-work", "../images/personal/승민/작업/", SEUNGMIN_WORK_PHOTOS);
   expandPhotos("jaei-work", "../images/personal/재이/작업/", JAEI_WORK_PHOTOS);
   expandPhotos("dono-graphic", "../images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA);
+  expandPhotos("dono-sled", "../images/personal/도노/썰매-작업/", DONO_SLED_PHOTOS);
   expandPhotos("dono-research", "../images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS);
   expandPhotos("dono-alps", "../images/personal/도노/북알프스/", DONO_ALPS_PHOTOS);
   expandPhotos("bacci-work", "../images/personal/바치/작업/", BACCI_WORK_MEDIA);
@@ -450,6 +450,8 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("bacci-telemachia", "../images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA);
   expandPhotos("bacci-tumblbug", "../images/personal/바치/텀블벅-프로젝트/", BACCI_TUMBLBUG_PHOTOS);
   expandPhotos("bacci-reverse-hangul", "../images/personal/바치/한글-거꾸로-쓰기/", BACCI_REVERSE_HANGUL_PHOTOS);
+  expandPhotos("sidae-2026", "../images/personal/시대/2026/", SIDAE_2026_PHOTOS);
+  expandPhotos("sidae-prev", "../images/personal/시대/이전-작업/", SIDAE_PREV_MEDIA);
   // 일정 페이지(images/event/*.html): 열 때마다 사진·영상 순서를 랜덤으로 (2026-10-14 — 전엔 Potato Pancake만).
   // 대문 일정 탭에서 항목을 누를 때마다 페이지를 새로 불러오므로 다시 들어가도 순서가 바뀜. 맨 앞 유튜브 영상은 고정
   if (/\/images\/event\/[^/]+\.html$/.test(decodeURI(location.pathname))) {
@@ -970,6 +972,7 @@ function setupMemberCards() {
     "people/재이.html": withBase("images/personal/재이/작업/", JAEI_WORK_PHOTOS),
     "people/도노.html": [
       ...withBase("images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA),
+      ...withBase("images/personal/도노/썰매-작업/", DONO_SLED_PHOTOS),
       ...withBase("images/personal/도노/리서치/", DONO_RESEARCH_PHOTOS),
       ...withBase("images/personal/도노/북알프스/", DONO_ALPS_PHOTOS),
     ],
@@ -979,6 +982,10 @@ function setupMemberCards() {
       ...withBase("images/personal/바치/텔레마키아/", BACCI_TELEMACHIA_MEDIA),
       ...withBase("images/personal/바치/텀블벅-프로젝트/", BACCI_TUMBLBUG_PHOTOS),
       ...withBase("images/personal/바치/한글-거꾸로-쓰기/", BACCI_REVERSE_HANGUL_PHOTOS),
+    ],
+    "people/시대.html": [
+      ...withBase("images/personal/시대/2026/", SIDAE_2026_PHOTOS),
+      ...withBase("images/personal/시대/이전-작업/", SIDAE_PREV_MEDIA),
     ],
   };
 
