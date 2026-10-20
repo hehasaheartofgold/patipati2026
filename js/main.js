@@ -122,6 +122,8 @@ const DONO_GRAPHIC_MEDIA = ["dono-graphic1.jpg", "dono-graphic-video1.mp4"];
 const DONO_SLED_PHOTOS = ["dono-sled1.jpg"];                                                       // 썰매 작업
 const DONO_RESEARCH_PHOTOS = numbered("dono-research", 8);                                       // 리서치 과정 및 자료
 const DONO_ALPS_PHOTOS = numbered("dono-alps", 26);                                              // 북알프스 사진
+// personal/준현/ 안의 목록 (2026-10-19. 주제 폴더 이름 미정 → 임시 "작업". 원본 파일명 순서, 영상 3개 포함. CMYK JPG 3장은 sRGB로, 스크린샷·엑소노 페이지는 긴 변 2400까지)
+const JUNHYUN_WORK_MEDIA = [...numbered("junhyun", 33), "junhyun-video1.mp4", ...numbered("junhyun", 35).slice(33), "junhyun-video2.mp4", "junhyun-video3.mp4", ...numbered("junhyun", 39).slice(35)];
 const MURUGOL_WORK_PHOTOS = [
   "murugol1.jpg", "murugol2.jpg", "murugol3.jpg", "murugol4.jpg",
   "murugol5.jpg", "murugol6.jpg", "murugol7.jpg",
@@ -452,6 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
   expandPhotos("bacci-reverse-hangul", "../images/personal/바치/한글-거꾸로-쓰기/", BACCI_REVERSE_HANGUL_PHOTOS);
   expandPhotos("sidae-2026", "../images/personal/시대/2026/", SIDAE_2026_PHOTOS);
   expandPhotos("sidae-prev", "../images/personal/시대/이전-작업/", SIDAE_PREV_MEDIA);
+  expandPhotos("junhyun-work", "../images/personal/준현/작업/", JUNHYUN_WORK_MEDIA);
   // 일정 페이지(images/event/*.html): 열 때마다 사진·영상 순서를 랜덤으로 (2026-10-14 — 전엔 Potato Pancake만).
   // 대문 일정 탭에서 항목을 누를 때마다 페이지를 새로 불러오므로 다시 들어가도 순서가 바뀜. 맨 앞 유튜브 영상은 고정
   if (/\/images\/event\/[^/]+\.html$/.test(decodeURI(location.pathname))) {
@@ -970,6 +973,7 @@ function setupMemberCards() {
     "people/휘.html": withBase("images/personal/휘/작업/", HWI_WORK_PHOTOS),
     "people/승민.html": withBase("images/personal/승민/작업/", SEUNGMIN_WORK_PHOTOS),
     "people/재이.html": withBase("images/personal/재이/작업/", JAEI_WORK_PHOTOS),
+    "people/준현.html": withBase("images/personal/준현/작업/", JUNHYUN_WORK_MEDIA),
     "people/도노.html": [
       ...withBase("images/personal/도노/그래픽-작업/", DONO_GRAPHIC_MEDIA),
       ...withBase("images/personal/도노/썰매-작업/", DONO_SLED_PHOTOS),
