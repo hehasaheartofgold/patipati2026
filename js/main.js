@@ -520,7 +520,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // 좌표는 OpenStreetMap 도로 노드(회동길 way 499654689 + 뜨인돌 옆 골목 way 472159393) 그대로 ([경도, 위도] 순서)
 const PATH_BEARING = 60;
 const PATH_PLACES = [
-  { name: "뜨인돌출판", at: [126.6916719, 37.7160375] },                 // 구글 지도 공유 링크 좌표
+  // 2026-10-21 뜨인돌은 아직 공개 전이라 숨김 — 주석만 풀면 다시 보임
+  // { name: "뜨인돌출판", at: [126.6916719, 37.7160375] },              // 구글 지도 공유 링크 좌표
   { name: "파주타이포그라피배곳 PaTI", at: [126.6915625, 37.7155625] },  // 구글 지도 플러스코드 8Q98PM8R+6J
 ];
 const PATH_ROUTE = [
