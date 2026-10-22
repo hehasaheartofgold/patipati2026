@@ -92,9 +92,9 @@ p { margin: 0; }
   transition: opacity 0.4s ease;
 }
 #loader .loader-name.show { opacity: 1; }
-#loader .lg { display: inline-flex; align-items: baseline; }
+#loader .lg, #pp-name .lg { display: inline-flex; align-items: baseline; }
 #loader .lp { font-weight: 700; font-size: 1.6em; line-height: 1; }
-#loader .lr {
+#loader .lr, #pp-name .lr {
   position: relative;
   display: inline-block;
   width: 0;
@@ -103,14 +103,21 @@ p { margin: 0; }
   transition: width 0.56s cubic-bezier(0.65, 0, 0.35, 1), clip-path 0.44s ease-in;
 }
 /* 사라질 때: 글자는 그대로 두고 위쪽 자르는 선을 맨 아래까지 내려서 위→아래로 지움 */
-#loader .lr.wipe { clip-path: inset(100% 0 -0.08em 0); }
-#loader .lr-in {
+#loader .lr.wipe, #pp-name .lr.wipe { clip-path: inset(100% 0 -0.08em 0); }
+#loader .lr-in, #pp-name .lr-in {
   display: inline-block;
   white-space: pre;
   transform: translateY(calc(var(--drop, 1.2em) + 0.1em));
   transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
 }
-#loader .lr-in.up { transform: translateY(0); }
+#loader .lr-in.up, #pp-name .lr-in.up { transform: translateY(0); }
+/* 헤더 이름은 10초마다 바뀜 (js/main.js setupHeaderCycle). 인트로와 달리 위아래 움직임 없이 가로로만:
+   글자를 칸 오른쪽 끝(= 뒤 P 쪽)에 붙여서, 칸이 좁아지면 뒤 P와 같이 밀려 들어가고 넓어지면 같이 따라 나옴.
+   .pp-still = 처음 그릴 때 움직임 없이 */
+#pp-name { white-space: nowrap; }
+#pp-name .lr { display: inline-flex; justify-content: flex-end; }
+#pp-name .lr-in { transform: none; transition: none; }
+#pp-name.pp-still .lr { transition: none; }
 
 a, a::after { color: inherit; }
 a:hover { color: var(--link-hover); }

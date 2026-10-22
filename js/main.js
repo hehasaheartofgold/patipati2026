@@ -474,10 +474,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // 개인·일정 페이지·PP 사진 탭: masonry 쌓기 + 가로 사진 일부 2열 폭 (순서 섞기·펼치기·스냅 설정이 다 끝난 뒤에)
   document.querySelectorAll(".person-grid, .photo-grid").forEach((grid) => setupMasonry(grid));
 
-  // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP)
+  // 헤더: 새로고침마다 다른 피피. 각 단어 첫 P 를 볼드로 강조 (= 약자 PP). 이후 10초마다 인트로처럼 바뀜 (setupHeaderCycle)
   const nameEl = document.getElementById("pp-name");
   const firstName = PP_NAMES[Math.floor(Math.random() * PP_NAMES.length)];
   if (nameEl) nameEl.innerHTML = ppNameHTML(firstName);
+  const setHeaderName = setupHeaderCycle(nameEl, firstName);
 
   // 대문 탭 + 배우미 4분면 카드 + 일정 탭 안 페이지 표시
   setupSheets();
@@ -491,7 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ...PP_PHOTOS.map((n) => "images/pp-photos/" + n),
     ...Object.values(memberPreviews || {}).flat(),
   ];
-  setupLoader(firstName, preload, (name) => { if (nameEl) nameEl.innerHTML = ppNameHTML(name); });
+  setupLoader(firstName, preload, setHeaderName);
 
   // 이메일 복사 버튼
   const btn = document.getElementById("copy-btn");
@@ -772,6 +773,89 @@ function ppNameHTML(name) {
   return name.replace(/&/g, "&amp;").replace(/(^|\s)(P)/g, "$1<b>$2</b>");
 }
 
+// "Pixel & Paper" → [P + "ixel & "] [P + "aper"] — P로 시작하는 단어마다 한 묶음, 나머지 글자·띄어쓰기는 앞 묶음 꼬리로.
+// 인트로(#loader)와 헤더(#pp-name)가 같이 씀. 묶음 = .lg 안에 b.lp(P) + .lr(나머지 글자 칸) > .lr-in(나머지 글자)
+function buildPPName(el, name) {
+  const groups = [];
+  name.split(" ").forEach((tok) => {
+    if (tok[0] === "P" || !groups.length) groups.push({ p: tok[0], rest: tok.slice(1) });
+    else groups[groups.length - 1].rest += " " + tok;
+  });
+  el.textContent = "";
+  return groups.map((g, i) => {
+    const wrap = document.createElement("span");
+    wrap.className = "lg";
+    const p = document.createElement("b");
+    p.className = "lp";
+    p.textContent = g.p;
+    const rest = document.createElement("span");
+    rest.className = "lr";
+    const inner = document.createElement("span");
+    inner.className = "lr-in";
+    inner.textContent = g.rest + (i < groups.length - 1 ? "\u00a0" : "");
+    rest.append(inner);
+    wrap.append(p, rest);
+    el.appendChild(wrap);
+    return { rest, inner };
+  });
+}
+
+// 헤더 이름 (2026-10-22) — HOLD_MS마다 다른 PP 이름으로 바뀜.
+// 뒤 P가 앞 P 쪽으로 미끄러져 모이면서 사이 글자도 같이 밀려 들어가 사라짐 → 새 이름 길이만큼 다시 미끄러져 나가며 글자가 따라 나옴 (약 1.2초).
+// (인트로처럼 위아래로 지우고 올리던 건 2026-10-22 사용자 요청으로 가로로 바꿈 — 모양은 style.css #pp-name .lr)
+// 반환값 setNow(name) = 움직임 없이 바로 그 이름으로 (인트로가 끝날 때 마지막 이름을 헤더에 맞출 때 씀)
+function setupHeaderCycle(el, firstName) {
+  if (!el) return () => {};
+  const HOLD_MS = 10000;
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  let current = firstName;
+  let parts = [];
+  let token = 0;   // setNow가 오면 진행 중인 바뀜을 멈춤
+
+  function measure() {
+    parts.forEach((q) => {
+      q.w = q.inner.scrollWidth;
+      q.rest.style.setProperty("--drop", q.rest.getBoundingClientRect().height.toFixed(1) + "px");
+    });
+  }
+
+  // 움직임 없이 다 펼쳐진 상태로
+  function setNow(name) {
+    token++;
+    current = name;
+    el.classList.add("pp-still");
+    parts = buildPPName(el, name);
+    measure();
+    parts.forEach((q) => (q.rest.style.width = q.w + "px"));
+    void el.offsetWidth;
+    el.classList.remove("pp-still");
+  }
+
+  async function swap(name) {
+    const my = token;
+    parts.forEach((q) => (q.rest.style.width = "0px"));   // 모임 — 글자도 같이 밀려 들어감
+    await wait(600);
+    if (my !== token) return;
+    current = name;
+    parts = buildPPName(el, name);                        // 새 이름: 칸 폭 0
+    measure();
+    void el.offsetWidth;
+    parts.forEach((q) => (q.rest.style.width = q.w + "px"));   // 벌어짐 — 글자가 따라 나옴
+  }
+
+  (async () => {
+    try { await document.fonts.ready; } catch (_) {}     // 글꼴이 늦게 오면 글자 폭을 잘못 잼
+    setNow(current);
+    for (;;) {
+      await wait(HOLD_MS);
+      let next = current;
+      while (PP_NAMES.length > 1 && next === current) next = PP_NAMES[Math.floor(Math.random() * PP_NAMES.length)];
+      await swap(next);
+    }
+  })();
+  return setNow;
+}
+
 // 첫 화면 인트로 (index.html #loader, 2026-10-14) — 사진을 미리 받는 동안 PP 이름 하나를 보여줌.
 // 움직임: PP 두 글자만 붙어서 나타남 → 가운데를 기준으로 이름 길이만큼 벌어짐 → 벌어진 자리에 나머지 글자가
 // 아래에서 위로 올라옴 → 잠시 머문 뒤 글자가 제자리에서 위→아래로 지워짐 → PP로 모임 → 페이드 아웃.
@@ -797,31 +881,7 @@ function setupLoader(firstName, srcs, onName) {
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-  // "Pixel & Paper" → [P + "ixel & "] [P + "aper"] — P로 시작하는 단어마다 한 묶음, 나머지 글자·띄어쓰기는 앞 묶음 꼬리로
-  function build(name) {
-    const groups = [];
-    name.split(" ").forEach((tok) => {
-      if (tok[0] === "P" || !groups.length) groups.push({ p: tok[0], rest: tok.slice(1) });
-      else groups[groups.length - 1].rest += " " + tok;
-    });
-    nameEl.textContent = "";
-    return groups.map((g, i) => {
-      const wrap = document.createElement("span");
-      wrap.className = "lg";
-      const p = document.createElement("b");
-      p.className = "lp";
-      p.textContent = g.p;
-      const rest = document.createElement("span");
-      rest.className = "lr";
-      const inner = document.createElement("span");
-      inner.className = "lr-in";
-      inner.textContent = g.rest + (i < groups.length - 1 ? "\u00a0" : "");
-      rest.append(inner);
-      wrap.append(p, rest);
-      nameEl.appendChild(wrap);
-      return { rest, inner };
-    });
-  }
+  const build = (name) => buildPPName(nameEl, name);   // 묶음 나누기는 헤더와 같이 씀
 
   async function play(name) {
     const parts = build(name);
