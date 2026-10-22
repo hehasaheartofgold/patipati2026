@@ -118,8 +118,8 @@ const SEUNGMIN_WORK_PHOTOS = Array.from({ length: 19 }, (_, i) => `seungmin${i +
 // personal/재이/ 안의 사진 목록 (주제 폴더 이름 미정 → 임시 "작업")
 const JAEI_WORK_PHOTOS = ["jaei1.jpg", "jaei2.jpg", "jaei3.jpg"];
 // personal/도노/ 안의 폴더별 목록 (2026-10-19 전체 교체. 관계도·참조 개념 이미지 research4~8은 글씨가 읽히게 긴 변 2400)
-const DONO_GRAPHIC_MEDIA = ["dono-graphic1.jpg", "dono-graphic-video1.mp4"];
-const DONO_SLED_PHOTOS = ["dono-sled1.jpg"];                                                       // 썰매 작업
+const DONO_GRAPHIC_MEDIA = ["dono-graphic1.jpg", "dono-graphic-video1.mp4", ...numbered("dono-graphic", 18).slice(1)];   // 2~18 = 2026-10-22 추가 파란 선 그래픽 (원본 _originals/도노/2026-10-22 추가/)
+const DONO_SLED_PHOTOS = numbered("dono-sled", 7);                                                // 썰매 작업 (2~7 = 2026-10-22 추가)
 const DONO_RESEARCH_PHOTOS = numbered("dono-research", 8);                                       // 리서치 과정 및 자료
 const DONO_ALPS_PHOTOS = numbered("dono-alps", 26);                                              // 북알프스 사진
 // personal/준현/ 안의 목록 (2026-10-19. 주제 폴더 이름 미정 → 임시 "작업". 원본 파일명 순서, 영상 3개 포함. CMYK JPG 3장은 sRGB로, 스크린샷·엑소노 페이지는 긴 변 2400까지)
