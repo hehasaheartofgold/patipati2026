@@ -47,7 +47,7 @@ const WOOSUNG_SISYPHUS_PHOTOS = [
 const WOOSUNG_ETC_PHOTOS = ["woosung-work1.jpg", "woosung-work2.jpg"];
 const WOOSUNG_OHHYUK_PHOTOS = ["ohhyuk1.jpg", "ohhyuk2.jpg", "ohhyuk3.jpg", "ohhyuk4.jpg"];
 const WOOSUNG_MOBO_MEDIA = ["mobo1.jpg", "mobo-video1.mp4", "mobo-video2.mp4"];
-const WOOSUNG_SOFA_PHOTOS = ["sofa1.jpg"]; // 소파 게임 최종 모습 렌더 (2026-10-16)
+const WOOSUNG_SOFA_PHOTOS = ["sofa1.jpg", "sofa2.jpg", "sofa3.jpg", "sofa4.jpg", "sofa5.jpg", "sofa6.jpg", "sofa7.jpg"]; // 1 = 소파 게임 최종 모습 렌더 (2026-10-16), 2~7 = 제작 과정 사진 (2026-10-23, 원본 _originals/우성/소파게임/)
 
 // personal/오늘이/ 안의 폴더별 사진(+영상) 목록. 개인 페이지 이미지는 personal/<이름>/<폴더>/ 에 정리
 const ONEULI_STRUCTURAL_KITE_PHOTOS = [
