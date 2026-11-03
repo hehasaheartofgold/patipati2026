@@ -32,6 +32,7 @@ const PATIPATI_PHOTOS = [
   "patipati-sofa-carry.jpg", // 2026-10-15 추가 (소파 옮기기)
   "patipati-daily9.jpg", "patipati-daily10.jpg", "patipati-daily11.jpg", "patipati-daily12.jpg", // 2026-10-16 추가 (일상3)
   "patipati-daily13.jpg", "patipati-daily14.jpg", "patipati-daily15.jpg", // 2026-11-03 추가 (일상4)
+  "patipati-video1.mp4", // 2026-11-03 추가 (원본 _originals/IMG_0928.MOV)
 ];
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -222,14 +223,26 @@ function setupPhotoGrid(gridId, sources) {
   srcs.forEach((src) => {
     const fig = document.createElement("figure");
     fig.className = "block-image";
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = "";
-    img.loading = "lazy";
-    img.decoding = "async";
-    fig.appendChild(img);
+    const isVideo = /\.(mp4|mov|webm)$/i.test(src);
+    let el;
+    if (isVideo) {
+      el = document.createElement("video");
+      el.muted = true;
+      el.setAttribute("muted", ""); // 자동재생 허용 조건: 속성으로도 명시해야 확실히 통과
+      el.autoplay = true;
+      el.loop = true;
+      el.playsInline = true;
+      el.src = src; // src는 마지막에 — 앞의 설정이 로드 시작 전에 반영되도록
+    } else {
+      el = document.createElement("img");
+      el.src = src;
+      el.alt = "";
+      el.loading = "lazy";
+      el.decoding = "async";
+    }
+    fig.appendChild(el);
     fig.dataset.zoom = "1";
-    fig.addEventListener("click", () => openLightbox(src, false));
+    fig.addEventListener("click", () => openLightbox(src, isVideo));
     grid.appendChild(fig);
   });
   setupRatioSnap(grid);

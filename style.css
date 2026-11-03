@@ -714,7 +714,8 @@ body.tabs-page.tabs-overlay { --panel-w: min(78vw, 1200px); }
   min-height: 0;
   cursor: zoom-in;
 }
-.photo-grid figure.block-image img {
+.photo-grid figure.block-image img,
+.photo-grid figure.block-image video {
   display: block;
   height: auto;
   aspect-ratio: auto;
