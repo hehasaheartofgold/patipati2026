@@ -54,6 +54,7 @@ const WOOSUNG_SOFA_PHOTOS = ["sofa1.jpg", "sofa2.jpg", "sofa3.jpg", "sofa4.jpg",
 const ONEULI_STRUCTURAL_KITE_PHOTOS = [
   "structural-kite-process1.jpg", "structural-kite-process2.jpg",
   "structural-kite-site1.jpg", "structural-kite-site2.jpg",
+  "structural-kite-video1.mp4", // 2026-11-03 추가 (원본 _originals/오늘이/구조적-연/IMG_0921.MOV)
 ];
 const ONEULI_DRAWING_PHOTOS = ["drawing-research1.jpg", "drawing-research2.jpg"];
 const ONEULI_BIOBIO_MEDIA = ["biobio1.jpg", "biobio2.jpg", "biobio-video1.mp4", "biobio-video2.mp4"];
