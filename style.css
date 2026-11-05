@@ -397,13 +397,17 @@ small { font-size: 14px; letter-spacing: 0.01em; }
 .person-grid > .wide,
 .photo-grid > .wide { grid-column: span 2; }
 
-/* 텍스트 칸·아이프레임(.video-embed도 class="block")은 정사각형 유지 */
+/* 텍스트 칸·웹사이트 아이프레임(.video-embed도 class="block")은 정사각형 유지 */
 .person-grid .block {
   aspect-ratio: 1 / 1;
 }
+/* 유튜브 칸은 영상 비율대로 (지금 올린 영상은 전부 16:9. 다른 비율이면 칸에 style="aspect-ratio: ..." 추가) */
+.person-grid .block.yt-embed {
+  aspect-ratio: 16 / 9;
+}
 
 /* 개인 페이지(people/*.html, .people-grid)·PP 사진 탭은 4열, 일정 페이지는 3열.
-   사진은 원본 비율 그대로(아래 "사진 칸 예외" 규칙). 텍스트·임베드 칸(.block)은 정사각형 유지 */
+   사진은 원본 비율 그대로(아래 "사진 칸 예외" 규칙). 텍스트·웹사이트 임베드 칸(.block)은 정사각형, 유튜브 칸은 영상 비율 */
 .person-grid.people-grid { --cols: 4; }
 .person-grid figure.block-image { cursor: zoom-in; }   /* 개인·일정 페이지 사진 — 누르면 크게 보기 */
 /* 비율 스냅된 사진(js/main.js setupRatioSnap) — figure가 기준 비율(style aspect-ratio), 사진은 그 안을 가운데 기준으로 채움 */
