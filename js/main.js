@@ -210,7 +210,7 @@ function setupA11yPanel() {
       '<p class="a11y-title">보기 설정</p>' +
       '<button type="button" class="a11y-opt" data-opt="still" aria-pressed="false"><span>움직임 멈추기</span><span class="a11y-state"></span></button>' +
       '<button type="button" class="a11y-opt" data-opt="contrast" aria-pressed="false"><span>고대비 (흑백)</span><span class="a11y-state"></span></button>' +
-      '<button type="button" class="a11y-opt a11y-sub" data-opt="photoGray" aria-pressed="false"><span>└ 사진도 흑백으로</span><span class="a11y-state"></span></button>' +
+      '<button type="button" class="a11y-opt a11y-sub" data-opt="photoGray" aria-pressed="false"><span>└ 사진 흑백</span><span class="a11y-state"></span></button>' +
       '<div class="a11y-row"><span id="a11y-text-label">글자 크기</span>' +
         '<span class="a11y-seg" role="group" aria-labelledby="a11y-text-label">' +
           '<button type="button" data-text="0" aria-pressed="false">보통</button>' +
