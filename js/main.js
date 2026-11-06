@@ -43,6 +43,72 @@ const PATIPATI_PHOTOS = [
   "patipati-video10.mp4", // 2026-11-06 추가 (원본 IMG_0968, HDR → SDR, 소리 제거)
 ];
 
+// 사진 대체 텍스트(alt) — 파일 이름 → 설명. PP 사진 탭(setupPhotoGrid)·개인 페이지(expandPhotos)에서 같은 이름이면 씀 (photoAlt).
+// 2026-11-06 Claude가 사진을 보고 1차 작성 (사람 이름은 넣지 않음). 사진을 추가하면 여기에도 한 줄씩. 없으면 빈 alt
+const PHOTO_ALTS = {
+  "patipati-space1.jpg": "4학년 작업실의 풍경",
+  "patipati-space2.jpg": "숲이 보이는 넓은 창 앞 작업실. 양치하는 재이, 준현이 만든 의자에 앉아있는 서로. 소파에 앉아있는 오늘이",
+  "patipati-space3.jpg": "소파와 테이블이 놓인 작업실에서 쉬며 이야기하는 PP.",
+  "patipati-space-site.jpg": "높은 콘크리트 벽에 걸친 사다리를 오르는 도노와 바라보는 서연과 알샴.",
+  "patipati-design-meeting1.jpg": "검은 책상에 앉아 회의하는 도노와 오늘이.",
+  "patipati-design-meeting2.jpg": "PP 아이디어가 빼곡히 적힌 화이트보드.",
+  "patipati-design-meeting3.jpg": "화이트보드에 글씨를 쓰며 이야기하는 도노와 오늘이와 무루골.",
+  "patipati-murugol-carrier.jpg": "건물 사이 횡단보도를 캐리어를 끌고 건너는 무루골.",
+  "patipati-soyo-site.jpg": "맑은 하늘 아래 풀이 무성한 옥상 밭에 서 있는 소요의 뒷모습.",
+  "patipati-meal.jpg": "테이블에 둘러앉아 함께 밥을 먹는 PP.",
+  "patipati-meeting.jpeg": "회의 공간에서 회의하는 PP.",
+  "patipati-woosung-hyundae.jpeg": "테이블에 나란히 앉아 노트북으로 작업하는 우성과 현대.",
+  "patipati-pr-zoom.jpg": "소파에 앉아 회의하는 디자인팀과 홍보 아카이빙 팀.",
+  "patipati-carry-box.jpg": "우성의 아케이드 머신을 옮기는 우성과 서연.",
+  "patipati-studio.jpg": "4학년 작업실의 풍경",
+  "patipati-planet.jpg": "휴식 공간 카펫 위 놓인 서연의 덧마루.",
+  "patipati-selfie.jpg": "PP의 셀카.",
+  "patipati-sunlight.jpg": "햇빛이 길게 들어오는 작업실 가운데 허리 춤에 손을 올리고 웃는 서로.",
+  "patipati-sunglasses.jpg": "선글라스를 쓰고 의자에 앉은 현과 옆에 서서 웃는 우성과 서연.",
+  "patipati-silkscreen.jpg": "'2026 12.19 12.25' 그래픽이 노광된 파란 실크스크린 판을 함께 드는 디자인팀.",
+  "patipati-knitting.jpg": "털실 뭉치를 옆에 두고 뜨개질하는 준현의 손.",
+  "patipati-board.jpg": "시멘트 벽돌에 게임 버튼을 붙이는 우성과 서연.",
+  "patipati-gathering.jpg": "휴식 공간에서 서연이 자랑하는 과일과 그걸 촬영하는 바치. 뒤에서 바라보는 현대",
+  "patipati-postit1.jpg": "포스트잇과 종이를 펼쳐 놓고 회의하는 알샴과 희주.",
+  "patipati-postit2.jpg": "큰 종이에 포스트잇을 붙여보며 PP 4사분면을 기획하는 기획팀",
+  "patipati-postit3.jpg": "노트북 화면과 키보드 위에 초록색 포스트잇이 잔뜩 붙은 모습.",
+  "patipati-night1.jpg": "조명이 켜진 밤 해월방에서 화면을 보며 회의하는 디자인팀.",
+  "patipati-night2.jpg": "4학년 작업실의 풍경",
+  "patipati-night3.jpg": "4학년 작업실의 풍경. 우성의 커다란 모니터에는 '플레이콜렉티브'라는 문구가 적혀있다.",
+  "patipati-night-tree.jpg": "나무 위에 올라타 가지에 걸린 오늘이의 연을 꺼내주는 도노.",
+  "patipati-meeting2.jpg": "전체회의 중인 PP",
+  "patipati-daily1.jpg": "창가 사이에서 마주보는 서로와 소요.",
+  "patipati-daily2.jpg": "바닥에 시대의 작업을 펼쳐놓고 구경하는 공간팀.",
+  "patipati-daily3.jpg": "옥상 테이블에 마주 앉아 작업 중인 우성과 현대.",
+  "patipati-daily4.jpg": "엘리베이터로 소파를 옮기는 우성.",
+  "patipati-daily5.jpg": "뜨개질을 자랑하는 서연과 서로. 바라보며 웃는 바치.",
+  "patipati-daily6.jpg": "해월방에서 현대의 작업을 구경하는 PP.",
+  "patipati-daily7.jpg": "재봉틀로 깃밧을 재봉하는 서연의 뒷모습.",
+  "patipati-daily8.jpg": "책상 사이에 모여 서서 무언가를 들여다보는 PP.",
+  "patipati-sofa-carry.jpg": "계단으로 소파를 함께 옮기는 우성과 현.",
+  "patipati-daily9.jpg": "바닥에 시대의 작업물을 펼쳐놓고 구경하는 PP.",
+  "patipati-daily10.jpg": "밤길에서 현대에게 자전거 타는 법을 가르쳐주는 서연.",
+  "patipati-daily11.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
+  "patipati-daily12.jpg": "도노의 파이프를 실험 중인 서연과 소요와 도노.",
+  "patipati-daily13.jpg": "밤길에 자전거 한 대에 함께 탄 우성과 현.",
+  "patipati-daily14.jpg": "큰 나무 판을 문 밖으로 옮기는 준현과 소요.",
+  "patipati-daily15.jpg": "휴식공간 소파에 앉아 회의 중인 공간팀.",
+  "patipati-daily16.jpg": "해월방에서 개인 인터뷰를 진행 중인 PP.",
+  "patipati-daily17.jpg": "창가 넘어 노을을 바라보는 서연과 무루골의 뒷모습",
+  "patipati-daily18.jpg": "휴식공간 소파에 앉아 회의하는 디자인팀과 홍보 아카이빙팀.",
+  "patipati-daily19.jpg": "외벽 통창을 실측하는 디자인팀.",
+  "patipati-daily20.jpg": "공간 답사 중인 공간팀.",
+  "patipati-daily21.jpg": "편의점 앞 라면 3개를 쌓은 채로 강아지를 쓰다듬은 준현과 소요.",
+  "patipati-daily22.jpg": "도노의 파이프를 실험 중인 서연과 소요와 도노.",
+  "patipati-daily23.jpg": "소파에 길게 누워 닌텐도 스위치2를 하는 현.",
+  "patipati-daily24.jpg": "식당에 둘러앉아 밥을 먹는 우성,현,휘수,서연.",
+  "potato30.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
+  "potato31.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
+  "potato32.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
+};
+const photoAlt = (src) => PHOTO_ALTS[src.split("/").pop()] || "";
+
+
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
 const WOOSUNG_WORK_PHOTOS = [
   "arcade-inside.jpeg", "arcade-frame.jpeg", "arcade1.jpeg",
@@ -147,7 +213,7 @@ const MURUGOL_WORK_PHOTOS = [
 //   contrast 고대비(흑백) — 화면을 반전(검정 바탕·흰 글씨) + 흑백. 사진·영상은 다시 뒤집어 원래 밝기로
 //            photoGray 켜면 사진도 흑백, 끄면 사진·지도만 원래 색 (2026-11-06 선택 추가)
 //   text     글자 크기 0 보통 / 1 크게(1.25배) / 2 더 크게(1.5배)
-//   list     목록으로 보기 — 배우미 4분면 대신 가나다순 목록 (대문에서만)
+//   list     목록으로 보기 — 배우미 4분면 대신 가나다순 목록 + 사진 칸(PP 사진 탭·개인·일정 페이지)을 한 줄에 하나씩, 옆에 대체 텍스트(alt)
 // 모양은 style.css "접근성" 섹션. <html>에 a11y-* 클래스를 붙이는 방식이라 iframe 안 배우미·일정 페이지도 같이 바뀜
 // =====================================================================
 const A11Y_KEY = "pp-a11y";
@@ -202,7 +268,6 @@ a11yApply(); // 화면을 그리기 전에 클래스부터
 // 오른쪽 아래 버튼 + 설정 패널. iframe 안 페이지에선 안 만듦(바깥 버튼 하나로)
 function setupA11yPanel() {
   if (A11Y_EMBEDDED) return;
-  const hasQuad = !!document.querySelector("#people .quad");
   const wrap = document.createElement("div");
   wrap.className = "a11y";
   wrap.innerHTML =
@@ -217,7 +282,7 @@ function setupA11yPanel() {
           '<button type="button" data-text="1" aria-pressed="false">크게</button>' +
           '<button type="button" data-text="2" aria-pressed="false">더 크게</button>' +
         '</span></div>' +
-      (hasQuad ? '<button type="button" class="a11y-opt" data-opt="list" aria-pressed="false"><span>목록으로 보기</span><span class="a11y-state"></span></button>' : "") +
+      '<button type="button" class="a11y-opt" data-opt="list" aria-pressed="false"><span>목록으로 보기</span><span class="a11y-state"></span></button>' +
       '<button type="button" class="a11y-reset">모두 끄기</button>' +
     '</div>' +
     '<button type="button" class="a11y-btn" aria-label="보기 설정" aria-expanded="false" aria-controls="a11y-panel">' +
@@ -324,7 +389,7 @@ function expandPhotos(figureId, basePath, items) {
       el.src = src; // src는 마지막에 — 앞의 설정이 로드 시작 전에 반영되도록
     } else {
       el = document.createElement("img");
-      el.alt = "";
+      el.alt = photoAlt(src);
       el.loading = "lazy";
       el.decoding = "async";
       el.src = src;
@@ -365,7 +430,7 @@ function setupPhotoGrid(gridId, sources) {
     } else {
       el = document.createElement("img");
       el.src = src;
-      el.alt = "";
+      el.alt = photoAlt(src);
       el.loading = "lazy";
       el.decoding = "async";
     }
@@ -615,6 +680,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 개인·일정 페이지: 비슷한 비율 사진은 하나의 비율로 맞춤 + 누르면 크게 보기 (expandPhotos로 펼친 뒤에)
   document.querySelectorAll(".person-grid").forEach((grid) => setupRatioSnap(grid));
   setupZoomFigures();
+  setupAltCaptions();
   // 개인·일정 페이지·PP 사진 탭: masonry 쌓기 + 가로 사진 일부 2열 폭 (순서 섞기·펼치기·스냅 설정이 다 끝난 뒤에)
   document.querySelectorAll(".person-grid, .photo-grid").forEach((grid) => setupMasonry(grid));
 
@@ -1402,4 +1468,26 @@ function setupMemberList(openInTab) {
     openInTab(a.getAttribute("href"));
   });
   quad.after(list);
+}
+
+// 접근성 "목록으로 보기" — 사진 칸(PP 사진 탭·개인·일정 페이지)마다 대체 텍스트(img alt)를, 유튜브·웹사이트 칸엔 제목을 글자로 붙여 둠.
+// 평소엔 숨김, 목록 보기에서만 사진 오른쪽 빈칸에 보임 (style.css "목록으로 보기" 섹션). alt가 없으면 빈칸 그대로
+function setupAltCaptions() {
+  document.querySelectorAll(".person-grid figure.block-image, .photo-grid figure.block-image").forEach((fig) => {
+    if (fig.querySelector(".a11y-alt")) return;
+    const img = fig.querySelector("img");
+    const cap = document.createElement("figcaption");
+    cap.className = "a11y-alt";
+    cap.textContent = img ? img.getAttribute("alt") || "" : "";
+    fig.appendChild(cap);
+  });
+  // 유튜브·웹사이트 임베드 칸 — iframe 제목(title)을 글자로
+  document.querySelectorAll(".person-grid > .video-embed").forEach((block) => {
+    if (block.querySelector(".a11y-alt")) return;
+    const frame = block.querySelector("iframe");
+    const cap = document.createElement("p");
+    cap.className = "a11y-alt";
+    cap.textContent = frame ? frame.getAttribute("title") || "" : "";
+    block.appendChild(cap);
+  });
 }

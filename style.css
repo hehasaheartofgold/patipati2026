@@ -1129,21 +1129,23 @@ html.a11y-big.a11y-text-2 { --fs: 1.5; }
 /* --- 4. 목록으로 보기: 배우미 4분면 대신 가나다순 목록 (js/main.js setupMemberList) --- */
 .member-list { display: none; }
 html.a11y-list #people .quad { display: none; }
-html.a11y-list #people .member-list { display: block; padding: 20px 0 100px; }
+html.a11y-list #people .member-list { display: block; padding: 20px 20px 100px; }
 html.a11y-list #people .sheet-body { overflow-y: auto; }
 #people .sheet-body:has(#member-view:not(.hidden)) .member-list { visibility: hidden; }
-.member-list-head { margin: 0 20px 12px; }
-.member-list ul { list-style: none; margin: 0; padding: 0; border-top: 1px dashed var(--line); }
-.member-list li { border-bottom: 1px dashed var(--line); }
-/* 줄 전체가 버튼(링크) — 어디를 눌러도 그 배우미 페이지. 호버하면 줄 전체 마젠타(리소 형광 핑크) */
+.member-list-head { margin-bottom: 12px; }
+.member-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+/* 줄 하나 = 이미지 컨테이너처럼 1px 점선 + 둥근 모서리 사각형 (2026-11-06 — 가로 점선 구분에서 변경).
+   칸 전체가 버튼(링크) — 어디를 눌러도 그 배우미 페이지. 호버하면 칸 전체 마젠타(리소 형광 핑크) */
 .member-list a {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 4px 20px;
-  padding: 12px 20px;
+  padding: 12px 16px;
   text-decoration: none;
   cursor: pointer;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
 }
 .member-list a:hover,
 .member-list a:focus-visible { color: inherit; background-color: var(--hover); outline: none; }
@@ -1151,3 +1153,57 @@ html.a11y-list #people .sheet-body { overflow-y: auto; }
 .member-list-en { min-width: 11em; }   /* public · premise — 길이가 달라도 한글 뜻이 한 줄로 맞게 */
 .member-list-where { color: #555; }
 .member-list a:hover .member-list-where { color: inherit; }
+
+/* 목록으로 보기 — 사진 칸(PP 사진 탭 .photo-grid, 개인·일정 페이지 .person-grid)도 한 줄에 하나씩 세로로.
+   줄 = 왼쪽 사진(원본 비율) + 오른쪽 빈칸에 대체 텍스트(figcaption.a11y-alt, js/main.js setupAltCaptions).
+   masonry(js setupMasonry)가 붙인 grid 위치·비율 스냅은 무시 */
+.a11y-alt { display: none; }
+html.a11y-list .person-grid,
+html.a11y-list .photo-grid { display: flex; flex-direction: column; gap: 10px; }
+html.a11y-list .person-grid > *,
+html.a11y-list .photo-grid > * { margin: 0; }
+html.a11y-list .person-grid figure.block-image,
+html.a11y-list .photo-grid figure.block-image {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: start;
+  gap: 20px;
+  padding: 12px;
+  aspect-ratio: auto !important;     /* 비율 스냅이 figure에 직접 넣은 값 무시 */
+  /* 줄 하나 = 이미지 컨테이너처럼 1px 점선 사각형 (기본 figure.block-image 테두리·곡률 그대로) */
+}
+html.a11y-list .person-grid figure.block-image img,
+html.a11y-list .person-grid figure.block-image video,
+html.a11y-list .photo-grid figure.block-image img,
+html.a11y-list .photo-grid figure.block-image video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+html.a11y-list .a11y-alt { display: block; }
+/* 글·웹사이트·유튜브 칸도 다른 줄과 같은 폭(가로 꽉), 높이는 내용만큼 */
+html.a11y-list .person-grid > .block { width: 100%; max-width: none; aspect-ratio: auto; }
+/* 유튜브·웹사이트 임베드는 사진 줄처럼 왼쪽에 작게(유튜브 16:9, 웹사이트 정사각형), 오른쪽 빈칸에 제목
+   (iframe title, js/main.js setupAltCaptions) — 작은 화면에서도 재생·조작 가능 */
+html.a11y-list .person-grid > .video-embed {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: start;
+  gap: 20px;
+  padding: 12px;
+}
+html.a11y-list .person-grid > .video-embed iframe {
+  position: static;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+html.a11y-list .person-grid > .yt-embed iframe { aspect-ratio: 16 / 9; }
+@media only screen and (max-width: 800px) {
+  html.a11y-list .person-grid > .video-embed { grid-template-columns: 120px 1fr; gap: 12px; }
+}
+@media only screen and (max-width: 800px) {
+  html.a11y-list .person-grid figure.block-image,
+  html.a11y-list .photo-grid figure.block-image { grid-template-columns: 120px 1fr; gap: 12px; }
+}
