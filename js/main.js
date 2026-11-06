@@ -144,14 +144,15 @@ const MURUGOL_WORK_PHOTOS = [
 // 접근성 설정 (2026-11-06, 레퍼런스: alittledifferent.kr의 흑백 모드·글자 확대·텍스트로 보기)
 // 오른쪽 아래 동그란 버튼 → 패널에서 4가지를 켜고 끔. 설정은 localStorage("pp-a11y")에 남아서 다른 페이지·다음 방문에도 유지.
 //   still    움직임 멈추기 — CSS 애니메이션·전환 끔 + 자동재생 영상 멈춤 + 헤더 이름 바뀜·인트로·모바일 사진 순환 멈춤
-//   contrast 고대비(흑백) — 화면을 반전(검정 바탕·흰 글씨) + 흑백. 사진·영상은 다시 뒤집어 원래 밝기의 흑백으로
+//   contrast 고대비(흑백) — 화면을 반전(검정 바탕·흰 글씨) + 흑백. 사진·영상은 다시 뒤집어 원래 밝기로
+//            photoGray 켜면 사진도 흑백, 끄면 사진·지도만 원래 색 (2026-11-06 선택 추가)
 //   text     글자 크기 0 보통 / 1 크게(1.25배) / 2 더 크게(1.5배)
 //   list     목록으로 보기 — 배우미 4분면 대신 가나다순 목록 (대문에서만)
 // 모양은 style.css "접근성" 섹션. <html>에 a11y-* 클래스를 붙이는 방식이라 iframe 안 배우미·일정 페이지도 같이 바뀜
 // =====================================================================
 const A11Y_KEY = "pp-a11y";
 const A11Y_EMBEDDED = window.self !== window.top;
-const A11Y = { still: false, contrast: false, text: 0, list: false };
+const A11Y = { still: false, contrast: false, photoGray: true, text: 0, list: false }; // photoGray = 고대비일 때 사진도 흑백(기본) / 끄면 사진만 컬러
 function a11yLoad() {
   try {
     const saved = localStorage.getItem(A11Y_KEY);
@@ -182,6 +183,7 @@ function a11yApply() {
   // 고대비: 맨 위 페이지만 화면 전체를 뒤집음. iframe 안 페이지는 바깥과 같이 뒤집히므로 사진만 되돌림
   root.classList.toggle("a11y-contrast", !!A11Y.contrast && !A11Y_EMBEDDED);
   root.classList.toggle("a11y-contrast-inner", !!A11Y.contrast && A11Y_EMBEDDED);
+  root.classList.toggle("a11y-photo-color", !!A11Y.contrast && !A11Y.photoGray);
   root.classList.toggle("a11y-big", A11Y.text > 0);
   root.classList.toggle("a11y-text-2", A11Y.text === 2);
   root.classList.toggle("a11y-list", !!A11Y.list);
@@ -208,6 +210,7 @@ function setupA11yPanel() {
       '<p class="a11y-title">보기 설정</p>' +
       '<button type="button" class="a11y-opt" data-opt="still" aria-pressed="false"><span>움직임 멈추기</span><span class="a11y-state"></span></button>' +
       '<button type="button" class="a11y-opt" data-opt="contrast" aria-pressed="false"><span>고대비 (흑백)</span><span class="a11y-state"></span></button>' +
+      '<button type="button" class="a11y-opt a11y-sub" data-opt="photoGray" aria-pressed="false"><span>└ 사진도 흑백으로</span><span class="a11y-state"></span></button>' +
       '<div class="a11y-row"><span id="a11y-text-label">글자 크기</span>' +
         '<span class="a11y-seg" role="group" aria-labelledby="a11y-text-label">' +
           '<button type="button" data-text="0" aria-pressed="false">보통</button>' +
@@ -218,8 +221,8 @@ function setupA11yPanel() {
       '<button type="button" class="a11y-reset">모두 끄기</button>' +
     '</div>' +
     '<button type="button" class="a11y-btn" aria-label="보기 설정" aria-expanded="false" aria-controls="a11y-panel">' +
-      '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
-        '<circle cx="12" cy="4.6" r="1.9" fill="currentColor" stroke="none"/><path d="M4.5 8.6 12 10l7.5-1.4M12 10v5.2M12 15.2 8.6 21.5M12 15.2l3.4 6.3"/></svg>' +
+      '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">' +
+        '<circle cx="12" cy="4.4" r="2.5" fill="currentColor" stroke="none"/><path d="M4.5 9 12 10.4 19.5 9M12 10.4v4.8M12 15.2 8.8 21M12 15.2 15.2 21"/></svg>' +
     '</button>';
   document.body.appendChild(wrap);
   const panel = wrap.querySelector(".a11y-panel");
@@ -234,6 +237,7 @@ function setupA11yPanel() {
     wrap.querySelectorAll("[data-text]").forEach((b) => {
       b.setAttribute("aria-pressed", String(A11Y.text) === b.dataset.text ? "true" : "false");
     });
+    wrap.querySelector(".a11y-sub").hidden = !A11Y.contrast; // 사진 흑백 선택은 고대비를 켰을 때만 보임
     btn.classList.toggle("on", !!(A11Y.still || A11Y.contrast || A11Y.text || A11Y.list)); // 하나라도 켜져 있으면 버튼 색
   };
   const change = (fn) => { fn(); a11ySave(); a11yApply(); render(); };
@@ -245,7 +249,7 @@ function setupA11yPanel() {
   btn.addEventListener("click", () => toggle(panel.hidden));
   wrap.querySelectorAll(".a11y-opt").forEach((b) => b.addEventListener("click", () => change(() => { A11Y[b.dataset.opt] = !A11Y[b.dataset.opt]; })));
   wrap.querySelectorAll("[data-text]").forEach((b) => b.addEventListener("click", () => change(() => { A11Y.text = Number(b.dataset.text); })));
-  wrap.querySelector(".a11y-reset").addEventListener("click", () => change(() => Object.assign(A11Y, { still: false, contrast: false, text: 0, list: false })));
+  wrap.querySelector(".a11y-reset").addEventListener("click", () => change(() => Object.assign(A11Y, { still: false, contrast: false, photoGray: true, text: 0, list: false })));
   // 바깥을 누르거나 Esc면 닫힘 (Esc가 열린 탭까지 닫지 않게 여기서 멈춤)
   document.addEventListener("pointerdown", (e) => { if (!panel.hidden && !wrap.contains(e.target)) toggle(false); });
   wrap.addEventListener("keydown", (e) => {

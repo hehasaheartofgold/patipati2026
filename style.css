@@ -1031,6 +1031,8 @@ body.embedded footer { display: none; }
   border: 1px dashed var(--line);
   border-radius: 999px;
 }
+.a11y-sub { margin-top: -2px; padding-left: 16px; font-size: 0.9em; }   /* 고대비 아래 딸린 선택 (사진도 흑백으로) */
+.a11y-sub[hidden] { display: none; }
 .a11y-reset { justify-content: center; margin-top: 4px; border-style: solid; }
 /* 키보드로 움직일 때 지금 어디 있는지 보이게 (패널 안) */
 .a11y button:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
@@ -1061,6 +1063,9 @@ html.a11y-contrast {
   background-color: #F5F5F5;
   filter: invert(1) grayscale(1);
 }
+/* 사진 컬러 선택(js A11Y.photoGray 끔): 화면은 뒤집기만(흑백 빼고), 사진·영상·지도는 다시 뒤집어 원래 색 그대로 */
+html.a11y-contrast.a11y-photo-color { filter: invert(1); }
+html.a11y-contrast.a11y-photo-color #path-map { filter: invert(1); }
 html.a11y-contrast img,
 html.a11y-contrast video,
 html.a11y-contrast .video-embed iframe,
