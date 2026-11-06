@@ -140,6 +140,121 @@ const MURUGOL_WORK_PHOTOS = [
   "murugol5.jpg", "murugol6.jpg", "murugol7.jpg",
 ];
 
+// =====================================================================
+// 접근성 설정 (2026-11-06, 레퍼런스: alittledifferent.kr의 흑백 모드·글자 확대·텍스트로 보기)
+// 오른쪽 아래 동그란 버튼 → 패널에서 4가지를 켜고 끔. 설정은 localStorage("pp-a11y")에 남아서 다른 페이지·다음 방문에도 유지.
+//   still    움직임 멈추기 — CSS 애니메이션·전환 끔 + 자동재생 영상 멈춤 + 헤더 이름 바뀜·인트로·모바일 사진 순환 멈춤
+//   contrast 고대비(흑백) — 화면을 반전(검정 바탕·흰 글씨) + 흑백. 사진·영상은 다시 뒤집어 원래 밝기의 흑백으로
+//   text     글자 크기 0 보통 / 1 크게(1.25배) / 2 더 크게(1.5배)
+//   list     목록으로 보기 — 배우미 4분면 대신 가나다순 목록 (대문에서만)
+// 모양은 style.css "접근성" 섹션. <html>에 a11y-* 클래스를 붙이는 방식이라 iframe 안 배우미·일정 페이지도 같이 바뀜
+// =====================================================================
+const A11Y_KEY = "pp-a11y";
+const A11Y_EMBEDDED = window.self !== window.top;
+const A11Y = { still: false, contrast: false, text: 0, list: false };
+function a11yLoad() {
+  try {
+    const saved = localStorage.getItem(A11Y_KEY);
+    if (saved) Object.assign(A11Y, JSON.parse(saved));
+    // 저장된 설정이 없으면 기기의 "동작 줄이기" 설정을 따름
+    else A11Y.still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (_) {}
+}
+function a11ySave() {
+  try { localStorage.setItem(A11Y_KEY, JSON.stringify(A11Y)); } catch (_) {}
+}
+// 자동재생 영상 — 움직임 멈추기면 멈추고 첫 장면만, 풀면 다시 재생
+function a11yVideo(v) {
+  if (v.autoplay) v.dataset.auto = "1";
+  if (!v.dataset.auto) return;
+  if (A11Y.still) {
+    v.autoplay = false;
+    v.pause();
+  } else {
+    v.autoplay = true;
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  }
+}
+function a11yApply() {
+  const root = document.documentElement;
+  root.classList.toggle("a11y-still", !!A11Y.still);
+  // 고대비: 맨 위 페이지만 화면 전체를 뒤집음. iframe 안 페이지는 바깥과 같이 뒤집히므로 사진만 되돌림
+  root.classList.toggle("a11y-contrast", !!A11Y.contrast && !A11Y_EMBEDDED);
+  root.classList.toggle("a11y-contrast-inner", !!A11Y.contrast && A11Y_EMBEDDED);
+  root.classList.toggle("a11y-big", A11Y.text > 0);
+  root.classList.toggle("a11y-text-2", A11Y.text === 2);
+  root.classList.toggle("a11y-list", !!A11Y.list);
+  document.querySelectorAll("video").forEach(a11yVideo);
+  document.dispatchEvent(new Event("a11y:change"));
+  // 탭 안에 떠 있는 배우미·일정 페이지(iframe)에도 바로 반영
+  document.querySelectorAll("iframe").forEach((f) => {
+    try { if (f.contentWindow.ppA11ySync) f.contentWindow.ppA11ySync(); } catch (_) {}
+  });
+}
+window.ppA11ySync = () => { a11yLoad(); a11yApply(); };
+window.addEventListener("storage", (e) => { if (e.key === A11Y_KEY) window.ppA11ySync(); });
+a11yLoad();
+a11yApply(); // 화면을 그리기 전에 클래스부터
+
+// 오른쪽 아래 버튼 + 설정 패널. iframe 안 페이지에선 안 만듦(바깥 버튼 하나로)
+function setupA11yPanel() {
+  if (A11Y_EMBEDDED) return;
+  const hasQuad = !!document.querySelector("#people .quad");
+  const wrap = document.createElement("div");
+  wrap.className = "a11y";
+  wrap.innerHTML =
+    '<div class="a11y-panel" id="a11y-panel" role="group" aria-label="보기 설정" hidden>' +
+      '<p class="a11y-title">보기 설정</p>' +
+      '<button type="button" class="a11y-opt" data-opt="still" aria-pressed="false"><span>움직임 멈추기</span><span class="a11y-state"></span></button>' +
+      '<button type="button" class="a11y-opt" data-opt="contrast" aria-pressed="false"><span>고대비 (흑백)</span><span class="a11y-state"></span></button>' +
+      '<div class="a11y-row"><span id="a11y-text-label">글자 크기</span>' +
+        '<span class="a11y-seg" role="group" aria-labelledby="a11y-text-label">' +
+          '<button type="button" data-text="0" aria-pressed="false">보통</button>' +
+          '<button type="button" data-text="1" aria-pressed="false">크게</button>' +
+          '<button type="button" data-text="2" aria-pressed="false">더 크게</button>' +
+        '</span></div>' +
+      (hasQuad ? '<button type="button" class="a11y-opt" data-opt="list" aria-pressed="false"><span>목록으로 보기</span><span class="a11y-state"></span></button>' : "") +
+      '<button type="button" class="a11y-reset">모두 끄기</button>' +
+    '</div>' +
+    '<button type="button" class="a11y-btn" aria-label="보기 설정" aria-expanded="false" aria-controls="a11y-panel">' +
+      '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
+        '<circle cx="12" cy="4.6" r="1.9" fill="currentColor" stroke="none"/><path d="M4.5 8.6 12 10l7.5-1.4M12 10v5.2M12 15.2 8.6 21.5M12 15.2l3.4 6.3"/></svg>' +
+    '</button>';
+  document.body.appendChild(wrap);
+  const panel = wrap.querySelector(".a11y-panel");
+  const btn = wrap.querySelector(".a11y-btn");
+
+  const render = () => {
+    wrap.querySelectorAll(".a11y-opt").forEach((b) => {
+      const on = !!A11Y[b.dataset.opt];
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.querySelector(".a11y-state").textContent = on ? "켬" : "끔";
+    });
+    wrap.querySelectorAll("[data-text]").forEach((b) => {
+      b.setAttribute("aria-pressed", String(A11Y.text) === b.dataset.text ? "true" : "false");
+    });
+    btn.classList.toggle("on", !!(A11Y.still || A11Y.contrast || A11Y.text || A11Y.list)); // 하나라도 켜져 있으면 버튼 색
+  };
+  const change = (fn) => { fn(); a11ySave(); a11yApply(); render(); };
+  const toggle = (open) => {
+    panel.hidden = !open;
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+
+  btn.addEventListener("click", () => toggle(panel.hidden));
+  wrap.querySelectorAll(".a11y-opt").forEach((b) => b.addEventListener("click", () => change(() => { A11Y[b.dataset.opt] = !A11Y[b.dataset.opt]; })));
+  wrap.querySelectorAll("[data-text]").forEach((b) => b.addEventListener("click", () => change(() => { A11Y.text = Number(b.dataset.text); })));
+  wrap.querySelector(".a11y-reset").addEventListener("click", () => change(() => Object.assign(A11Y, { still: false, contrast: false, text: 0, list: false })));
+  // 바깥을 누르거나 Esc면 닫힘 (Esc가 열린 탭까지 닫지 않게 여기서 멈춤)
+  document.addEventListener("pointerdown", (e) => { if (!panel.hidden && !wrap.contains(e.target)) toggle(false); });
+  wrap.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !panel.hidden) { e.stopPropagation(); toggle(false); btn.focus(); }
+  });
+  document.addEventListener("a11y:change", render);
+  render();
+}
+
 // 사진/영상을 같은 탭 안에서 크게 보여주는 라이트박스. 오버레이는 최초 호출 때 한 번만
 // 만들어서 재사용. 배경 클릭·닫기 버튼·Esc로 닫힘
 function openLightbox(src, isVideo) {
@@ -164,7 +279,7 @@ function openLightbox(src, isVideo) {
     el = document.createElement("video");
     el.src = src;
     el.controls = true;
-    el.autoplay = true;
+    el.autoplay = !A11Y.still; // 움직임 멈추기면 눌러야 재생
     el.loop = true;
     el.playsInline = true;
   } else {
@@ -198,7 +313,8 @@ function expandPhotos(figureId, basePath, items) {
       el = document.createElement("video");
       el.muted = true;
       el.setAttribute("muted", ""); // 자동재생 허용 조건: 속성으로도 명시해야 확실히 통과
-      el.autoplay = true;
+      el.dataset.auto = "1";
+      el.autoplay = !A11Y.still; // 움직임 멈추기면 첫 장면만
       el.loop = true;
       el.playsInline = true;
       el.src = src; // src는 마지막에 — 앞의 설정이 로드 시작 전에 반영되도록
@@ -237,7 +353,8 @@ function setupPhotoGrid(gridId, sources) {
       el = document.createElement("video");
       el.muted = true;
       el.setAttribute("muted", ""); // 자동재생 허용 조건: 속성으로도 명시해야 확실히 통과
-      el.autoplay = true;
+      el.dataset.auto = "1";
+      el.autoplay = !A11Y.still; // 움직임 멈추기면 첫 장면만
       el.loop = true;
       el.playsInline = true;
       el.src = src; // src는 마지막에 — 앞의 설정이 로드 시작 전에 반영되도록
@@ -508,6 +625,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const memberPreviews = setupMemberCards();
   setupEventView();
   setupPathMap();
+  setupA11yPanel();
+  document.querySelectorAll("video").forEach(a11yVideo); // HTML에 직접 넣은 자동재생 영상(일정 페이지 등)
 
   // 첫 화면 로딩 (index.html #loader) — 대문에서 쓰는 사진을 전부 미리 받음: 화면에 있는 img + PP 그림 전부 + 배우미 호버 사진
   const preload = [
@@ -866,11 +985,14 @@ function setupHeaderCycle(el, firstName) {
     parts.forEach((q) => (q.rest.style.width = q.w + "px"));   // 벌어짐 — 글자가 따라 나옴
   }
 
+  // 접근성 글자 크기가 바뀌면 글자 칸 폭을 다시 잼 (안 그러면 이름이 잘려 보임)
+  document.addEventListener("a11y:change", () => { if (parts.length) setNow(current); });
   (async () => {
     try { await document.fonts.ready; } catch (_) {}     // 글꼴이 늦게 오면 글자 폭을 잘못 잼
     setNow(current);
     for (;;) {
       await wait(HOLD_MS);
+      if (A11Y.still) continue; // 움직임 멈추기면 이름 그대로
       let next = current;
       while (PP_NAMES.length > 1 && next === current) next = PP_NAMES[Math.floor(Math.random() * PP_NAMES.length)];
       await swap(next);
@@ -888,7 +1010,7 @@ function setupHeaderCycle(el, firstName) {
 function setupLoader(firstName, srcs, onName) {
   const loader = document.getElementById("loader");
   if (!loader) return;
-  if (document.documentElement.classList.contains("intro-seen")) { loader.remove(); return; }
+  if (document.documentElement.classList.contains("intro-seen") || A11Y.still) { loader.remove(); return; }
   try { sessionStorage.setItem("pp-intro-seen", "1"); } catch (_) {}
   const nameEl = loader.querySelector(".loader-name");
   const MAX_MS = 20000;
@@ -1192,7 +1314,7 @@ function setupMemberCards() {
       bgPhoto.classList.remove("show");
     };
     const busy = () =>
-      document.hidden || document.body.classList.contains("panel-open") || (view && !view.classList.contains("hidden"));
+      document.hidden || A11Y.still || A11Y.list || document.body.classList.contains("panel-open") || (view && !view.classList.contains("hidden"));
     const step = () => {
       if (busy() || !cards.length) {
         clear();
@@ -1224,5 +1346,45 @@ function setupMemberCards() {
     document.getElementById("people").addEventListener("pointerdown", pause);
     timer = setTimeout(step, 1500);
   }
+  setupMemberList(openInTab);
   return MEMBER_PREVIEWS; // 첫 화면 로딩에서 미리 받을 사진 목록으로도 씀
+}
+
+// 접근성 "목록으로 보기" (2026-11-06) — 4분면 대신 보이는 배우미 가나다순 목록. 이름 옆에 4분면에서 놓인 쪽(위·아래 / 왼쪽·오른쪽 라벨의 한글 뜻)을 적음.
+// 카드 위치(--x, --y)와 라벨 글자는 index.html에서 그대로 읽어오므로 4분면을 고치면 목록도 따라 바뀜. 누르면 카드처럼 탭 안에 개인 페이지
+function setupMemberList(openInTab) {
+  const body = document.querySelector("#people .sheet-body");
+  const quad = body && body.querySelector(".quad");
+  if (!quad) return;
+  const label = (side) => {
+    const el = quad.querySelector(".quad-label-" + side + " .quad-ko");
+    return el ? el.textContent.trim() : side;
+  };
+  const items = Array.from(quad.querySelectorAll(".member[data-href]")).map((card) => {
+    const x = parseFloat(card.style.getPropertyValue("--x")) || 0;
+    const y = parseFloat(card.style.getPropertyValue("--y")) || 0;
+    return { name: card.textContent.trim(), href: card.dataset.href, where: label(y >= 0 ? "top" : "bottom") + " · " + label(x >= 0 ? "right" : "left") };
+  }).sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  const list = document.createElement("div");
+  list.className = "member-list";
+  list.innerHTML = '<p class="member-list-head">배우미 ' + items.length + "명 (가나다순)</p><ul></ul>";
+  const ul = list.querySelector("ul");
+  items.forEach((it) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = it.href;
+    a.textContent = it.name;
+    const where = document.createElement("span");
+    where.className = "member-list-where";
+    where.textContent = it.where;
+    li.append(a, where);
+    ul.appendChild(li);
+  });
+  list.addEventListener("click", (e) => {
+    const a = e.target.closest("a[href]");
+    if (!a || !openInTab || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    openInTab(a.getAttribute("href"));
+  });
+  quad.after(list);
 }

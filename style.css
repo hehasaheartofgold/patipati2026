@@ -956,3 +956,171 @@ body.embedded footer { display: none; }
   .quad:has(.quad-label-right:hover) .quad-hair-h { right: 125px; }
   .member { --member-size: 56px; font-size: 13px; padding: 4px; }
 }
+
+/* =====================================================================
+   접근성 (2026-11-06) — 오른쪽 아래 동그란 버튼 + 보기 설정 패널. 켜고 끄기는 js/main.js A11Y / setupA11yPanel.
+   <html>에 붙는 클래스: a11y-still(움직임 멈추기) · a11y-contrast(고대비, iframe 안은 a11y-contrast-inner)
+   · a11y-big + a11y-text-2(글자 크기) · a11y-list(배우미 목록으로 보기)
+   ===================================================================== */
+.a11y {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 100001;                 /* 헤더·탭 위, 사진 크게 보기(라이트박스) 아래 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+.a11y-btn {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #000;
+  background-color: var(--accent);  /* 헤더와 같은 실버 */
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.a11y-btn:hover,
+.a11y-btn.on { background-color: var(--hover); }   /* 하나라도 켜져 있으면 핑크 */
+.a11y-panel {
+  width: 260px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 16px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.a11y-panel[hidden] { display: none; }
+.a11y-title { font-weight: 700; margin-bottom: 2px; }
+.a11y-panel button {
+  font: inherit;
+  color: #000;
+  cursor: pointer;
+}
+.a11y-opt,
+.a11y-reset {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background-color: transparent;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+}
+.a11y-opt:hover,
+.a11y-reset:hover,
+.a11y-seg button:hover { background-color: rgba(0, 0, 0, 0.06); }
+.a11y-opt[aria-pressed="true"],
+.a11y-seg button[aria-pressed="true"] { background-color: var(--hover); border-style: solid; }
+.a11y-row { display: flex; flex-direction: column; gap: 6px; padding: 2px 0; }
+.a11y-seg { display: flex; gap: 6px; }
+.a11y-seg button {
+  flex: 1;
+  padding: 6px 0;
+  background-color: transparent;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+}
+.a11y-reset { justify-content: center; margin-top: 4px; border-style: solid; }
+/* 키보드로 움직일 때 지금 어디 있는지 보이게 (패널 안) */
+.a11y button:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+/* 오시는 길 지도 확대/축소 버튼이 접근성 버튼에 가리지 않게 위로 */
+#path-map .maplibregl-ctrl-bottom-right .maplibregl-ctrl { margin-bottom: 84px; }
+@media only screen and (max-width: 800px) {
+  .a11y { right: 16px; bottom: 16px; }
+  .a11y-btn { width: 46px; height: 46px; }
+  #path-map .maplibregl-ctrl-bottom-right .maplibregl-ctrl { margin-bottom: 74px; }
+}
+
+/* --- 1. 움직임 멈추기: 둥실 모션·탭 미끄러짐·호버 전환 등 CSS 움직임 전부 끔 (영상·헤더 이름·인트로는 JS) --- */
+html.a11y-still *,
+html.a11y-still *::before,
+html.a11y-still *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* --- 2. 고대비(흑백): 화면 전체를 뒤집고 흑백으로 → 검정 바탕·흰 글씨. 사진·영상·외부 임베드는 한 번 더 뒤집어 원래 밝기(흑백)로.
+   뒤집기 전 색을 미리 바꿔서, 뒤집은 뒤에 잘 읽히게: 헤더 실버 → 검정, 호버 핑크 → 진회색, 링크 호버 → 밝은 회색 (리소 색 변수는 지도 오렌지 길이 써서 그대로 둠) --- */
+html.a11y-contrast {
+  --silver: #fff;
+  --hover: #c8c8c8;
+  --link-hover: #555;
+  min-height: 100%;
+  background-color: #F5F5F5;
+  filter: invert(1) grayscale(1);
+}
+html.a11y-contrast img,
+html.a11y-contrast video,
+html.a11y-contrast .video-embed iframe,
+html.a11y-contrast-inner img,
+html.a11y-contrast-inner video,
+html.a11y-contrast-inner .video-embed iframe { filter: invert(1); }
+
+/* --- 3. 글자 크기: 크게 1.25배 / 더 크게 1.5배. 사이트 글자 크기가 px로 고정돼 있어서 주요 글자마다 배수를 곱함 --- */
+html.a11y-big { --fs: 1.25; }
+html.a11y-big.a11y-text-2 { --fs: 1.5; }
+.a11y-big body,
+.a11y-big h1,
+.a11y-big h2,
+.a11y-big .in-tab-back,
+.a11y-big #copy-btn,
+.a11y-big .sheet-tab { font-size: calc(18px * var(--fs)); }
+.a11y-big #pp-name,
+.a11y-big #pp-name b,
+.a11y-big .tabs-page #pp-name,
+.a11y-big .home-intro { font-size: calc(20px * var(--fs)); }
+.a11y-big small,
+.a11y-big .person-insta { font-size: calc(14px * var(--fs)); }
+.a11y-big .embed-open,
+.a11y-big .map #address,
+.a11y-big .quad-label,
+.a11y-big .a11y-panel,
+.a11y-big .tabs-overlay .site-nav .sheet-tab { font-size: calc(16px * var(--fs)); }
+.a11y-big .member {
+  font-size: calc(20px * var(--fs));
+  --member-size: calc(110px * (1 + (var(--fs) - 1) * 0.6));   /* 원은 글자보다 덜 커지게 (카드끼리 덜 겹치게) */
+}
+.a11y-big .a11y-panel { width: calc(260px * var(--fs)); }
+@media only screen and (max-width: 800px) {
+  .a11y-big .tabs-overlay .site-nav .sheet-tab,
+  .a11y-big .sheet-tab,
+  .a11y-big small,
+  .a11y-big .person-insta { font-size: calc(14px * var(--fs)); }
+  .a11y-big .quad-label { font-size: calc(12px * var(--fs)); }
+  .a11y-big .member { font-size: calc(13px * var(--fs)); --member-size: calc(56px * (1 + (var(--fs) - 1) * 0.6)); }
+  .a11y-big .a11y-panel { width: min(calc(260px * var(--fs)), calc(100vw - 32px)); }
+}
+
+/* --- 4. 목록으로 보기: 배우미 4분면 대신 가나다순 목록 (js/main.js setupMemberList) --- */
+.member-list { display: none; }
+html.a11y-list #people .quad { display: none; }
+html.a11y-list #people .member-list { display: block; padding: 20px 20px 100px; }
+html.a11y-list #people .sheet-body { overflow-y: auto; }
+#people .sheet-body:has(#member-view:not(.hidden)) .member-list { visibility: hidden; }
+.member-list-head { margin-bottom: 12px; }
+.member-list ul { list-style: none; margin: 0; padding: 0; border-top: 1px dashed var(--line); }
+.member-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 20px;
+  border-bottom: 1px dashed var(--line);
+}
+.member-list a {
+  min-width: 6em;
+  padding: 12px 0;
+  text-decoration: none;
+}
+.member-list-where { color: #555; }
