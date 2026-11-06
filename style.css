@@ -1098,19 +1098,24 @@ html.a11y-big.a11y-text-2 { --fs: 1.5; }
   --member-size: calc(110px * (1 + (var(--fs) - 1) * 0.6));   /* 원은 글자보다 덜 커지게 (카드끼리 덜 겹치게) */
 }
 .a11y-big .a11y-panel { width: calc(260px * var(--fs)); }
-/* 4분면 가로 점선 — 좌우 라벨(premise·process)이 커진 만큼 점선 양 끝을 더 비움 (안 그러면 겹침) */
-.a11y-big .quad-hair-h { left: max(4%, calc(88px * var(--fs))); right: max(4%, calc(88px * var(--fs))); }
-.a11y-big .quad:has(.quad-label-left:hover) .quad-hair-h  { left: calc(170px * var(--fs)); }
-.a11y-big .quad:has(.quad-label-right:hover) .quad-hair-h { right: calc(170px * var(--fs)); }
+/* 4분면 가로 점선 — 글자가 커지면 점선을 양 끝까지 길게 두고, 좌우 라벨(premise·process)에 배경색을 깔아
+   라벨이 있는 자리만 점선을 가림 → 라벨 글자 바로 옆까지 점선이 옴 (폭을 고정값으로 비우면 너무 짧아졌음) */
+.a11y-big .quad-hair-h,
+.a11y-big .quad:has(.quad-label-left:hover) .quad-hair-h,
+.a11y-big .quad:has(.quad-label-right:hover) .quad-hair-h { left: 12px; right: 12px; }
+.a11y-big .quad-label-left,
+.a11y-big .quad-label-right { background-color: var(--quad-bg); }
+.a11y-big .quad-label-left  { padding-right: 8px; }
+.a11y-big .quad-label-right { padding-left: 8px; }
 @media only screen and (max-width: 800px) {
   .a11y-big .tabs-overlay .site-nav .sheet-tab,
   .a11y-big .sheet-tab,
   .a11y-big small,
   .a11y-big .person-insta { font-size: calc(14px * var(--fs)); }
   .a11y-big .quad-label { font-size: calc(12px * var(--fs)); }
-  .a11y-big .quad-hair-h { left: calc(70px * var(--fs)); right: calc(70px * var(--fs)); }
-  .a11y-big .quad:has(.quad-label-left:hover) .quad-hair-h  { left: calc(125px * var(--fs)); }
-  .a11y-big .quad:has(.quad-label-right:hover) .quad-hair-h { right: calc(125px * var(--fs)); }
+  .a11y-big .quad-hair-h,
+  .a11y-big .quad:has(.quad-label-left:hover) .quad-hair-h,
+  .a11y-big .quad:has(.quad-label-right:hover) .quad-hair-h { left: 12px; right: 12px; }
   .a11y-big .member { font-size: calc(13px * var(--fs)); --member-size: calc(56px * (1 + (var(--fs) - 1) * 0.6)); }
   .a11y-big .a11y-panel { width: min(calc(260px * var(--fs)), calc(100vw - 32px)); }
 }
