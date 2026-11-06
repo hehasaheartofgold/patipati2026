@@ -1129,22 +1129,25 @@ html.a11y-big.a11y-text-2 { --fs: 1.5; }
 /* --- 4. 목록으로 보기: 배우미 4분면 대신 가나다순 목록 (js/main.js setupMemberList) --- */
 .member-list { display: none; }
 html.a11y-list #people .quad { display: none; }
-html.a11y-list #people .member-list { display: block; padding: 20px 20px 100px; }
+html.a11y-list #people .member-list { display: block; padding: 20px 0 100px; }
 html.a11y-list #people .sheet-body { overflow-y: auto; }
 #people .sheet-body:has(#member-view:not(.hidden)) .member-list { visibility: hidden; }
-.member-list-head { margin-bottom: 12px; }
+.member-list-head { margin: 0 20px 12px; }
 .member-list ul { list-style: none; margin: 0; padding: 0; border-top: 1px dashed var(--line); }
-.member-list li {
+.member-list li { border-bottom: 1px dashed var(--line); }
+/* 줄 전체가 버튼(링크) — 어디를 눌러도 그 배우미 페이지. 호버하면 줄 전체 마젠타(리소 형광 핑크) */
+.member-list a {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 4px 20px;
-  border-bottom: 1px dashed var(--line);
-}
-.member-list a {
-  min-width: 6em;
-  padding: 12px 0;
+  padding: 12px 20px;
   text-decoration: none;
+  cursor: pointer;
 }
+.member-list a:hover,
+.member-list a:focus-visible { color: inherit; background-color: var(--hover); outline: none; }
+.member-list-name { min-width: 6em; }
 .member-list-en { min-width: 11em; }   /* public · premise — 길이가 달라도 한글 뜻이 한 줄로 맞게 */
 .member-list-where { color: #555; }
+.member-list a:hover .member-list-where { color: inherit; }

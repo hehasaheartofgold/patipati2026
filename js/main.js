@@ -1378,9 +1378,12 @@ function setupMemberList(openInTab) {
   const ul = list.querySelector("ul");
   items.forEach((it) => {
     const li = document.createElement("li");
+    // 칸 전체가 링크 (2026-11-06 — 이름 글자만 눌리던 것을 줄 전체로)
     const a = document.createElement("a");
     a.href = it.href;
-    a.textContent = it.name;
+    const name = document.createElement("span");
+    name.className = "member-list-name";
+    name.textContent = it.name;
     // 영어 키워드(public · premise) 먼저, 그 뒤에 한글 뜻 (2026-11-06 요청)
     const en = document.createElement("span");
     en.className = "member-list-en";
@@ -1388,7 +1391,8 @@ function setupMemberList(openInTab) {
     const ko = document.createElement("span");
     ko.className = "member-list-where";
     ko.textContent = it.ko;
-    li.append(a, en, ko);
+    a.append(name, en, ko);
+    li.appendChild(a);
     ul.appendChild(li);
   });
   list.addEventListener("click", (e) => {
