@@ -40,6 +40,7 @@ const PATIPATI_PHOTOS = [
   "patipati-video8.mp4", "patipati-video9.mp4", // 2026-11-04 추가 (원본 IMG_0947·0948, HDR → SDR 변환)
   "patipati-daily23.jpg", // 2026-11-05 추가 (폰에서 보낸 사진)
   "patipati-daily24.jpg", // 2026-11-06 추가 (식당, 원본 IMG_5974)
+  "patipati-video10.mp4", // 2026-11-06 추가 (원본 IMG_0968, HDR → SDR, 소리 제거)
 ];
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
