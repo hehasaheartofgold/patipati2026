@@ -1107,6 +1107,12 @@ html.a11y-big.a11y-text-2 { --fs: 1.5; }
 .a11y-big .quad-label-right { background-color: var(--quad-bg); }
 .a11y-big .quad-label-left  { padding-right: 8px; }
 .a11y-big .quad-label-right { padding-left: 8px; }
+/* 세로 점선도 같은 방식 — 위아래 끝까지 두고 public·private 라벨 뒤만 가려서 글자와 8px 간격 (가로와 맞춤) */
+.a11y-big .quad-hair-v { top: 12px; bottom: 12px; }
+.a11y-big .quad-label-top,
+.a11y-big .quad-label-bottom { background-color: var(--quad-bg); }
+.a11y-big .quad-label-top    { padding-bottom: 8px; }
+.a11y-big .quad-label-bottom { padding-top: 8px; }
 @media only screen and (max-width: 800px) {
   .a11y-big .tabs-overlay .site-nav .sheet-tab,
   .a11y-big .sheet-tab,
