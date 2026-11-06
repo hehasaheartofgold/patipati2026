@@ -1128,4 +1128,5 @@ html.a11y-list #people .sheet-body { overflow-y: auto; }
   padding: 12px 0;
   text-decoration: none;
 }
+.member-list-en { min-width: 11em; }   /* public · premise — 길이가 달라도 한글 뜻이 한 줄로 맞게 */
 .member-list-where { color: #555; }

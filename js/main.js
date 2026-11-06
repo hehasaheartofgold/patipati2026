@@ -1354,20 +1354,23 @@ function setupMemberCards() {
   return MEMBER_PREVIEWS; // 첫 화면 로딩에서 미리 받을 사진 목록으로도 씀
 }
 
-// 접근성 "목록으로 보기" (2026-11-06) — 4분면 대신 보이는 배우미 가나다순 목록. 이름 옆에 4분면에서 놓인 쪽(위·아래 / 왼쪽·오른쪽 라벨의 한글 뜻)을 적음.
+// 접근성 "목록으로 보기" (2026-11-06) — 4분면 대신 보이는 배우미 가나다순 목록. 이름 옆에 4분면에서 놓인 쪽(위·아래 / 왼쪽·오른쪽 라벨)을 영어 키워드 → 한글 뜻 순서로 적음.
 // 카드 위치(--x, --y)와 라벨 글자는 index.html에서 그대로 읽어오므로 4분면을 고치면 목록도 따라 바뀜. 누르면 카드처럼 탭 안에 개인 페이지
 function setupMemberList(openInTab) {
   const body = document.querySelector("#people .sheet-body");
   const quad = body && body.querySelector(".quad");
   if (!quad) return;
-  const label = (side) => {
-    const el = quad.querySelector(".quad-label-" + side + " .quad-ko");
+  // 라벨 글자: lang "en" = 영어 키워드(public 등), "ko" = 한글 뜻
+  const label = (side, lang) => {
+    const el = quad.querySelector(".quad-label-" + side + " .quad-" + lang);
     return el ? el.textContent.trim() : side;
   };
   const items = Array.from(quad.querySelectorAll(".member[data-href]")).map((card) => {
     const x = parseFloat(card.style.getPropertyValue("--x")) || 0;
     const y = parseFloat(card.style.getPropertyValue("--y")) || 0;
-    return { name: card.textContent.trim(), href: card.dataset.href, where: label(y >= 0 ? "top" : "bottom") + " · " + label(x >= 0 ? "right" : "left") };
+    const v = y >= 0 ? "top" : "bottom", h = x >= 0 ? "right" : "left";
+    return { name: card.textContent.trim(), href: card.dataset.href,
+      en: label(v, "en") + " · " + label(h, "en"), ko: label(v, "ko") + " · " + label(h, "ko") };
   }).sort((a, b) => a.name.localeCompare(b.name, "ko"));
   const list = document.createElement("div");
   list.className = "member-list";
@@ -1378,10 +1381,14 @@ function setupMemberList(openInTab) {
     const a = document.createElement("a");
     a.href = it.href;
     a.textContent = it.name;
-    const where = document.createElement("span");
-    where.className = "member-list-where";
-    where.textContent = it.where;
-    li.append(a, where);
+    // 영어 키워드(public · premise) 먼저, 그 뒤에 한글 뜻 (2026-11-06 요청)
+    const en = document.createElement("span");
+    en.className = "member-list-en";
+    en.textContent = it.en;
+    const ko = document.createElement("span");
+    ko.className = "member-list-where";
+    ko.textContent = it.ko;
+    li.append(a, en, ko);
     ul.appendChild(li);
   });
   list.addEventListener("click", (e) => {
