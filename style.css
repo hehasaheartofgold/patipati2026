@@ -1207,3 +1207,41 @@ html.a11y-list .person-grid > .yt-embed iframe { aspect-ratio: 16 / 9; }
   html.a11y-list .person-grid figure.block-image,
   html.a11y-list .photo-grid figure.block-image { grid-template-columns: 120px 1fr; gap: 12px; }
 }
+
+/* 대체 텍스트 편집 모드 (?alt-edit=1, js/main.js setupAltEditor) — 로컬 작업용. 설명 칸을 입력 칸처럼 */
+html.alt-edit .a11y-alt[contenteditable] {
+  min-height: 3em;
+  padding: 8px 10px;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: text;
+  outline: none;
+}
+html.alt-edit .a11y-alt[contenteditable]:focus { border-style: solid; }
+html.alt-edit .a11y-alt[contenteditable].edited { background-color: #fff3fa; }   /* 이번에 고친 칸 = 옅은 핑크 */
+html.alt-edit .a11y-alt[contenteditable]:empty::before { content: attr(data-placeholder); color: #999; }
+.alt-edit-bar {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 14px;
+  font-size: 15px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.alt-edit-bar button {
+  font: inherit;
+  padding: 4px 12px;
+  color: #000;
+  background-color: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.alt-edit-bar button:hover { background-color: var(--hover); }

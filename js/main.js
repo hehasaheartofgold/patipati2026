@@ -43,70 +43,110 @@ const PATIPATI_PHOTOS = [
   "patipati-video10.mp4", // 2026-11-06 추가 (원본 IMG_0968, HDR → SDR, 소리 제거)
 ];
 
-// 사진 대체 텍스트(alt) — 파일 이름 → 설명. PP 사진 탭(setupPhotoGrid)·개인 페이지(expandPhotos)에서 같은 이름이면 씀 (photoAlt).
-// 2026-11-06 Claude가 사진을 보고 1차 작성 (사람 이름은 넣지 않음). 사진을 추가하면 여기에도 한 줄씩. 없으면 빈 alt
+// 사진·영상 대체 텍스트(alt) — 사이트 안 경로 → 설명. 영상은 aria-label로 들어감. PP 사진 탭(setupPhotoGrid)·개인 페이지(expandPhotos)에서 같은 이름이면 씀 (photoAlt).
+// 2026-11-06 Claude 1차 작성 → 우성 수정, 2026-11-07 편집 모드(?alt-edit=1) 내보내기 반영. 사진을 추가하면 여기에도 한 줄씩. 없으면 빈 alt
 const PHOTO_ALTS = {
-  "patipati-space1.jpg": "4학년 작업실의 풍경",
-  "patipati-space2.jpg": "숲이 보이는 넓은 창 앞 작업실. 양치하는 재이, 준현이 만든 의자에 앉아있는 서로. 소파에 앉아있는 오늘이",
-  "patipati-space3.jpg": "소파와 테이블이 놓인 작업실에서 쉬며 이야기하는 PP.",
-  "patipati-space-site.jpg": "높은 콘크리트 벽에 걸친 사다리를 오르는 도노와 바라보는 서연과 알샴.",
-  "patipati-design-meeting1.jpg": "검은 책상에 앉아 회의하는 도노와 오늘이.",
-  "patipati-design-meeting2.jpg": "PP 아이디어가 빼곡히 적힌 화이트보드.",
-  "patipati-design-meeting3.jpg": "화이트보드에 글씨를 쓰며 이야기하는 도노와 오늘이와 무루골.",
-  "patipati-murugol-carrier.jpg": "건물 사이 횡단보도를 캐리어를 끌고 건너는 무루골.",
-  "patipati-soyo-site.jpg": "맑은 하늘 아래 풀이 무성한 옥상 밭에 서 있는 소요의 뒷모습.",
-  "patipati-meal.jpg": "테이블에 둘러앉아 함께 밥을 먹는 PP.",
-  "patipati-meeting.jpeg": "회의 공간에서 회의하는 PP.",
-  "patipati-woosung-hyundae.jpeg": "테이블에 나란히 앉아 노트북으로 작업하는 우성과 현대.",
-  "patipati-pr-zoom.jpg": "소파에 앉아 회의하는 디자인팀과 홍보 아카이빙 팀.",
-  "patipati-carry-box.jpg": "우성의 아케이드 머신을 옮기는 우성과 서연.",
-  "patipati-studio.jpg": "4학년 작업실의 풍경",
-  "patipati-planet.jpg": "휴식 공간 카펫 위 놓인 서연의 덧마루.",
-  "patipati-selfie.jpg": "PP의 셀카.",
-  "patipati-sunlight.jpg": "햇빛이 길게 들어오는 작업실 가운데 허리 춤에 손을 올리고 웃는 서로.",
-  "patipati-sunglasses.jpg": "선글라스를 쓰고 의자에 앉은 현과 옆에 서서 웃는 우성과 서연.",
-  "patipati-silkscreen.jpg": "'2026 12.19 12.25' 그래픽이 노광된 파란 실크스크린 판을 함께 드는 디자인팀.",
-  "patipati-knitting.jpg": "털실 뭉치를 옆에 두고 뜨개질하는 준현의 손.",
-  "patipati-board.jpg": "시멘트 벽돌에 게임 버튼을 붙이는 우성과 서연.",
-  "patipati-gathering.jpg": "휴식 공간에서 서연이 자랑하는 과일과 그걸 촬영하는 바치. 뒤에서 바라보는 현대",
-  "patipati-postit1.jpg": "포스트잇과 종이를 펼쳐 놓고 회의하는 알샴과 희주.",
-  "patipati-postit2.jpg": "큰 종이에 포스트잇을 붙여보며 PP 4사분면을 기획하는 기획팀",
-  "patipati-postit3.jpg": "노트북 화면과 키보드 위에 초록색 포스트잇이 잔뜩 붙은 모습.",
-  "patipati-night1.jpg": "조명이 켜진 밤 해월방에서 화면을 보며 회의하는 디자인팀.",
-  "patipati-night2.jpg": "4학년 작업실의 풍경",
-  "patipati-night3.jpg": "4학년 작업실의 풍경. 우성의 커다란 모니터에는 '플레이콜렉티브'라는 문구가 적혀있다.",
-  "patipati-night-tree.jpg": "나무 위에 올라타 가지에 걸린 오늘이의 연을 꺼내주는 도노.",
-  "patipati-meeting2.jpg": "전체회의 중인 PP",
-  "patipati-daily1.jpg": "창가 사이에서 마주보는 서로와 소요.",
-  "patipati-daily2.jpg": "바닥에 시대의 작업을 펼쳐놓고 구경하는 공간팀.",
-  "patipati-daily3.jpg": "옥상 테이블에 마주 앉아 작업 중인 우성과 현대.",
-  "patipati-daily4.jpg": "엘리베이터로 소파를 옮기는 우성.",
-  "patipati-daily5.jpg": "뜨개질을 자랑하는 서연과 서로. 바라보며 웃는 바치.",
-  "patipati-daily6.jpg": "해월방에서 현대의 작업을 구경하는 PP.",
-  "patipati-daily7.jpg": "재봉틀로 깃밧을 재봉하는 서연의 뒷모습.",
-  "patipati-daily8.jpg": "책상 사이에 모여 서서 무언가를 들여다보는 PP.",
-  "patipati-sofa-carry.jpg": "계단으로 소파를 함께 옮기는 우성과 현.",
-  "patipati-daily9.jpg": "바닥에 시대의 작업물을 펼쳐놓고 구경하는 PP.",
-  "patipati-daily10.jpg": "밤길에서 현대에게 자전거 타는 법을 가르쳐주는 서연.",
-  "patipati-daily11.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
-  "patipati-daily12.jpg": "도노의 파이프를 실험 중인 서연과 소요와 도노.",
-  "patipati-daily13.jpg": "밤길에 자전거 한 대에 함께 탄 우성과 현.",
-  "patipati-daily14.jpg": "큰 나무 판을 문 밖으로 옮기는 준현과 소요.",
-  "patipati-daily15.jpg": "휴식공간 소파에 앉아 회의 중인 공간팀.",
-  "patipati-daily16.jpg": "해월방에서 개인 인터뷰를 진행 중인 PP.",
-  "patipati-daily17.jpg": "창가 넘어 노을을 바라보는 서연과 무루골의 뒷모습",
-  "patipati-daily18.jpg": "휴식공간 소파에 앉아 회의하는 디자인팀과 홍보 아카이빙팀.",
-  "patipati-daily19.jpg": "외벽 통창을 실측하는 디자인팀.",
-  "patipati-daily20.jpg": "공간 답사 중인 공간팀.",
-  "patipati-daily21.jpg": "편의점 앞 라면 3개를 쌓은 채로 강아지를 쓰다듬은 준현과 소요.",
-  "patipati-daily22.jpg": "도노의 파이프를 실험 중인 서연과 소요와 도노.",
-  "patipati-daily23.jpg": "소파에 길게 누워 닌텐도 스위치2를 하는 현.",
-  "patipati-daily24.jpg": "식당에 둘러앉아 밥을 먹는 우성,현,휘수,서연.",
-  "potato30.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
-  "potato31.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
-  "potato32.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
+  "images/patipati/patipati-space1.jpg": "4학년 작업실의 풍경",
+  "images/patipati/patipati-space2.jpg": "숲이 보이는 넓은 창 앞 작업실. 양치하는 재이, 준현이 만든 의자에 앉아있는 서로. 소파에 앉아있는 오늘이",
+  "images/patipati/patipati-space3.jpg": "소파와 테이블이 놓인 작업실에서 쉬며 이야기하는 PP.",
+  "images/patipati/patipati-space-site.jpg": "높은 콘크리트 벽에 걸친 사다리를 오르는 도노와 바라보는 서연과 알샴.",
+  "images/patipati/patipati-design-meeting1.jpg": "검은 책상에 앉아 회의하는 도노와 오늘이.",
+  "images/patipati/patipati-design-meeting2.jpg": "PP 아이디어가 빼곡히 적힌 화이트보드.",
+  "images/patipati/patipati-design-meeting3.jpg": "화이트보드에 글씨를 쓰며 이야기하는 도노와 오늘이와 무루골.",
+  "images/patipati/patipati-murugol-carrier.jpg": "건물 사이 횡단보도를 캐리어를 끌고 건너는 무루골.",
+  "images/patipati/patipati-soyo-site.jpg": "맑은 하늘 아래 풀이 무성한 옥상 밭에 서 있는 소요의 뒷모습.",
+  "images/patipati/patipati-meal.jpg": "테이블에 둘러앉아 함께 밥을 먹는 PP.",
+  "images/patipati/patipati-meeting.jpeg": "회의 공간에서 회의하는 PP.",
+  "images/patipati/patipati-woosung-hyundae.jpeg": "테이블에 나란히 앉아 노트북으로 작업하는 우성과 현대.",
+  "images/patipati/patipati-pr-zoom.jpg": "소파에 앉아 회의하는 디자인팀과 홍보 아카이빙 팀.",
+  "images/patipati/patipati-carry-box.jpg": "우성의 아케이드 머신을 옮기는 우성과 서연.",
+  "images/patipati/patipati-studio.jpg": "4학년 작업실의 풍경.",
+  "images/patipati/patipati-planet.jpg": "휴식 공간 카펫 위 놓인 서연의 덧마루.",
+  "images/patipati/patipati-selfie.jpg": "PP의 셀카.",
+  "images/patipati/patipati-sunlight.jpg": "햇빛이 길게 들어오는 작업실 가운데 허리 춤에 손을 올리고 웃는 서로.",
+  "images/patipati/patipati-sunglasses.jpg": "픽셀 모양 선글라스를 쓰고 의자에 앉은 현과 옆에 서서 웃는 우성과 서연.",
+  "images/patipati/patipati-silkscreen.jpg": "PP깃발 용 '2026 12.19 12.25' 그래픽이 노광된 파란 실크스크린 판.",
+  "images/patipati/patipati-knitting.jpg": "털실 뭉치를 옆에 두고 뜨개질하는 준현의 손.",
+  "images/patipati/patipati-board.jpg": "시멘트 벽돌에 게임 버튼을 붙이는 우성과 서연.",
+  "images/patipati/patipati-gathering.jpg": "휴식 공간에서 서연이 자랑하는 과일과 그걸 촬영하는 바치. 뒤에서 바라보는 현대",
+  "images/patipati/patipati-postit1.jpg": "포스트잇과 종이를 펼쳐 놓고 회의하는 알샴과 희주.",
+  "images/patipati/patipati-postit2.jpg": "큰 종이에 포스트잇을 붙여보며 PP 4사분면을 기획하는 기획팀.",
+  "images/patipati/patipati-postit3.jpg": "노트북 화면과 키보드 위에 초록색 포스트잇이 잔뜩 붙은 모습.",
+  "images/patipati/patipati-night1.jpg": "조명이 켜진 밤 해월방에서 화면을 보며 회의하는 디자인팀.",
+  "images/patipati/patipati-night2.jpg": "4학년 작업실의 풍경.",
+  "images/patipati/patipati-night3.jpg": "4학년 작업실의 풍경. 우성의 커다란 모니터에는 '플레이콜렉티브'라는 문구가 적혀있다.",
+  "images/patipati/patipati-night-tree.jpg": "나무 위에 올라타 가지에 걸린 오늘이의 연을 꺼내주는 도노.",
+  "images/patipati/patipati-meeting2.jpg": "전체회의 중인 PP.",
+  "images/patipati/patipati-daily1.jpg": "창가 사이에서 마주보는 서로와 소요.",
+  "images/patipati/patipati-daily2.jpg": "바닥에 시대의 작업을 펼쳐놓고 구경하는 공간팀.",
+  "images/patipati/patipati-daily3.jpg": "옥상 테이블에 마주 앉아 작업 중인 우성과 현대.",
+  "images/patipati/patipati-daily4.jpg": "엘리베이터로 소파를 옮기는 우성.",
+  "images/patipati/patipati-daily5.jpg": "뜨개질을 자랑하는 서연과 서로. 바라보며 웃는 바치.",
+  "images/patipati/patipati-daily6.jpg": "해월방에서 현대의 작업을 구경하는 PP.",
+  "images/patipati/patipati-daily7.jpg": "재봉틀로 깃밧을 재봉하는 서연의 뒷모습.",
+  "images/patipati/patipati-daily8.jpg": "책상 사이에 모여 서서 무언가를 들여다보는 PP.",
+  "images/patipati/patipati-sofa-carry.jpg": "계단으로 소파를 함께 옮기는 우성과 현.",
+  "images/patipati/patipati-daily9.jpg": "바닥에 시대의 작업물을 펼쳐놓고 구경하는 PP.",
+  "images/patipati/patipati-daily10.jpg": "밤길에서 현대에게 자전거 타는 법을 가르쳐주는 서연.",
+  "images/patipati/patipati-daily11.jpg": "휴식 공간을 청소기로 청소하고 있는 준현.",
+  "images/patipati/patipati-daily12.jpg": "도노의 파이프를 실험 중인 서연과 소요와 도노.",
+  "images/patipati/patipati-daily13.jpg": "밤길에 자전거 한 대에 함께 탄 우성과 현.",
+  "images/patipati/patipati-daily14.jpg": "큰 나무 판을 문 밖으로 옮기는 준현과 소요.",
+  "images/patipati/patipati-daily15.jpg": "휴식공간 소파에 앉아 회의 중인 공간팀.",
+  "images/patipati/patipati-daily16.jpg": "해월방에서 개인 인터뷰를 진행 중인 PP.",
+  "images/patipati/patipati-daily17.jpg": "창가 넘어 노을을 바라보는 서연과 무루골의 뒷모습.",
+  "images/patipati/patipati-daily18.jpg": "휴식공간 소파에 앉아 회의하는 디자인팀과 홍보 아카이빙팀.",
+  "images/patipati/patipati-daily19.jpg": "외벽 통창을 실측하는 디자인팀.",
+  "images/patipati/patipati-daily20.jpg": "공간 답사 중인 공간팀.",
+  "images/patipati/patipati-daily21.jpg": "편의점 앞 라면 3개를 쌓은 채로 강아지를 쓰다듬은 준현과 소요.",
+  "images/patipati/patipati-daily22.jpg": "도노의 파이프를 실험 중인 서연과 소요와 도노.",
+  "images/patipati/patipati-daily23.jpg": "소파에 길게 누워 닌텐도 스위치2를 하는 현.",
+  "images/patipati/patipati-daily24.jpg": "식당에 둘러앉아 밥을 먹는 우성,현,휘수,서연.",
+  "images/event/potato-pancake/potato30.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
+  "images/event/potato-pancake/potato31.jpg": "휴식 공간에 둘러앉아 감자전을 먹는 PP.",
+  "images/event/potato-pancake/potato32.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
+  "images/patipati/patipati-video1.mp4": "마리오 카트를 플레이하는 서연과 현.",
+  "images/patipati/patipati-video9.mp4": "구부러진 파이프 구멍에 입을 대고 말을 하는 서연과 반대편 구멍에 귀를 대고 듣는 도노.",
+  "images/patipati/patipati-video3.mp4": "'Potato Pancake' 중인 PP.",
+  "images/patipati/patipati-video2.mp4": "서로의 종이컵 전화기를 귀에 대고 서로의 목소리를 듣는 우성.",
+  "images/patipati/patipati-video10.mp4": "우성의 모니터에 연결해서 닌텐도로 '젤다의 전설'을 플레이하는 현.",
+  "images/patipati/patipati-video7.mp4": "어두운 휴식 공간 의자에 혼자 앉아 잠든 도노.",
+  "images/patipati/patipati-video5.mp4": "회의 공간에서 전체 회의를 진행 중인 PP.",
+  "images/patipati/patipati-video8.mp4": "PP깃발을 파이프 벤더에 지렛대로 꽂아 파이프를 구부려보는 도노. 이를 구경하는 소요와 서연.",
+  "images/patipati/patipati-video4.mp4": "식탁에 둘러 앉아 설거지 내기 가위바위보를 하는 PP.",
+  "images/patipati/patipati-video6.mp4": "PP 전체 회의 중 웃음이 터진 PP.",
+  "images/personal/우성/아케이드/arcade1.jpeg": "게임이 켜진 아케이드 머신.",
+  "images/personal/우성/아케이드/arcade-buttons.jpeg": "각종 게임용 버튼과 회로.",
+  "images/personal/우성/OHHYUK/ohhyuk1.jpg": "게임 버튼이 회로로 연결된 시멘트 벽돌.",
+  "images/personal/우성/시지프스/sisyphus4.jpg": "우성의 게임을 벽돌을 흔들면서 플레이 중인 도노의 뒷모습.",
+  "images/personal/우성/소파게임/sofa2.jpg": "각종 버튼을 연결된 라즈베리파이4.",
+  "images/personal/우성/OHHYUK/ohhyuk2.jpg": "벽돌에 버튼을 부착하기 위해 나무막대를 실측하는 서연의 손.",
+  "images/personal/우성/시지프스/sisyphus2.jpg": "주황색 마스킹 테이프로 아두이노가 부착된 시멘트 벽돌.",
+  "images/personal/우성/작업/woosung-work-video1.mp4": "'플레이 콜렉티브' 마스코트 가면을 쓰고 책상에 앉아 작업하는 우성.",
+  "images/personal/우성/시지프스/sisyphus3.jpg": "우성의 시멘트 벽돌 컨트롤러를 들어보는 서연.",
+  "images/personal/우성/모보페스티벌/mobo1.jpg": "'플레이콜렉티브' 가면을 쓰고 나란히 서있는 우성을 포함한 사람들.",
+  "images/personal/우성/아케이드/arcade-frame.jpeg": "나무 뼈대만 완성된 상태의 우성의 아케이드 머신.",
+  "images/personal/우성/소파게임/sofa5.jpg": "소파 위에 버튼 2개를 얹어 놓은 손.",
+  "images/personal/우성/OHHYUK/ohhyuk4.jpg": "빨간 버튼이 연결된 벽돌 컨트롤러.",
+  "images/personal/우성/작업/woosung-work1.jpg": "착시현상 이미지로 가득 채워진 우성의 디지털 게임.",
+  "images/personal/우성/소파게임/sofa7.jpg": "우성의 소파 게임 도안이 인쇄된 종이. 소파 위에 사람이 길게 누워있고 각종 메모가 적혀있다.",
+  "images/personal/우성/OHHYUK/ohhyuk3.jpg": "혁오 플리마켓에서 전시된 우성의 게임.",
+  "images/personal/우성/소파게임/sofa4.jpg": "우성이 제작 중인 게임. 픽셀로 그려진 소파와 그 위에 주인공이 누워있다.",
+  "images/personal/우성/모보페스티벌/mobo-video1.mp4": "'MOBBO 페스티벌'에서 'BIG GAME' 무대를 하고있는 우성. '플레이콜렉티브' 점프슈트와 가면을 쓰고 VJ를 준비하고 있다.",
+  "images/personal/우성/아케이드/arcade-encoder.jpeg": "노트북에 연결된 게임 장치.",
+  "images/personal/우성/아케이드/arcade-inside.jpeg": "우성의 아케이드 머신 내부. 모니터가 밧줄로 고정되어 있고 아래로는 노트북과 연장 케이블이 보인다.",
+  "images/personal/우성/소파게임/sofa1.jpg": "우성의 소파 게임 3D 도안.",
+  "images/personal/우성/작업/woosung-work2.jpg": "우성의 게임인 '박우성의 대모험'이 담긴 플로피 디스크.",
+  "images/personal/우성/소파게임/sofa3.jpg": "각종 버튼과 라즈베리파이와 7인치 모니터.",
+  "images/personal/우성/모보페스티벌/mobo-video2.mp4": "'MOBBO 페스티벌'에서 'BIG GAME' 무대를 하고있는 우성. '플레이콜렉티브' 점프슈트와 가면을 쓰고 VJ를 준비하고 있다.",
+  "images/personal/우성/소파게임/sofa6.jpg": "우성의 장비가 들어있는 박스. 각종 버튼과 회로, 아두이노 등이 들어있다.",
+  "images/personal/우성/시지프스/sisyphus1.jpg": "시멘트 벽돌 위에 주황색 마스킹 테이프로 투박하게 부착된 아두이노 센서.",
 };
-const photoAlt = (src) => PHOTO_ALTS[src.split("/").pop()] || "";
+// 키 = 사이트 안 경로(images/…). src가 "../images/…"여도 images/부터 잘라서 찾음 (파일 이름이 겹치는 사진끼리 안 섞이게)
+const photoAlt = (src) => {
+  const i = src.indexOf("images/");
+  return PHOTO_ALTS[i >= 0 ? src.slice(i) : src] || "";
+};
 
 
 // personal/우성/아케이드/ 안의 사진 파일 목록 (우성 개인 페이지 "지난 작업"). 사진을 추가/삭제하면 여기도 맞춰줄 것
@@ -217,6 +257,18 @@ const MURUGOL_WORK_PHOTOS = [
 // 모양은 style.css "접근성" 섹션. <html>에 a11y-* 클래스를 붙이는 방식이라 iframe 안 배우미·일정 페이지도 같이 바뀜
 // =====================================================================
 const A11Y_KEY = "pp-a11y";
+// 대체 텍스트 편집 모드 (2026-11-07, 로컬 작업용) — 주소 끝에 ?alt-edit=1 로 켜고 ?alt-edit=0 으로 끔.
+// 켜 두면 모든 페이지(탭 안 iframe 포함)가 목록 보기 + 설명 칸 입력 가능 상태가 됨. 자세한 건 setupAltEditor
+const ALT_EDIT_KEY = "pp-alt-edit";
+const ALT_DRAFT_KEY = "pp-alt-drafts";
+const ALT_EDIT = (() => {
+  try {
+    const q = new URLSearchParams(location.search).get("alt-edit");
+    if (q === "1") localStorage.setItem(ALT_EDIT_KEY, "1");
+    if (q === "0") localStorage.removeItem(ALT_EDIT_KEY);
+    return localStorage.getItem(ALT_EDIT_KEY) === "1";
+  } catch (_) { return false; }
+})();
 const A11Y_EMBEDDED = window.self !== window.top;
 const A11Y = { still: false, contrast: false, photoGray: true, text: 0, list: false }; // photoGray = 고대비일 때 사진도 흑백(기본) / 끄면 사진만 컬러
 function a11yLoad() {
@@ -252,7 +304,8 @@ function a11yApply() {
   root.classList.toggle("a11y-photo-color", !!A11Y.contrast && !A11Y.photoGray);
   root.classList.toggle("a11y-big", A11Y.text > 0);
   root.classList.toggle("a11y-text-2", A11Y.text === 2);
-  root.classList.toggle("a11y-list", !!A11Y.list);
+  root.classList.toggle("a11y-list", !!A11Y.list || ALT_EDIT); // 편집 모드면 항상 목록 보기
+  root.classList.toggle("alt-edit", ALT_EDIT);
   document.querySelectorAll("video").forEach(a11yVideo);
   document.dispatchEvent(new Event("a11y:change"));
   // 탭 안에 떠 있는 배우미·일정 페이지(iframe)에도 바로 반영
@@ -383,6 +436,7 @@ function expandPhotos(figureId, basePath, items) {
       el.muted = true;
       el.setAttribute("muted", ""); // 자동재생 허용 조건: 속성으로도 명시해야 확실히 통과
       el.dataset.auto = "1";
+      if (photoAlt(src)) el.setAttribute("aria-label", photoAlt(src)); // 영상 설명 (PHOTO_ALTS)
       el.autoplay = !A11Y.still; // 움직임 멈추기면 첫 장면만
       el.loop = true;
       el.playsInline = true;
@@ -423,6 +477,7 @@ function setupPhotoGrid(gridId, sources) {
       el.muted = true;
       el.setAttribute("muted", ""); // 자동재생 허용 조건: 속성으로도 명시해야 확실히 통과
       el.dataset.auto = "1";
+      if (photoAlt(src)) el.setAttribute("aria-label", photoAlt(src)); // 영상 설명 (PHOTO_ALTS)
       el.autoplay = !A11Y.still; // 움직임 멈추기면 첫 장면만
       el.loop = true;
       el.playsInline = true;
@@ -681,6 +736,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".person-grid").forEach((grid) => setupRatioSnap(grid));
   setupZoomFigures();
   setupAltCaptions();
+  setupAltEditor();
   // 개인·일정 페이지·PP 사진 탭: masonry 쌓기 + 가로 사진 일부 2열 폭 (순서 섞기·펼치기·스냅 설정이 다 끝난 뒤에)
   document.querySelectorAll(".person-grid, .photo-grid").forEach((grid) => setupMasonry(grid));
 
@@ -1476,9 +1532,11 @@ function setupAltCaptions() {
   document.querySelectorAll(".person-grid figure.block-image, .photo-grid figure.block-image").forEach((fig) => {
     if (fig.querySelector(".a11y-alt")) return;
     const img = fig.querySelector("img");
+    const video = fig.querySelector("video");
     const cap = document.createElement("figcaption");
     cap.className = "a11y-alt";
-    cap.textContent = img ? img.getAttribute("alt") || "" : "";
+    // 사진은 alt, 영상은 aria-label(영상 설명)
+    cap.textContent = img ? img.getAttribute("alt") || "" : video ? video.getAttribute("aria-label") || "" : "";
     fig.appendChild(cap);
   });
   // 유튜브·웹사이트 임베드 칸 — iframe 제목(title)을 글자로
@@ -1489,5 +1547,87 @@ function setupAltCaptions() {
     cap.className = "a11y-alt";
     cap.textContent = frame ? frame.getAttribute("title") || "" : "";
     block.appendChild(cap);
+  });
+}
+
+// 대체 텍스트 편집 모드 (2026-11-07, 로컬 작업용 — 방문자에겐 안 보임) — 주소에 ?alt-edit=1 을 붙여 열면 켜짐.
+// 목록 보기에서 사진·영상 옆 설명 칸을 눌러 바로 입력 → 브라우저(localStorage "pp-alt-drafts")에 자동 저장.
+// 왼쪽 아래 "내보내기"로 고친 것만 JSON 파일로 받아서 Claude에게 주면 실제 파일(alt / PHOTO_ALTS / aria-label)에 반영.
+// 키 = 사이트 안 경로(images/event/potato-pancake/potato1.jpg 처럼). 끄려면 ?alt-edit=0
+function altKey(media) {
+  try {
+    const path = decodeURI(new URL(media.getAttribute("src"), location.href).pathname);
+    const i = path.lastIndexOf("/images/");
+    return (i >= 0 ? path.slice(i + 1) : path).normalize("NFC"); // 맥 파일 경로의 한글(자모 분리)도 코드와 같은 형태로
+  } catch (_) { return media.getAttribute("src"); }
+}
+function loadAltDrafts() {
+  try { return JSON.parse(localStorage.getItem(ALT_DRAFT_KEY) || "{}"); } catch (_) { return {}; }
+}
+function setupAltEditor() {
+  if (!ALT_EDIT) return;
+  const drafts = loadAltDrafts();
+  const save = () => {
+    try { localStorage.setItem(ALT_DRAFT_KEY, JSON.stringify(drafts)); } catch (_) {}
+    document.dispatchEvent(new Event("alt:drafts"));
+  };
+  document.querySelectorAll(".a11y-alt").forEach((cap) => {
+    const fig = cap.parentElement;
+    const media = fig.querySelector("img, video");
+    if (!media) return; // 유튜브·웹사이트 제목 칸은 편집 안 함
+    const key = altKey(media);
+    const apply = (text) => {
+      if (media.tagName === "IMG") media.alt = text;
+      else if (text) media.setAttribute("aria-label", text);
+      else media.removeAttribute("aria-label");
+    };
+    if (key in drafts) { cap.textContent = drafts[key]; apply(drafts[key]); }
+    cap.contentEditable = "plaintext-only";
+    cap.dataset.key = key;
+    cap.dataset.placeholder = media.tagName === "VIDEO" ? "영상 설명 입력" : "사진 설명 입력";
+    cap.classList.toggle("edited", key in drafts);
+    // 설명 칸을 눌러도 사진 크게 보기가 열리지 않게
+    cap.addEventListener("click", (e) => e.stopPropagation());
+    cap.addEventListener("keydown", (e) => {
+      e.stopPropagation(); // Esc 등이 탭 닫기로 이어지지 않게
+      if (e.key === "Enter") { e.preventDefault(); cap.blur(); }   // 엔터 = 입력 끝 (한 줄 설명)
+    });
+    cap.addEventListener("input", () => {
+      const text = cap.textContent.replace(/\s+/g, " ").trim();
+      drafts[key] = text;
+      apply(text);
+      cap.classList.add("edited");
+      save();
+    });
+  });
+
+  // 왼쪽 아래 편집 막대 — 맨 위 페이지에만 (탭 안 iframe 페이지는 바깥 막대 하나로)
+  if (A11Y_EMBEDDED) return;
+  const bar = document.createElement("div");
+  bar.className = "alt-edit-bar";
+  bar.innerHTML = '<span class="alt-edit-count"></span>' +
+    '<button type="button" class="alt-edit-export">내보내기</button>' +
+    '<button type="button" class="alt-edit-off">편집 끄기</button>';
+  document.body.appendChild(bar);
+  const count = bar.querySelector(".alt-edit-count");
+  const render = () => { count.textContent = "설명 편집 중 · 고친 칸 " + Object.keys(loadAltDrafts()).length + "개"; };
+  document.addEventListener("alt:drafts", render);
+  window.addEventListener("storage", (e) => { if (e.key === ALT_DRAFT_KEY) render(); }); // 탭 안 페이지에서 고친 것도 셈
+  render();
+  bar.querySelector(".alt-edit-export").addEventListener("click", () => {
+    const data = JSON.stringify(loadAltDrafts(), null, 2);
+    const d = new Date();
+    const stamp = d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0") +
+      "-" + String(d.getHours()).padStart(2, "0") + String(d.getMinutes()).padStart(2, "0");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([data], { type: "application/json" }));
+    a.download = "pp-alt-drafts-" + stamp + ".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+  bar.querySelector(".alt-edit-off").addEventListener("click", () => {
+    try { localStorage.removeItem(ALT_EDIT_KEY); } catch (_) {}
+    location.reload();
   });
 }
