@@ -104,7 +104,7 @@ const PHOTO_ALTS = {
   "images/patipati/patipati-daily24.jpg": "식당에 둘러앉아 밥을 먹는 우성,현,휘수,서연.",
   "images/event/potato-pancake/potato30.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
   "images/event/potato-pancake/potato31.jpg": "휴식 공간에 둘러앉아 감자전을 먹는 PP.",
-  "images/event/potato-pancake/potato32.jpg": "'Potato Pancake' 중 함께 모여앉아 감자전을 먹는 PP.",
+  "images/event/potato-pancake/potato32.jpg": "휴식 공간에 둘러앉아 감자전을 먹는 PP.",
   "images/patipati/patipati-video1.mp4": "마리오 카트를 플레이하는 서연과 현.",
   "images/patipati/patipati-video9.mp4": "구부러진 파이프 구멍에 입을 대고 말을 하는 서연과 반대편 구멍에 귀를 대고 듣는 도노.",
   "images/patipati/patipati-video3.mp4": "'Potato Pancake' 중인 PP.",
